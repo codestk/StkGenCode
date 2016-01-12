@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using StkGenCode.Code;
+using StkGenCode.Code.Template;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace StkGenCode
@@ -41,10 +37,33 @@ namespace StkGenCode
         //Write file by path
         private void button2_Click(object sender, EventArgs e)
         {
-            //string codeAfterGen = "dsgmdkl kfjkj ekjrefjriefjirjf er irj g";
+            string _constr = textBox2.Text;
+            string _path = textBox1.Text;
 
-            ClearAllFile(textBox1.Text);
-            GenAspx("LogX");
+            //string _TableName = "mktsum_log";
+            string _TableName = "AmpBangkok";
+
+            StkGenCode.Code.FileCode F = new Code.FileCode();
+            F.path = _path;
+            F.ClearAllFile();
+
+            Db _db = new Db();
+            var _ds = Db.GetData(_constr, _TableName);
+
+            PropertiesCode Pcode = new PropertiesCode();
+            Pcode._FileCode = F;
+            Pcode._ds = _ds;
+            Pcode._TableName = _TableName;
+            Pcode.Gen();
+
+            DbCode _DbCode = new DbCode();
+            _DbCode._FileCode = F;
+            _DbCode._ds = _ds;
+            _DbCode._TableName = _TableName;
+            _DbCode.Gen();
+
+            //  MessageBox.Show("Ok");
+            this.Close();
         }
 
         //Delete All Find in folder
