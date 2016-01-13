@@ -62,11 +62,11 @@ namespace StkGenCode
             _DbCode._TableName = _TableName;
             _DbCode.Gen();
 
-            AspxCode _aspx = new AspxCode();
-            _aspx._FileCode = F;
-            _aspx._ds = _ds;
-            _aspx._TableName = _TableName;
-            _aspx.Gen();
+            AspxFromCode _AspxFromCodeaspx = new AspxFromCode();
+            _AspxFromCodeaspx._FileCode = F;
+            _AspxFromCodeaspx._ds = _ds;
+            _AspxFromCodeaspx._TableName = _TableName;
+            _AspxFromCodeaspx.Gen();
 
             StoreProCode _StoreProCode = new StoreProCode();
             _StoreProCode._FileCode = F;
