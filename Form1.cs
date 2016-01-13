@@ -62,6 +62,18 @@ namespace StkGenCode
             _DbCode._TableName = _TableName;
             _DbCode.Gen();
 
+            AspxCode _aspx = new AspxCode();
+            _aspx._FileCode = F;
+            _aspx._ds = _ds;
+            _aspx._TableName = _TableName;
+            _aspx.Gen();
+
+            StoreProCode _StoreProCode = new StoreProCode();
+            _StoreProCode._FileCode = F;
+            _StoreProCode._ds = _ds;
+            _StoreProCode._TableName = _TableName;
+            _StoreProCode.Gen();
+
             //  MessageBox.Show("Ok");
             this.Close();
         }

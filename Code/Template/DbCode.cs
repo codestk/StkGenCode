@@ -100,6 +100,31 @@ namespace StkGenCode.Code.Template
             return sql;
         }
 
+        //public List<AmpBangkok> GetPageWise(int pageIndex, int PageSize)
+        //{
+        //    string _sql1 = \"Sp_GetCustomersPageWise\";
+        //    var prset = new List<IDataParameter>();
+        //    prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex));
+        //    prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize));
+        //    DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure);
+        //    return DataSetToList(ds);
+        //}
+
+        private string GenGetPageWise()
+        {
+            string command = "";
+            command += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize)" + _NewLine;
+            command += "{" + _NewLine;
+            command += " string _sql1 = \"Sp_Get" + _TableName + "PageWise\";" + _NewLine;
+            command += "  var prset = new List<IDataParameter>();" + _NewLine;
+            command += " prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex));" + _NewLine;
+            command += " prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize));" + _NewLine;
+            command += " DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure);" + _NewLine;
+            command += "  return DataSetToList(ds);" + _NewLine;
+            command += "}" + _NewLine;
+            return command;
+        }
+
         private string GenInsert()
         {
             string insercolumn = "";
@@ -319,6 +344,63 @@ namespace StkGenCode.Code.Template
             return _code;
         }
 
+        //bool output = false;
+        //    try
+        //    {
+        //        Db.OpenFbData();
+        //        Db.BeginTransaction();
+
+        //        MPO_ORDERS o1 = new MPO_ORDERS();
+        //o1 = _MPO_ORDERS;
+        //        int orid = o1.Save();
+
+        //MPO_ODERDETAILS o2 = new MPO_ODERDETAILS();
+        //o2.Save(orid, ODERDETAILS);
+
+        //        Db.CommitTransaction();
+        //        OR_ID = orid;
+        //        output = true;
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        Db.RollBackTransaction();
+        //        ErrorLogging.LogErrorToLogFile(ex, "");
+        //        throw ex;
+        //    }
+
+        //    return output;
+        private string Comment()
+        {
+            string _code = _NewLine + "//Trasaction User" + _NewLine;
+            _code += "//bool output = false;" + _NewLine;
+            _code += "//    try" + _NewLine;
+            _code += "//    {" + _NewLine;
+            _code += "//        Db.OpenFbData();" + _NewLine;
+            _code += "//        Db.BeginTransaction();" + _NewLine;
+
+            _code += "//        MPO_ORDERS o1 = new MPO_ORDERS();" + _NewLine;
+            _code += "//o1 = _MPO_ORDERS;" + _NewLine;
+            _code += "//        int orid = o1.Save();" + _NewLine;
+
+            _code += "//MPO_ODERDETAILS o2 = new MPO_ODERDETAILS();" + _NewLine;
+            _code += "//o2.Save(orid, ODERDETAILS);" + _NewLine;
+
+            _code += "//        Db.CommitTransaction();" + _NewLine;
+            _code += "//        OR_ID = orid;" + _NewLine;
+            _code += "//        output = true;" + _NewLine;
+            _code += "//    }" + _NewLine;
+            _code += "//    catch (System.Exception ex)" + _NewLine;
+            _code += "//    {" + _NewLine;
+            _code += "//        Db.RollBackTransaction();" + _NewLine;
+            _code += "//        ErrorLogging.LogErrorToLogFile(ex, \"\");" + _NewLine;
+            _code += "//        throw ex;" + _NewLine;
+            _code += "//    }" + _NewLine;
+
+            _code += "//    return output;" + _NewLine;
+
+            return _code;
+        }
+
         public void Gen()
         {
             string _code = "";
@@ -330,12 +412,14 @@ namespace StkGenCode.Code.Template
 
             _code += GenGetAll();
             _code += GetWithFilter();
+
+            _code += GenGetPageWise();
             _code += GenInsert();
             _code += GenUpdate();
             _code += GenDelete();
             _code += GenConvertDataList();
             _code += GenEndNameSpaceAndClass();
-
+            _code += Comment();
             _FileCode.writeFile(_TableName + "Db", _code, _fileType);
         }
     }

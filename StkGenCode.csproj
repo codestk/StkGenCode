@@ -51,6 +51,7 @@
     <Compile Include="Code\Template\AspxCode.cs" />
     <Compile Include="Code\Template\DbCode.cs" />
     <Compile Include="Code\Template\PropertiesCode.cs" />
+    <Compile Include="Code\Template\StoreProCode.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

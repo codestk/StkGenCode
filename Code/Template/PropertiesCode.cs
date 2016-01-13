@@ -61,7 +61,6 @@ namespace StkGenCode.Code.Template
         {
             string _code = "";
             _code = GenUsign();
-
             _code += GenBeginNameSpaceAndClass();
             _code += GenProperties();
             _code += GenEndNameSpaceAndClass();
