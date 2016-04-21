@@ -35,15 +35,31 @@ namespace StkGenCode
         }
 
         //Write file by path
+        private string _constr;
+
+        private string _path;
+
         private void button2_Click(object sender, EventArgs e)
         {
-            string _constr = textBox2.Text;
-            string _path = textBox1.Text;
+            _constr = textBox2.Text;
+            _path = textBox1.Text;
 
             //string _TableName = "mktsum_log";
-            string _TableName = "AmpBangkok";
+            string _TableName = "";
 
-            StkGenCode.Code.FileCode F = new Code.FileCode();
+            foreach (var item in checkedListBox1.CheckedItems)
+            {
+                _TableName = item.ToString();
+                Gen(_TableName);
+            }
+
+            //  MessageBox.Show("Ok");
+            this.Close();
+        }
+
+        private void Gen(string _TableName)
+        {
+            StkGenCode.Code.FileCode F = new FileCode();
             F.path = _path;
             F.ClearAllFile();
 
@@ -68,14 +84,34 @@ namespace StkGenCode
             _AspxFromCodeaspx._TableName = _TableName;
             _AspxFromCodeaspx.Gen();
 
-            StoreProCode _StoreProCode = new StoreProCode();
-            _StoreProCode._FileCode = F;
-            _StoreProCode._ds = _ds;
-            _StoreProCode._TableName = _TableName;
-            _StoreProCode.Gen();
 
-            //  MessageBox.Show("Ok");
-            this.Close();
+            AspxFromCodeBehide _AspxCodeBehide = new AspxFromCodeBehide();
+            _AspxCodeBehide._FileCode = F;
+            _AspxCodeBehide._ds = _ds;
+            _AspxCodeBehide._TableName = _TableName;
+            _AspxCodeBehide.Gen();
+
+
+
+            //AspxTableCode _AspxTableCode = new AspxTableCode();
+            //_AspxTableCode._FileCode = F;
+            //_AspxTableCode._ds = _ds;
+            //_AspxTableCode._TableName = _TableName;
+            //_AspxTableCode.Gen();
+
+            //AspxTableCodeBehine _AspxTableCodeBehine = new AspxTableCodeBehine();
+            //_AspxTableCodeBehine._FileCode = F;
+            //_AspxTableCodeBehine._ds = _ds;
+            //_AspxTableCodeBehine._TableName = _TableName;
+            //_AspxTableCodeBehine.Gen();
+
+
+
+            //StoreProCode _StoreProCode = new StoreProCode();
+            //_StoreProCode._FileCode = F;
+            //_StoreProCode._ds = _ds;
+            //_StoreProCode._TableName = _TableName;
+            //_StoreProCode.Gen();
         }
 
         //Delete All Find in folder

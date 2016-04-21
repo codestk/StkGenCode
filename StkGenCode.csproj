@@ -48,7 +48,10 @@
   <ItemGroup>
     <Compile Include="Code\Db.cs" />
     <Compile Include="Code\File.cs" />
-    <Compile Include="Code\Template\AspxCode.cs" />
+    <Compile Include="Code\Template\AspxFromCodeBehide.cs" />
+    <Compile Include="Code\Template\AspxFromCode.cs" />
+    <Compile Include="Code\Template\AspxTableCode.cs" />
+    <Compile Include="Code\Template\AspxTableCodeBehine.cs" />
     <Compile Include="Code\Template\DbCode.cs" />
     <Compile Include="Code\Template\PropertiesCode.cs" />
     <Compile Include="Code\Template\StoreProCode.cs" />

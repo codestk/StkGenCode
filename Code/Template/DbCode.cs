@@ -58,6 +58,31 @@ namespace StkGenCode.Code.Template
             return _code;
         }
 
+        //public List<AmpBangkok> Select(string AmpBangkokIndex)
+        //{
+        //    string _sql1 = "SELECT * FROM AmpBangkok where AmpBangkokIndex =@AmpBangkokIndex;";
+        //    var prset = new List<IDataParameter>();
+        //    prset.Add(Db.CreateParameterDb("@AmpBangkokIndex", AmpBangkokIndex));
+
+        //    DataSet ds = Db.GetDataSet(_sql1);
+        //    return DataSetToList(ds);
+        //}
+
+        private string GenSelectOne()
+        {
+            string _code = "";
+            string column = _ds.Tables[0].Columns[0].ColumnName;
+            _code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
+            _code += "{ " + _NewLine;
+            _code += " string _sql1 = \"SELECT * FROM " + _TableName + " where AmpBangkokIndex = @" + column + "; \"; " + _NewLine;
+            _code += "   var prset = new List<IDataParameter>();" + _NewLine;
+            _code += "  prset.Add(Db.CreateParameterDb(\"@" + column + "\", " + column + "));" + _NewLine;
+            _code += "  DataSet ds = Db.GetDataSet(_sql1,prset);" + _NewLine;
+            _code += "return DataSetToList(ds).FirstOrDefault(); " + _NewLine;
+            _code += "}";
+            return _code;
+        }
+
         private string GetWithFilter()
         {
             string sql = "";
@@ -90,7 +115,7 @@ namespace StkGenCode.Code.Template
             sql += "}" + _NewLine;
             sql += "else" + _NewLine;
             sql += "{" + _NewLine;
-            sql += "Db.SetSort(sortAscending, sortExpression);";
+            sql += " SetSort(sortAscending, sortExpression);";
             sql += "}" + _NewLine;
 
             sql += _NewLine;
@@ -152,10 +177,10 @@ namespace StkGenCode.Code.Template
             insertparameter = insertparameter.TrimEnd(',');
 
             string _code = "";
-            _code += " void Insert() {";
+            _code += "public void Insert() {";
             _code += _NewLine + "var prset = new List<IDataParameter>();";
             _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
-            _code += " VALUES (" + inservalue + ")returning  " + _ds.Tables[0].Columns[0].ColumnName + ";\";";
+            _code += " VALUES (" + inservalue + ") ;SELECT SCOPE_IDENTITY();  " + _ds.Tables[0].Columns[0].ColumnName + ";\";";
             //textBox4.Text +=_NewLine + "var prset = new List<FbParameter> { " + insertparameter + "};";
             _code += _NewLine + insertparameter;
 
@@ -183,22 +208,31 @@ namespace StkGenCode.Code.Template
         {
             //string insercolumn = "";
             //string inservalue = "";
-            //string insertparameter = "";
+            string insertparameter = "";
 
             string updateCommand = "";
+            bool isFirst = true;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
                 //              insercolumn += _DataColumn.ColumnName + "," ;
                 //              inservalue += "?,";
                 //insertparameter += "new FbParameter(\":"+ _DataColumn.ColumnName+"\", _obj."+ _DataColumn.ColumnName+"),";
+                if (isFirst == true)
+                {
+                    //  updateCommand += _DataColumn.ColumnName + "=@" + _DataColumn.ColumnName + ",";
+                    isFirst = false;
+                }
+                else
+                {
+                    updateCommand += _DataColumn.ColumnName + "=@" + _DataColumn.ColumnName + ",";
+                }
 
-                updateCommand += _DataColumn.ColumnName + "=@" + _DataColumn.ColumnName + ",";
                 //=====================================================================
                 // New Version
                 //   Db.CreateParameterDb(":V1_GOOD_INOUT_ID", _obj.V1_GOOD_INOUT_ID.ToString().Trim())
                 // insercolumn += _DataColumn.ColumnName + ",";
                 //inservalue += "@" + _DataColumn.ColumnName + ",";
-                //insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
+                insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
             }
 
             //insercolumn = insercolumn.TrimEnd(',');
@@ -206,12 +240,12 @@ namespace StkGenCode.Code.Template
             //insertparameter = insertparameter.TrimEnd(',');
 
             string _code = "";
-            _code += " void Update() {";
+            _code += "public void Update() {";
             _code += _NewLine + "var prset = new List<IDataParameter>();";
             // _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
             //_code += " VALUES (" + inservalue + ")returning  " + _ds.Tables[0].Columns[0].ColumnName + ";\";";
             //textBox4.Text +=_NewLine + "var prset = new List<FbParameter> { " + insertparameter + "};";
-            //_code += _NewLine + insertparameter;
+            _code += _NewLine + insertparameter;
 
             _code += _NewLine;
 
@@ -274,7 +308,7 @@ namespace StkGenCode.Code.Template
             insertparameter = insertparameter.TrimEnd(',');
 
             string _code = "";
-            _code += " void Delete() {";
+            _code += "public void Delete() {";
             _code += _NewLine + "var prset = new List<IDataParameter>();";
             // _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
             //_code += " VALUES (" + inservalue + ")returning  " + _ds.Tables[0].Columns[0].ColumnName + ";\";";
@@ -411,6 +445,7 @@ namespace StkGenCode.Code.Template
             _code += GenConStance();
 
             _code += GenGetAll();
+            _code += GenSelectOne();
             _code += GetWithFilter();
 
             _code += GenGetPageWise();
