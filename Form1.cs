@@ -53,7 +53,10 @@ namespace StkGenCode
                 Gen(_TableName);
             }
 
-            //  MessageBox.Show("Ok");
+            //MessageBox.Show("Ok");
+
+            System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
+
             this.Close();
         }
 
@@ -66,6 +69,40 @@ namespace StkGenCode
             Db _db = new Db();
             var _ds = Db.GetData(_constr, _TableName);
 
+            AspxFromCode _AspxFromCodeaspx = new AspxFromCode();
+            _AspxFromCodeaspx._FileCode = F;
+            _AspxFromCodeaspx._ds = _ds;
+            _AspxFromCodeaspx._TableName = _TableName;
+            _AspxFromCodeaspx.Gen();
+
+            AspxFromCodeBehide _AspxCodeBehide = new AspxFromCodeBehide();
+            _AspxCodeBehide._FileCode = F;
+            _AspxCodeBehide._ds = _ds;
+            _AspxCodeBehide._TableName = _TableName;
+            _AspxCodeBehide.Gen();
+
+            AspxTableCode _AspxTableCode = new AspxTableCode();
+            _AspxTableCode._FileCode = F;
+            _AspxTableCode._ds = _ds;
+            _AspxTableCode._TableName = _TableName;
+            _AspxTableCode.Gen();
+
+            AspxTableCodeBehine _AspxTableCodeBehine = new AspxTableCodeBehine();
+            _AspxTableCodeBehine._FileCode = F;
+            _AspxTableCodeBehine._ds = _ds;
+            _AspxTableCodeBehine._TableName = _TableName;
+            _AspxTableCodeBehine.Gen();
+
+            StoreProCode _StoreProCode = new StoreProCode();
+            _StoreProCode._FileCode = F;
+            _StoreProCode._ds = _ds;
+            _StoreProCode._TableName = _TableName;
+            _StoreProCode.Gen();
+
+            //========Foder Cdoe
+
+            string pathBuCode = _path + @"App_Code\Code\Business\";
+            F.path = pathBuCode;
             PropertiesCode Pcode = new PropertiesCode();
             Pcode._FileCode = F;
             Pcode._ds = _ds;
@@ -77,41 +114,6 @@ namespace StkGenCode
             _DbCode._ds = _ds;
             _DbCode._TableName = _TableName;
             _DbCode.Gen();
-
-            AspxFromCode _AspxFromCodeaspx = new AspxFromCode();
-            _AspxFromCodeaspx._FileCode = F;
-            _AspxFromCodeaspx._ds = _ds;
-            _AspxFromCodeaspx._TableName = _TableName;
-            _AspxFromCodeaspx.Gen();
-
-
-            AspxFromCodeBehide _AspxCodeBehide = new AspxFromCodeBehide();
-            _AspxCodeBehide._FileCode = F;
-            _AspxCodeBehide._ds = _ds;
-            _AspxCodeBehide._TableName = _TableName;
-            _AspxCodeBehide.Gen();
-
-
-
-            //AspxTableCode _AspxTableCode = new AspxTableCode();
-            //_AspxTableCode._FileCode = F;
-            //_AspxTableCode._ds = _ds;
-            //_AspxTableCode._TableName = _TableName;
-            //_AspxTableCode.Gen();
-
-            //AspxTableCodeBehine _AspxTableCodeBehine = new AspxTableCodeBehine();
-            //_AspxTableCodeBehine._FileCode = F;
-            //_AspxTableCodeBehine._ds = _ds;
-            //_AspxTableCodeBehine._TableName = _TableName;
-            //_AspxTableCodeBehine.Gen();
-
-
-
-            //StoreProCode _StoreProCode = new StoreProCode();
-            //_StoreProCode._FileCode = F;
-            //_StoreProCode._ds = _ds;
-            //_StoreProCode._TableName = _TableName;
-            //_StoreProCode.Gen();
         }
 
         //Delete All Find in folder
@@ -130,89 +132,12 @@ namespace StkGenCode
         #region apsxCode
 
         //Gen Aspx File
-        private void GenAspx(string Table)
-        {
-            string aspxHtml;
-            //Begin Content===================================================
-            aspxHtml = "<asp:Content ID='Content1' ContentPlaceHolderID='HeadContent' runat='server'>";
-            writeFile(Table, aspxHtml);
-
-            //style -----------------------------------------------------------
-            aspxHtml = "<style type='text/css'>";
-            writeFile(Table, aspxHtml);
-            AddSpace(Table);
-            aspxHtml = "</style>";
-            writeFile(Table, aspxHtml);
-            AddSpace(Table);
-            //-----------------------------------------------------------------
-
-            //Script ----------------------------------------------------------
-            aspxHtml = " <script type='text/javascript'>";
-            writeFile(Table, aspxHtml);
-
-            aspxHtml = "$(document).ready(function() {";
-            writeFile(Table, aspxHtml);
-
-            AddSpace(Table);
-
-            aspxHtml = "});";
-            writeFile(Table, aspxHtml);
-            aspxHtml = "</script>";
-            writeFile(Table, aspxHtml);
-            //-----------------------------------------------------------------
-
-            aspxHtml = @"</asp:Content>";
-            writeFile(Table, aspxHtml);
-            AddSpace(Table);
-            //======================================================End Content
-
-            //Begin Content====================================================
-            aspxHtml = @"<asp:Content ID='Content2' ContentPlaceHolderID='MainContent' runat='server'>";
-            writeFile(Table, aspxHtml);
-            AddSpace(Table);
-
-            aspxHtml = "< asp:Panel ID ='pnlSave' runat='server'>";
-            AddSpace(Table);
-            aspxHtml = @"</asp:Content>";
-            writeFile(Table, aspxHtml);
-            AddSpace(Table);
-            //======================================================End Content
-        }
-
-        private void AddSpace(string Table)
-        {
-            string space = "\r\n";
-            writeFile(Table, space);
-        }
 
         #endregion apsxCode
 
-        public void writeFile(string Table, string content)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            string path = textBox1.Text;
-            // check if directory exists
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            path = path + Table + "_" + DateTime.Today.ToString("dd-MM-yy") + ".aspx";
-            // check if file exist
-            //File.Delete(path);
-            if (!File.Exists(path))
-            {
-                File.Create(path).Dispose();
-            }
-
-            // log the error now
-            using (StreamWriter writer = File.AppendText(path))
-            {
-                string error = content;
-                writer.WriteLine(error);
-                //writer.WriteLine("==========================================");
-                writer.Flush();
-                writer.Close();
-            }
-            //  return userFriendlyError;
+            button1_Click(sender, e);
         }
     }
 }

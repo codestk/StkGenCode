@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace StkGenCode.Code
 {
@@ -25,9 +20,9 @@ namespace StkGenCode.Code
 
             // check if file exist
             //File.Delete(path);
-            if (!File.Exists(_pathFull))
+            if (!Directory.Exists(path))
             {
-                File.Create(_pathFull).Dispose();
+                Directory.CreateDirectory(path);
             }
 
             // log the error now
@@ -46,11 +41,15 @@ namespace StkGenCode.Code
         {
             System.IO.DirectoryInfo di = new DirectoryInfo(path);
 
-            foreach (FileInfo file in di.GetFiles())
+            if (di.Exists)
             {
-                file.Delete();
+                //foreach (FileInfo file in di.GetFiles())
+                //{
+                //    file.Delete();
+                //}
+                foreach (System.IO.FileInfo file in di.GetFiles()) file.Delete();
+                foreach (System.IO.DirectoryInfo subDirectory in di.GetDirectories()) subDirectory.Delete(true);
             }
-
             // File.Delete(path);
         }
 

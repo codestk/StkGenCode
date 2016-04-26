@@ -16,13 +16,12 @@ namespace StkGenCode.Code.Template
         private string GenUsign()
         {
             string _code = "";
-            _code = "using System;" + _NewLine;
+            _code += "using System;" + _NewLine;
             _code += "using System.Collections.Generic;" + _NewLine;
             _code += "using System.Data;" + _NewLine;
             _code += "using System.Linq;" + _NewLine;
             _code += "using System.Web;" + _NewLine;
-            _code += "using ExchangeService.Code;" + _NewLine;
-            // _FileCode.writeFile(_ds.Tables[0].TableName, _code, _fileType);
+            //_code += "using ExchangeService.Code;" + _NewLine;
 
             return _code;
         }
@@ -30,9 +29,9 @@ namespace StkGenCode.Code.Template
         private string GenBeginNameSpaceAndClass()
         {
             string _code = "";
-            _code = "namespace XXXXX.Code.Bu" + _NewLine;
-            _code += "{" + _NewLine;
-            _code += " public class  " + _TableName + "Db: DataAccess" + _NewLine;
+            //_code = "namespace XXXXX.Code.Bu" + _NewLine;
+            //_code += "{" + _NewLine;
+            _code += "public class  " + _TableName + "Db: DataAccess" + _NewLine;
             _code += "{" + _NewLine;
 
             return _code;
@@ -42,7 +41,7 @@ namespace StkGenCode.Code.Template
         {
             string _code = "" + _NewLine;
             _code = "}" + _NewLine;
-            _code += " }";
+            //_code += " }"; Close Name
 
             return _code;
         }
@@ -57,16 +56,6 @@ namespace StkGenCode.Code.Template
             _code += "} \r\n";
             return _code;
         }
-
-        //public List<AmpBangkok> Select(string AmpBangkokIndex)
-        //{
-        //    string _sql1 = "SELECT * FROM AmpBangkok where AmpBangkokIndex =@AmpBangkokIndex;";
-        //    var prset = new List<IDataParameter>();
-        //    prset.Add(Db.CreateParameterDb("@AmpBangkokIndex", AmpBangkokIndex));
-
-        //    DataSet ds = Db.GetDataSet(_sql1);
-        //    return DataSetToList(ds);
-        //}
 
         private string GenSelectOne()
         {
@@ -125,29 +114,54 @@ namespace StkGenCode.Code.Template
             return sql;
         }
 
-        //public List<AmpBangkok> GetPageWise(int pageIndex, int PageSize)
-        //{
-        //    string _sql1 = \"Sp_GetCustomersPageWise\";
-        //    var prset = new List<IDataParameter>();
-        //    prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex));
-        //    prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize));
-        //    DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure);
-        //    return DataSetToList(ds);
-        //}
-
         private string GenGetPageWise()
         {
-            string command = "";
-            command += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize)" + _NewLine;
-            command += "{" + _NewLine;
-            command += " string _sql1 = \"Sp_Get" + _TableName + "PageWise\";" + _NewLine;
-            command += "  var prset = new List<IDataParameter>();" + _NewLine;
-            command += " prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex));" + _NewLine;
-            command += " prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize));" + _NewLine;
-            command += " DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure);" + _NewLine;
-            command += "  return DataSetToList(ds);" + _NewLine;
-            command += "}" + _NewLine;
-            return command;
+            string code = "";
+            //command += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize)" + _NewLine;
+            //command += "{" + _NewLine;
+            //command += " string _sql1 = \"Sp_Get" + _TableName + "PageWise\";" + _NewLine;
+            //command += "  var prset = new List<IDataParameter>();" + _NewLine;
+            //command += " prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex));" + _NewLine;
+            //command += " prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize));" + _NewLine;
+            //command += " DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure);" + _NewLine;
+            //command += "  return DataSetToList(ds);" + _NewLine;
+            //command += "}" + _NewLine;
+
+            code += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter) " + _NewLine;
+            code += "{ " + _NewLine;
+            code += "string _sql1 = \"Sp_Get" + _TableName + "PageWise\"; " + _NewLine;
+            code += "var prset = new List<IDataParameter>(); " + _NewLine;
+            code += "prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex)); " + _NewLine;
+            code += "prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize)); " + _NewLine;
+            code += "" + _NewLine;
+            code += "string commandFilter = \"\"; " + _NewLine;
+            code += "if (Wordfilter != \"\") " + _NewLine;
+            code += "{" + _NewLine;
+            code += "if (commandFilter == \"\") " + _NewLine;
+            code += "{ " + _NewLine;
+            code += "commandFilter = \"Where \"; " + _NewLine;
+            code += "} " + _NewLine;
+            code += "commandFilter += SearchUtility.GenWordfilter(Wordfilter); " + _NewLine;
+            code += "} " + _NewLine;
+            code += "  " + _NewLine;
+            //code += "if (Servicesfilter != \"\") " + _NewLine;
+            //code += "{ " + _NewLine;
+            //code += "if (commandFilter == \"\") " + _NewLine;
+            //code += "{ " + _NewLine;
+            //code += "commandFilter = \"Where \"; " + _NewLine;
+            //code += "} " + _NewLine;
+            //code += "else " + _NewLine;
+            //code += "{ commandFilter += \" and \"; } " + _NewLine;
+            //code += "commandFilter += \"(\"+ SearchUtility.GenServicesfilter(Servicesfilter)+\")\"; " + _NewLine;
+            //code += "} " + _NewLine;
+            code += " " + _NewLine;
+            code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", commandFilter)); " + _NewLine;
+            code += " " + _NewLine;
+            code += "DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure); " + _NewLine;
+            code += "return DataSetToList(ds); " + _NewLine;
+            code += "}" + _NewLine;
+
+            return code;
         }
 
         private string GenInsert()
@@ -156,6 +170,7 @@ namespace StkGenCode.Code.Template
             string inservalue = "";
             string insertparameter = "";
 
+            string ReturnPrimary = "SELECT SCOPE_IDENTITY();";
             // string updateCommand = "";
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
@@ -165,8 +180,25 @@ namespace StkGenCode.Code.Template
 
                 // updateCommand += _DataColumn.ColumnName + "=?,";
                 //=====================================================================
-                // New Version
-                //   Db.CreateParameterDb(":V1_GOOD_INOUT_ID", _obj.V1_GOOD_INOUT_ID.ToString().Trim())
+
+                //ถ้า PRimary ไม่ auto ให้เลือกตัวมันเอง
+                //SELECT @[name];
+                if ((_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString()))
+                {
+                    if ((_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        //ถ้าไม่เป็น Auto ให้เลือกตัวมันเอง Return
+                        ReturnPrimary = "Select @" + _DataColumn.Table.PrimaryKey[0];
+                    }
+                }
+
+                if ((_DataColumn.DataType.ToString() == "System.Guid"))
+                { continue; }
+
                 insercolumn += _DataColumn.ColumnName + ",";
                 inservalue += "@" + _DataColumn.ColumnName + ",";
                 insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
@@ -177,29 +209,23 @@ namespace StkGenCode.Code.Template
             insertparameter = insertparameter.TrimEnd(',');
 
             string _code = "";
-            _code += "public void Insert() {";
+            _code += "public object Insert() {";
             _code += _NewLine + "var prset = new List<IDataParameter>();";
             _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
-            _code += " VALUES (" + inservalue + ") ;SELECT SCOPE_IDENTITY();  " + _ds.Tables[0].Columns[0].ColumnName + ";\";";
+            _code += " VALUES (" + inservalue + ") ;" + ReturnPrimary + "\";";
             //textBox4.Text +=_NewLine + "var prset = new List<FbParameter> { " + insertparameter + "};";
             _code += _NewLine + insertparameter;
-
+            _code += _NewLine;
             _code += _NewLine;
 
-            // _code += "var sql = \"UPDATE   " + _TableName + " SET  " + updateCommand.Trim(',') + " where " + _NewLine; ;
-            //_code += "var prset = new List<FbParameter> { new FbParameter(\":" + _TableName + "_ID\", " + _TableName + "_ID.ToString().Trim()) };";
-            _code += _NewLine;
+            //_code += "int output = Db.FbExecuteNonQuery(sql, prset);" + _NewLine;
+            //_code += "if (output != 1){" + _NewLine;
+            //_code += " throw new System.Exception(\"Insert\" + this.ToString());}   }" + _NewLine;
 
-            //   Db.CreateParameterDb(":V1_GOOD_INOUT_ID", _obj.V1_GOOD_INOUT_ID.ToString().Trim())
-            //int output = DB_R2.FbExecuteNonQuery(sql, prset);
-            //if (output != 1)
-            //{
-            //    throw new System.Exception("Save " + this.ToString());
-            //}
-            _code += "int output = Db.FbExecuteNonQuery(sql, prset);" + _NewLine;
-            _code += "if (output != 1){" + _NewLine;
-            _code += " throw new System.Exception(\"Insert\" + this.ToString());}   }" + _NewLine;
+            _code += "object output = Db.FbExecuteScalar(sql, prset);";
+            _code += "return output;";
 
+            _code += "  }" + _NewLine;
             _code += _NewLine;
             return _code;
         }
@@ -211,33 +237,25 @@ namespace StkGenCode.Code.Template
             string insertparameter = "";
 
             string updateCommand = "";
-            bool isFirst = true;
+
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                //              insercolumn += _DataColumn.ColumnName + "," ;
-                //              inservalue += "?,";
-                //insertparameter += "new FbParameter(\":"+ _DataColumn.ColumnName+"\", _obj."+ _DataColumn.ColumnName+"),";
-                if (isFirst == true)
+                insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
+                if (_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString())
                 {
-                    //  updateCommand += _DataColumn.ColumnName + "=@" + _DataColumn.ColumnName + ",";
-                    isFirst = false;
+                    continue;
                 }
-                else
-                {
-                    updateCommand += _DataColumn.ColumnName + "=@" + _DataColumn.ColumnName + ",";
-                }
+
+                updateCommand += _DataColumn.ColumnName + "=@" + _DataColumn.ColumnName + ",";
 
                 //=====================================================================
                 // New Version
                 //   Db.CreateParameterDb(":V1_GOOD_INOUT_ID", _obj.V1_GOOD_INOUT_ID.ToString().Trim())
                 // insercolumn += _DataColumn.ColumnName + ",";
                 //inservalue += "@" + _DataColumn.ColumnName + ",";
-                insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
+                //  insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
             }
-
-            //insercolumn = insercolumn.TrimEnd(',');
-            //inservalue = inservalue.TrimEnd(',');
-            //insertparameter = insertparameter.TrimEnd(',');
+            //Key
 
             string _code = "";
             _code += "public void Update() {";
@@ -249,7 +267,7 @@ namespace StkGenCode.Code.Template
 
             _code += _NewLine;
 
-            _code += "var sql = @\"UPDATE   " + _TableName + " SET  " + updateCommand.Trim(',') + " where " + _ds.Tables[0].Columns[0].ColumnName + " = @" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine; ;
+            _code += "var sql = @\"UPDATE   " + _TableName + " SET  " + updateCommand.Trim(',') + " where " + _ds.Tables[0].PrimaryKey[0].ToString() + " = @" + _ds.Tables[0].PrimaryKey[0].ToString() + "\";" + _NewLine; ;
             //_code += "var prset = new List<FbParameter> { new FbParameter(\":" + _TableName + "_ID\", " + _TableName + "_ID.ToString().Trim()) };";
             _code += _NewLine;
 
@@ -285,23 +303,7 @@ namespace StkGenCode.Code.Template
             string inservalue = "";
             string insertparameter = "";
 
-            //string updateCommand = "";
-            //foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
-            //{
-            //    //              insercolumn += _DataColumn.ColumnName + "," ;
-            //    //              inservalue += "?,";
-            //    //insertparameter += "new FbParameter(\":"+ _DataColumn.ColumnName+"\", _obj."+ _DataColumn.ColumnName+"),";
-
-            //    updateCommand += _DataColumn.ColumnName + "=@" + _DataColumn.ColumnName + ",";
-            //    //=====================================================================
-            //    // New Version
-            //    //   Db.CreateParameterDb(":V1_GOOD_INOUT_ID", _obj.V1_GOOD_INOUT_ID.ToString().Trim())
-            //    insercolumn += _DataColumn.ColumnName + ",";
-            //    inservalue += "@" + _DataColumn.ColumnName + ",";
-            //    insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
-            //}
-
-            insertparameter = " prset.Add(Db.CreateParameterDb(\"@" + _ds.Tables[0].Columns[0].ColumnName + "\",_" + _TableName + "." + _ds.Tables[0].Columns[0].ColumnName + "));";
+            insertparameter = " prset.Add(Db.CreateParameterDb(\"@" + _ds.Tables[0].PrimaryKey[0].ToString() + "\",_" + _TableName + "." + _ds.Tables[0].PrimaryKey[0].ToString() + "));";
 
             insercolumn = insercolumn.TrimEnd(',');
             inservalue = inservalue.TrimEnd(',');
@@ -317,16 +319,17 @@ namespace StkGenCode.Code.Template
 
             _code += _NewLine;
 
-            _code += "var sql =@\"DELETE FROM " + _TableName + " where " + _ds.Tables[0].Columns[0].ColumnName + "=@" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine; ;
+            string DeleteCondition = "";
+
+            //pyID=@pyID
+            DeleteCondition = _ds.Tables[0].PrimaryKey[0].ToString() + "=@" + _ds.Tables[0].PrimaryKey[0].ToString();
+
+            // DeleteCondition = DeleteCondition.Remove(DeleteCondition.Length - 3);
+
+            _code += "var sql =@\"DELETE FROM " + _TableName + " where " + DeleteCondition + "\";" + _NewLine; ;
             //_code += "var prset = new List<FbParameter> { new FbParameter(\":" + _TableName + "_ID\", " + _TableName + "_ID.ToString().Trim()) };";
             _code += _NewLine;
 
-            //   Db.CreateParameterDb(":V1_GOOD_INOUT_ID", _obj.V1_GOOD_INOUT_ID.ToString().Trim())
-            //int output = DB_R2.FbExecuteNonQuery(sql, prset);
-            //if (output != 1)
-            //{
-            //    throw new System.Exception("Save " + this.ToString());
-            //}
             _code += "int output = Db.FbExecuteNonQuery(sql, prset);" + _NewLine;
             _code += "if (output != 1){" + _NewLine;
             _code += " throw new System.Exception(\"Delete\" + this.ToString());}   }" + _NewLine;
@@ -350,9 +353,20 @@ namespace StkGenCode.Code.Template
             _code += " EnumerableRowCollection<" + _TableName + "> q = (from temp in ds.Tables[0].AsEnumerable()\r\n";
             _code += " select new " + _TableName + "\r\n";
             _code += "{\r\n";
+
+            //Inherrit
+            _code += "RecordCount = temp.Field<Int32>(\"RecordCount\"),";
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                _code += _DataColumn.ColumnName + "= temp.Field<" + _DataColumn.DataType.Name + ">(\"" + _DataColumn.ColumnName + "\"), \r\n ";
+                if (_DataColumn.DataType.ToString() == "System.Decimal")
+                {
+                    _code += _DataColumn.ColumnName + "= Convert.ToDecimal (temp.Field<Object>(\"" + _DataColumn.ColumnName + "\")), \r\n ";
+                }
+                else
+                {
+                    _code += _DataColumn.ColumnName + "= temp.Field<" + _DataColumn.DataType.Name + ">(\"" + _DataColumn.ColumnName + "\"), \r\n ";
+                }
+                // Convert.ToDecimal (temp.Field<Object>("mod_id")),
 
                 // _code += "_obj." + _DataColumn.ColumnName + "= " + _DataColumn.ColumnName + "; \r\n ";
                 //  _code += "" + _DataColumn.ColumnName + "= _obj." + _DataColumn.ColumnName + "; \r\n ";
@@ -378,31 +392,6 @@ namespace StkGenCode.Code.Template
             return _code;
         }
 
-        //bool output = false;
-        //    try
-        //    {
-        //        Db.OpenFbData();
-        //        Db.BeginTransaction();
-
-        //        MPO_ORDERS o1 = new MPO_ORDERS();
-        //o1 = _MPO_ORDERS;
-        //        int orid = o1.Save();
-
-        //MPO_ODERDETAILS o2 = new MPO_ODERDETAILS();
-        //o2.Save(orid, ODERDETAILS);
-
-        //        Db.CommitTransaction();
-        //        OR_ID = orid;
-        //        output = true;
-        //    }
-        //    catch (System.Exception ex)
-        //    {
-        //        Db.RollBackTransaction();
-        //        ErrorLogging.LogErrorToLogFile(ex, "");
-        //        throw ex;
-        //    }
-
-        //    return output;
         private string Comment()
         {
             string _code = _NewLine + "//Trasaction User" + _NewLine;

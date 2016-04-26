@@ -16,6 +16,12 @@ namespace StkGenCode.Code
 
             SqlDataAdapter adapter = new SqlDataAdapter(sql, _FbConnection);
             adapter.Fill(ds);
+
+            //For Get Lenght
+            var dataTables = adapter.FillSchema(ds, SchemaType.Source);
+            ds.Tables.Clear();
+            ds.Tables.Add(dataTables[0]);
+
             return ds;
         }
     }

@@ -14,12 +14,12 @@ namespace StkGenCode.Code.Template
         private string GenUsign()
         {
             string _code = "";
-            _code = "using System;" + _NewLine;
+            _code += "using System;" + _NewLine;
             _code += "using System.Collections.Generic;" + _NewLine;
             _code += "using System.Data;" + _NewLine;
             _code += "using System.Linq;" + _NewLine;
             _code += "using System.Web;" + _NewLine;
-            // _FileCode.writeFile(_ds.Tables[0].TableName, _code, _fileType);
+       
 
             return _code;
         }
@@ -27,9 +27,9 @@ namespace StkGenCode.Code.Template
         private string GenBeginNameSpaceAndClass()
         {
             string _code = "";
-            _code = "namespace XXXXX.Code.Bu" + _NewLine;
-            _code += "{" + _NewLine;
-            _code += " public class  " + _TableName + _NewLine;
+            //_code = "namespace XXXXX.Code.Bu" + _NewLine;
+            //_code += "{" + _NewLine;
+            _code += "public class  " + _TableName + _NewLine + " : BaseProperties";
             _code += "{" + _NewLine;
 
             return _code;
@@ -39,7 +39,7 @@ namespace StkGenCode.Code.Template
         {
             string _code = "" + _NewLine;
             _code = "}" + _NewLine;
-            _code += " }";
+            //_code += " }"; //End Name Space
 
             return _code;
         }
@@ -54,13 +54,13 @@ namespace StkGenCode.Code.Template
             }
 
             return _code;
-            // _FileCode.writeFile(_ds.Tables[0].TableName, _code, _fileType);
+ 
         }
 
         public void Gen()
         {
             string _code = "";
-            _code = GenUsign();
+            _code += GenUsign();
             _code += GenBeginNameSpaceAndClass();
             _code += GenProperties();
             _code += GenEndNameSpaceAndClass();

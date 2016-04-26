@@ -14,7 +14,24 @@ namespace StkGenCode.Code.Template
 
         private string _NotImplement = "throw new Exception(\"Not implement\");";
 
-        private string FileName;
+ 
+
+
+
+        private string GenPageLoad()
+        {
+            string code = "  ";
+            code += "  protected void Page_Load(object sender, EventArgs e)" + _NewLine;
+            code += " { " + _NewLine;
+            code += " if (!Page.IsPostBack) " + _NewLine;
+            code += " {  " + _NewLine;
+            code += " BindForm(); " + _NewLine;
+            code += " } " + _NewLine;
+            code += "}  " + _NewLine;
+
+            return code;
+        }
+
 
         private string GenBtnSave()
         {
@@ -23,22 +40,15 @@ namespace StkGenCode.Code.Template
             code += " { " + _NewLine;
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
-            code += MapControlToProPErties(_ds);
-            //foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
-            //{
-            //    if (_DataColumn.DataType.ToString() == "System.Int32")
-            //    {
-            //        code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt32(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-            //    }
-            //    else
-            //    {
-            //        code += "_" + _TableName + "." + _DataColumn.ColumnName + " = txt" + _DataColumn.ColumnName + ".Text;" + _NewLine;
-            //    }
-            //    // _AmpBangkok.AmpBangkokIndex = Convert.ToInt32(txtAmpBangkokIndex.Text);
-            //    //  _AmpBangkok.AmpText = txtAmpText.Text;
-            //}
+
+            code += MapControlToProPerties(_ds, true);
+
             code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
-            code += "    _" + _TableName + "Db.Insert(); " + _NewLine;
+            //code += "  _" + _TableName + "Db.Insert(); " + _NewLine;
+
+            //  txtid.Text = _modulesDb.Insert().ToString();
+            code += "txt" + _ds.Tables[0].PrimaryKey[0] + ".Text= _" + _TableName + "Db.Insert().ToString();; " + _NewLine;
+
             code += "  MsgBox.Alert(\"Saved!!!\"); " + _NewLine;
 
             code += "  btnSave.Visible = false; " + _NewLine;
@@ -54,27 +64,15 @@ namespace StkGenCode.Code.Template
             code += " { " + _NewLine;
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
-            code += MapControlToProPErties(_ds);
-            //foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
-            //{
-            //    if (_DataColumn.DataType.ToString() == "System.Int32")
-            //    {
-            //        code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt32(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-            //    }
-            //    else
-            //    {
-            //        code += "_" + _TableName + "." + _DataColumn.ColumnName + " = txt" + _DataColumn.ColumnName + ".Text;" + _NewLine;
-            //    }
-            //    // _AmpBangkok.AmpBangkokIndex = Convert.ToInt32(txtAmpBangkokIndex.Text);
-            //    //  _AmpBangkok.AmpText = txtAmpText.Text;
-            //}
+            code += MapControlToProPerties(_ds, false);
+
             code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
-            code += "    _" + _TableName + "Db.Update(); " + _NewLine;
-            code += "   MsgBox.Alert(\"Updated!!!\"); " + _NewLine;
+            code += "  _" + _TableName + "Db.Update(); " + _NewLine;
+            code += "MsgBox.Alert(\"Updated!!!\"); " + _NewLine;
 
-            code += "  btnUpdate.Visible = false; " + _NewLine;
+            code += "btnUpdate.Visible = false; " + _NewLine;
 
-            code += " } " + _NewLine;
+            code += "} " + _NewLine;
             return code;
         }
 
@@ -84,54 +82,53 @@ namespace StkGenCode.Code.Template
             code += "protected void btnDelete_Click(object sender, EventArgs e)" + _NewLine;
             code += " { " + _NewLine;
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
-            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            code += " " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
 
-            //foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
-            //{
-            //    //System.Console.Write(_DataColumn.DataType.ToString()+ _NewLine);
-            //    //if (_DataColumn.DataType.ToString() == "System.Int32")
-            //    //{
-            //    //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt32(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-            //    //}
-            //    //else if (_DataColumn.DataType.ToString() == "System.Decimal")
-            //    //{
-            //    //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =  Convert.ToDecimal (txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-            //    //}
-            //    //else if (_DataColumn.DataType.ToString() == "System.DateTime")
-            //    //{
-            //    //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToDateTime(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-            //    //}
-            //    //else if (_DataColumn.DataType.ToString() == "System.Boolean")
-            //    //{
-            //    //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToBoolean(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-            //    //}
-            //    //else
-            //    //{
-            //    //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = txt" + _DataColumn.ColumnName + ".Text;" + _NewLine;
-            //    //}
-
-            //}
-            code += MapControlToProPErties(_ds);
+            code += MapControlToProPerties(_ds, false);
 
             code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
-            code += "    _" + _TableName + "Db.Delete(); " + _NewLine;
-            code += "   MsgBox.Alert(\"Deleted!!!\"); " + _NewLine;
+            code += "  _" + _TableName + "Db.Delete(); " + _NewLine;
+            code += " MsgBox.Alert(\"Deleted!!!\"); " + _NewLine;
 
-            code += "  btnDelete.Visible = false; " + _NewLine;
+            code += " btnDelete.Visible = false; " + _NewLine;
 
             code += " } " + _NewLine;
             return code;
         }
 
-        private String MapControlToProPErties(DataSet _ds)
+        private String MapControlToProPerties(DataSet _ds, bool CommentKey = false)
         {
             string code = "";
+
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                System.Console.Write(_DataColumn.DataType.ToString() + _NewLine);
-                if (_DataColumn.DataType.ToString() == "System.Int32")
+                if (CommentKey)
+                {
+                    bool primary = false;
+
+                    //ต้อง เป็น Auto ถึงจะ Comment
+                    if ((_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+                    {
+                        primary = true;
+                    }
+
+                    if (primary)
+                    {
+                        // continue;
+                        code += "// ";
+                    }
+                }
+
+                if ((_DataColumn.DataType.ToString() == "System.Guid"))
+                { continue; }
+
+                if ((_DataColumn.DataType.ToString() == "System.Int32"))
                 {
                     code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt32(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
+                }
+                else if (_DataColumn.DataType.ToString() == "System.Int16")
+                {
+                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt16(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
                 }
                 else if (_DataColumn.DataType.ToString() == "System.Decimal")
                 {
@@ -143,7 +140,7 @@ namespace StkGenCode.Code.Template
                 }
                 else if (_DataColumn.DataType.ToString() == "System.Boolean")
                 {
-                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToBoolean(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
+                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToBoolean(txt" + _DataColumn.ColumnName + ".Checked);" + _NewLine;
                 }
                 else
                 {
@@ -162,37 +159,20 @@ namespace StkGenCode.Code.Template
             code += " if (Request.QueryString[\"Q\"] == null)" + _NewLine;
             code += " { return; }" + _NewLine;
             code += "  String Q = Stk_QueryString.DecryptQuery(\"Q\");" + _NewLine;
-            code += "    " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db();" + _NewLine;
-            code += "   " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
-            code += "  _" + _TableName + " = _" + _TableName + "Db.Select(Q); " + _NewLine;
+            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db();" + _NewLine;
+            code += "  " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
+            code += " _" + _TableName + " = _" + _TableName + "Db.Select(Q); " + _NewLine;
             code += "  " + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                code += "  txt" + _DataColumn.ColumnName + ".Text = Stk_TextNull.StringTotext(_" + _TableName + "." + _DataColumn.ColumnName + ".ToString()); " + _NewLine;
-            }
-            code += "   } " + _NewLine;
-            code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            return code;
-        }
+                if ((_DataColumn.DataType.ToString() == "System.Guid"))
+                { continue; }
 
-        //protected void Page_Load(object sender, EventArgs e)
-        //{
-        //    if (!Page.IsPostBack)
-        //    {
-        //        BindForm();
-        //    }
-        //}
-        private string GenPageLoad()
-        {
-            string code = "  ";
-            code += "  protected void Page_Load(object sender, EventArgs e)" + _NewLine;
-            code += " { " + _NewLine;
-            code += "  if (!Page.IsPostBack) " + _NewLine;
-            code += " {  " + _NewLine;
-            code += "    BindForm(); " + _NewLine;
-            code += "  } " + _NewLine;
-            code += "}  " + _NewLine;
+                code += "txt" + _DataColumn.ColumnName + ".Text = Stk_TextNull.StringTotext(_" + _TableName + "." + _DataColumn.ColumnName + ".ToString()); " + _NewLine;
+            }
+            code += " } " + _NewLine;
+            code += "  " + _NewLine;
+            code += "  " + _NewLine;
             return code;
         }
 
@@ -225,6 +205,8 @@ namespace StkGenCode.Code.Template
             string code = "  ";
             code += "public partial class " + _TableName + "Web: System.Web.UI.Page" + _NewLine;
             code += "{" + _NewLine;
+
+         
             return code;
         }
 
