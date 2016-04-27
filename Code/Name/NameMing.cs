@@ -2,7 +2,7 @@
 
 namespace StkGenCode.Code
 {
-    public class NameMing
+    public class FileName
     {
         public DataSet _ds;
         public string _TableName;
@@ -65,5 +65,15 @@ namespace StkGenCode.Code
             name = string.Format("Sp_{0}PageWise.sql", _TableName);
             return name;
         }
+
+
+        //Js File
+        public string JsCodeName()
+        {
+            string name = "";
+            name = string.Format("{0}.js", _TableName);
+            return name;
+        }
+
     }
 }

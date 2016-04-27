@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\Column\ColumnString.cs" />
     <Compile Include="Code\Db.cs" />
     <Compile Include="Code\File.cs" />
     <Compile Include="Code\Name\NameMing.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Code\Template\AspxTableCodeBehine.cs" />
     <Compile Include="Code\Template\CodeBase.cs" />
     <Compile Include="Code\Template\DbCode.cs" />
+    <Compile Include="Code\Template\JsCode.cs" />
     <Compile Include="Code\Template\PropertiesCode.cs" />
     <Compile Include="Code\Template\StoreProCode.cs" />
     <Compile Include="Code\Type\DbType.cs" />

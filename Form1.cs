@@ -18,6 +18,9 @@ namespace StkGenCode
         //List All Table to display
         private void button1_Click(object sender, EventArgs e)
         {
+       
+
+
             string sql;
             sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
             SqlConnection _FbConnection = new SqlConnection();
@@ -47,11 +50,12 @@ namespace StkGenCode
             //string _TableName = "mktsum_log";
             string _TableName = "";
 
-            foreach (var item in checkedListBox1.CheckedItems)
-            {
-                _TableName = item.ToString();
-                Gen(_TableName);
-            }
+            //foreach (var item in checkedListBox1.CheckedItems)
+            //{
+            //    _TableName = item.ToString();
+            //    Gen(_TableName);
+            //}
+            Gen("fxrates_family");
 
             //MessageBox.Show("Ok");
 
@@ -99,6 +103,17 @@ namespace StkGenCode
             _StoreProCode._TableName = _TableName;
             _StoreProCode.Gen();
 
+            //Gen Js
+          
+            string pathJs_U = _path + @"Js_U\";
+            F.path = pathJs_U;
+            JsCode _JsCode = new JsCode();
+            _JsCode._FileCode = F;
+            _JsCode._ds = _ds;
+            _JsCode._TableName = _TableName;
+            _JsCode.Gen();
+
+             
             //========Foder Cdoe
 
             string pathBuCode = _path + @"App_Code\Code\Business\";
@@ -137,7 +152,10 @@ namespace StkGenCode
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            button1_Click(sender, e);
+            //Gen("fxrates_family");
+            //this.Close();
+            //button1_Click(sender, e);
+            button2_Click (sender, e);
         }
     }
 }

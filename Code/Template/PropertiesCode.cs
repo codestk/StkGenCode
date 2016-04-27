@@ -65,7 +65,7 @@ namespace StkGenCode.Code.Template
             _code += GenProperties();
             _code += GenEndNameSpaceAndClass();
 
-            NameMing name = new NameMing();
+            FileName name = new FileName();
             name._TableName = _TableName;
             name._ds = _ds;
             _FileCode.writeFile(name.PropertiesCodeName(), _code);

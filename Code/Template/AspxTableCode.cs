@@ -1,21 +1,13 @@
-﻿using System.Data;
+﻿using StkGenCode.Code.Column;
+using System.Data;
 
 namespace StkGenCode.Code.Template
 {
-    public class AspxTableCode:CodeBase
+    public class AspxTableCode : CodeBase
     {
-        //public FileCode _FileCode;
-        //public DataSet _ds;
-        //public string _TableName;
-
-        //private string _fileType = ".aspx";
-        //private string _NewLine = " \r\n";
-
-        //private string _NotImplement = "throw new Exception(\"Not implement\");";
-
         private string GenHeadeFile()
         {
-            string code = "<%@ Page Title=\"" + _TableName + "\" Language=\"C#\" MasterPageFile=\"~/MasterPage.master\" AutoEventWireup=\"true\" CodeFile=\"" + _TableName + "List.aspx.cs\" Inherits=\"" + _TableName + "List\" %>" + _NewLine;
+            string code = "<%@ Page Title=\"" + _TableName + "\" Language=\"C#\" MasterPageFile=\"~/MasterPage.master\" AutoEventWireup=\"true\" CodeFile=\"" + _FileName.AspxTableCodeBehineName() + "\" Inherits=\"" + _TableName + "List\" %>" + _NewLine;
 
             return code;
         }
@@ -46,30 +38,6 @@ namespace StkGenCode.Code.Template
             string code = "</asp:Content>" + _NewLine;
             return code;
         }
-
-        //    <table class=\"striped\">
-        //        <thead>
-        //            <tr>
-        //                <th>Currency</th>
-        //                <th>Description</th>
-        //                <th>Bank Note</th>
-        //                <th>Buying Rates	</th>
-        //            </tr>
-        //        </thead>
-        //        <tbody>
-        //            <asp:Repeater ID = \"rptCustomers\" runat= \"server\" >
-        //                < ItemTemplate >
-
-        //                    < tr >
-        //                        < td ><%# Eval(\"ENGAmpText\") %></td>
-        //                        < td ><%# Eval(\"AmpText\") %></td>
-        //                        < td ><%# Eval(\"RecordCount\") %></td>
-        //                        < td ><%# Eval(\"RecordCount\") %></td>
-        //                    </ tr >
-        //                </ ItemTemplate >
-        //            </ asp:Repeater>
-        //        </tbody>
-        //    </table>
 
         private string GenTableRepeater()
         {
@@ -106,7 +74,7 @@ namespace StkGenCode.Code.Template
                 }
                 else
                 {
-                    code += " <td class=\"tdEnglishAddress3\"> " + _NewLine;
+                    code += " <td class=\"td"+ _DataColumn.ColumnName + "\"> " + _NewLine;
                     code += "       <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
                     code += "                                    <div style=\"display: none\"> " + _NewLine;
                     code += "                                        <input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate " + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\"> " + _NewLine;
@@ -128,16 +96,6 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        //    <ul class=\"pagination\">
-
-        //        <asp:Repeater ID = \"rptPager\" runat=\"server\">
-        //            <ItemTemplate>
-        //                <li class=\"<%# LiPaggerClass(Eval(\"Enabled\"), Eval(\"Text\")) %>\">
-        //                    <asp:LinkButton ID = \"lnkPage\" runat=\"server\" Text='<%#Eval(\"Text\") %>' CommandArgument='<%# Eval(\"Value\") %>'
-        //                        OnClick=\"Page_Changed\" OnClientClick='<%# !Convert.ToBoolean(Eval(\"Enabled\")) ? \"javascript:return false;\" : \"\" %>'></asp:LinkButton></li>
-        //            </ItemTemplate>
-        //        </asp:Repeater>
-        //    </ul>
         private string GenPagger()
         {
             //string code = "  ";
@@ -182,9 +140,11 @@ namespace StkGenCode.Code.Template
         private string GenReferJavaScript()
         {
             string code = "";
-            code += "<script src=\"Bu/LocationManageCallServices.js\"></script>" + _NewLine;
-            code += "<script src=\"Bu/AutoCompleteService.js\"></script>" + _NewLine;
+            // code += "<script src=\"Bu/LocationManageCallServices.js\"></script>" + _NewLine;
+            //code += "<script src=\"Bu/AutoCompleteService.js\"></script>" + _NewLine;
             code += "<script src=\"Module/Pagger/jquery.simplePagination.js\"></script>" + _NewLine;
+
+            code += "<script src=\"Js_U/" + _FileName.JsCodeName() + "\"></script>" + _NewLine;
             return code;
         }
 
@@ -192,71 +152,10 @@ namespace StkGenCode.Code.Template
 
         {
             string code = "";
-            return code = " <link href=\"Module/Search/SearchControl.css\" rel=\"stylesheet\" />";
+            return code = " <link href=\"Module/Search/SearchControl.css\" rel=\"stylesheet\" />" + _NewLine;
             return code;
         }
-
-        private string GenJavaScript()
-        {
-            string code = "";
-            code += "  $(document).ready(function () {" + _NewLine;
-
-            //===Pager---------------------------------------------------------------------------
-            code += "$('#ulpage').pagination({" + _NewLine;
-            code += "items: '<%=  ViewState[\"recordCount\"].ToString()%>'," + _NewLine;
-            code += "itemsOnPage: '<%= PageSize%>'," + _NewLine;
-
-            code += " prevText: '<img class=\"iconDirection\" src=\"Images/1457020750_arrow-left-01.svg\" />', " + _NewLine;
-            code += " nextText: '<img class=\"iconDirection\" src=\"Images/1457020740_arrow-right-01.svg\" />'," + _NewLine;
-
-            code += "  currentPage: '<%=  ViewState[\"CurrentPage\"].ToString()%>'," + _NewLine;
-            //cssStyle: 'light-theme',
-            code += " onPageClick: function(event, page) {" + _NewLine;
-            code += "   var pagenum = '';" + _NewLine;
-            code += "  if (event < 10) {" + _NewLine;
-            code += "   pagenum = '0' + event;" + _NewLine;
-            code += " }" + _NewLine;
-            code += "            else {" + _NewLine;
-            code += "               pagenum = event;" + _NewLine;
-            code += " }" + _NewLine;
-            code += " var code = 'ctl00$ContentPlaceHolder1$rptlocation2Pager$ctl' + pagenum + '$lnkPage';" + _NewLine;
-
-            code += "         __doPostBack(code, '');" + _NewLine;
-            code += "}" + _NewLine;
-
-            code += "});" + _NewLine;
-            //=================================================================================================
-
-            code += "   });//End Document Ready" + _NewLine;
-            return code;
-        }
-
-        string GenCallSaveJquery()
-        {
-
-            string code = "";
-
-            code += " " + _NewLine;
-            code += "var "+_TableName+"JService = {}; " + _NewLine;
-            code += "(function () { " + _NewLine;
-            code += "    var url = \"/WebTemplate/LocationManage.aspx/\"; " + _NewLine;
-            code += " " + _NewLine;
-            code += "    this.SaveColumn =  function (id, column, value) { " + _NewLine;
-            code += "            var result; " + _NewLine;
-            code += "            ////data \"{ssss:1,ddddd:1}\" " + _NewLine;
-            code += "            var tag = '{id:\"' + id + '\",column:\"' + column + '\",value:\"' + value + '\"}'; " + _NewLine;
-            code += "            var F = CallServices(url + \"SaveColumn\", tag, false, function (msg) { " + _NewLine;
-            code += "                result = msg.d; " + _NewLine;
-            code += "            }); " + _NewLine;
-            code += "            return result; " + _NewLine;
-            code += "        };//SaveColumn " + _NewLine;
-            code += "   " + _NewLine;
-            code += "}).apply(LocationManageService); " + _NewLine;
-
-            return code;
-        }
-
-
+ 
 
         private string GenSearch()
         {
@@ -310,15 +209,9 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        //string GenBeginResult()
-        //{
-        //    string code = "";
-        //    return code;
-        //}
-
         private string GenDocumentReady()
         {
-            string code = " <script>";
+            string code = " <script> " + _NewLine;
             code += "     var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.'; " + _NewLine;
             code += " " + _NewLine;
             code += "        $(document).ready(function () { " + _NewLine;
@@ -356,7 +249,7 @@ namespace StkGenCode.Code.Template
             code += "                    else { " + _NewLine;
             code += "                        pagenum = event; " + _NewLine;
             code += "                    } " + _NewLine;
-            code += "                    var code = 'ctl00$ContentPlaceHolder1$rptlocation2Pager$ctl' + pagenum + '$lnkPage'; " + _NewLine;
+            code += "                    var code = 'ctl00$ContentPlaceHolder1$rpt"+_TableName+"Pagger$ctl' + pagenum + '$lnkPage'; " + _NewLine;
             code += " " + _NewLine;
             code += "                    __doPostBack(code, ''); " + _NewLine;
             code += "                } " + _NewLine;
@@ -375,7 +268,16 @@ namespace StkGenCode.Code.Template
             code += "            }); " + _NewLine;
             code += " " + _NewLine;
             code += "            //Edit table-------------------------------------------------------------------------------------------- " + _NewLine;
-            code += "            $('.tdThaiName,.tdThaiAddress1,.tdThaiAddress2,.tdThaiAddress3,.tdThaiProvince,.tdPostcode,.tdEnglishName,.tdEnglishAddress1,.tdEnglishAddress2,.tdEnglishAddress3,.tdEnglishProvince').dblclick(function () { " + _NewLine;
+
+            string ClassTextBox = "";
+            //ClassSet = ColumnString.GenLineString(_ds, _TableName, ".td{0},");
+            //ClassSet = ClassSet.TrimEnd(',');
+
+            ClassTextBox = GenClassTextBoxList();
+            code += "            $('" + ClassTextBox + "').dblclick(function () { " + _NewLine;
+
+            //code += "            $('.tdThaiName,.tdThaiAddress1,.tdThaiAddress2,.tdThaiAddress3,.tdThaiProvince,.tdPostcode,.tdEnglishName,.tdEnglishAddress1,.tdEnglishAddress2,.tdEnglishAddress3,.tdEnglishProvince').dblclick(function () { " + _NewLine;
+
             code += "                var ClassEvent = trim(this.className, ' '); " + _NewLine;
             code += " " + _NewLine;
             code += "                if ((ClassEvent == 'tdThaiName') || (ClassEvent == 'tdThaiAddress1') || (ClassEvent == 'tdEnglishName') || (ClassEvent == 'tdEnglishAddress1')) { " + _NewLine;
@@ -411,7 +313,7 @@ namespace StkGenCode.Code.Template
             code += "                var data = inputBox.value; " + _NewLine;
             code += " " + _NewLine;
             code += "                //Save Data To CodeBehide " + _NewLine;
-            code += "                var result = LocationManageService.SaveColumn(id, column, data); " + _NewLine;
+            code += "                var result = " + _TableName + "Service.SaveColumn(id, column, data); " + _NewLine;
             code += " " + _NewLine;
             code += "                if (result == true) { " + _NewLine;
             code += "                    tdContent.find(\"span\").show(); " + _NewLine;
@@ -430,7 +332,12 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "            }); " + _NewLine;
             code += " " + _NewLine;
-            code += "            $('.chekBoxAtm,.chekBoxBranch,.chekBoxSubBranch,.chekBoxMicroBranch,.chekBoxInternationalBranch,.chekBoxBusinessCenter,.chekBoxFXBooth,.chekBoxBualuangExclusive,.chekBoxFCDService,.chekBoxRemittanceService ,.chekBoxWesternUnionService').dblclick(function () { " + _NewLine;
+
+
+            string ClassCheck = GenClassCheckBoxList();
+            //code += "            $('.chekBoxAtm,.chekBoxBranch,.chekBoxSubBranch,.chekBoxMicroBranch,.chekBoxInternationalBranch,.chekBoxBusinessCenter,.chekBoxFXBooth,.chekBoxBualuangExclusive,.chekBoxFCDService,.chekBoxRemittanceService ,.chekBoxWesternUnionService').dblclick(function () { " + _NewLine;
+            code += "            $('" + ClassCheck + "').dblclick(function () { " + _NewLine;
+
             code += "                // <p><input name = '' type = 'radio' id = 'test1'  checked= 'true' /><label for= 'test1'></label></p> " + _NewLine;
             code += "                var chk = $(this).find('input:radio')[0]; " + _NewLine;
             code += " " + _NewLine;
@@ -443,14 +350,14 @@ namespace StkGenCode.Code.Template
             code += "                var status = false; " + _NewLine;
             code += "                if (chk.checked) { " + _NewLine;
             code += "                    status = false; " + _NewLine;
-            code += "                    Data = \"\"; " + _NewLine;
+            code += "                    Data = \"0\"; " + _NewLine;
             code += "                } " + _NewLine;
             code += "                else { " + _NewLine;
             code += "                    status = true; " + _NewLine;
-            code += "                    Data = \"x\"; " + _NewLine;
+            code += "                    Data = \"1\"; " + _NewLine;
             code += "                } " + _NewLine;
             code += " " + _NewLine;
-            code += "                var result = LocationManageService.SaveColumn(id, column, Data); " + _NewLine;
+            code += "                var result = " + _TableName + "Service.SaveColumn(id, column, Data); " + _NewLine;
             code += " " + _NewLine;
             code += "                if (result == true) { " + _NewLine;
             code += "                    //Display Message Display Checkbox " + _NewLine;
@@ -479,7 +386,9 @@ namespace StkGenCode.Code.Template
             code += "            } " + _NewLine;
             code += " " + _NewLine;
             code += "            //For Autocomplete  ----------------------------------------------------------------------------------- " + _NewLine;
-            code += "            $(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
+            // code += "            $(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
+            code += "              $('" + ClassTextBox + "').autocomplete({ " + _NewLine;
+
             code += " " + _NewLine;
             code += "                source: function (request, response) { " + _NewLine;
             code += " " + _NewLine;
@@ -546,12 +455,87 @@ namespace StkGenCode.Code.Template
             code += "            $(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
             code += "        } " + _NewLine;
 
-
-            code += GenCallSaveJquery();
-
             code += " </script>";
             return code;
         }
+
+        private string GenClassCheckBoxList()
+        {
+            string code = "";
+                     foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            {
+                //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
+                //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
+                if (_DataColumn.DataType.ToString() == "System.Boolean")
+                {
+                    code += string.Format(".chekBox{0},", _DataColumn.ColumnName);
+                    //code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
+                    //code += "                                    <p> " + _NewLine;
+                    //code += "                                        <input name='' type='radio' data-column-id=\"" + _DataColumn.ColumnName + "\" data-column-key=\"<%# Eval(\"" + _ds.Tables[0].PrimaryKey[0].ToString() + "\") %>\" <%# TagCheck(Eval(\"" + _DataColumn.ColumnName + "\")) %> /><label> </label> " + _NewLine;
+                    //code += "                                    </p> " + _NewLine;
+                    //code += "                                </td> " + _NewLine;
+                }
+                //else
+                //{
+                //    code += " <td class=\"td"+ _DataColumn.ColumnName + "\"> " + _NewLine;
+                //    code += "       <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
+                //    code += "                                    <div style=\"display: none\"> " + _NewLine;
+                //    code += "                                        <input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate " + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\"> " + _NewLine;
+                //    code += "                                        <label class=\"lblSave\">Save</label> " + _NewLine;
+                //    code += "                                        <label class=\"lblCancel\">" + _NewLine;
+                //    code += "                                            Cancel</label> " + _NewLine;
+                //    code += "                                    </div> " + _NewLine;
+                //    code += "  </td>" + _NewLine;
+                //}
+
+                // < input name = '' data - column - id = "BualuangExclusive" data - column - key = "<%# Eval("ID1") %>" type = 'radio' <%# ServiceSet(Eval("BualuangExclusive")) %> /><label for='test1'></label>
+            }
+
+            code = code.TrimEnd(',');
+        return code;
+    }
+
+        private string GenClassTextBoxList()
+        {
+            string code = "";
+            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            {
+
+
+                if ((_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString()))               {
+                    continue;
+                }
+                //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
+                //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
+                if (_DataColumn.DataType.ToString() != "System.Boolean")
+                {
+                    code += string.Format(".td{0},", _DataColumn.ColumnName);
+                    //code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
+                    //code += "                                    <p> " + _NewLine;
+                    //code += "                                        <input name='' type='radio' data-column-id=\"" + _DataColumn.ColumnName + "\" data-column-key=\"<%# Eval(\"" + _ds.Tables[0].PrimaryKey[0].ToString() + "\") %>\" <%# TagCheck(Eval(\"" + _DataColumn.ColumnName + "\")) %> /><label> </label> " + _NewLine;
+                    //code += "                                    </p> " + _NewLine;
+                    //code += "                                </td> " + _NewLine;
+                }
+                //else
+                //{
+                //    code += " <td class=\"td"+ _DataColumn.ColumnName + "\"> " + _NewLine;
+                //    code += "       <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
+                //    code += "                                    <div style=\"display: none\"> " + _NewLine;
+                //    code += "                                        <input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate " + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\"> " + _NewLine;
+                //    code += "                                        <label class=\"lblSave\">Save</label> " + _NewLine;
+                //    code += "                                        <label class=\"lblCancel\">" + _NewLine;
+                //    code += "                                            Cancel</label> " + _NewLine;
+                //    code += "                                    </div> " + _NewLine;
+                //    code += "  </td>" + _NewLine;
+                //}
+
+                // < input name = '' data - column - id = "BualuangExclusive" data - column - key = "<%# Eval("ID1") %>" type = 'radio' <%# ServiceSet(Eval("BualuangExclusive")) %> /><label for='test1'></label>
+            }
+
+            code = code.TrimEnd(',');
+            return code;
+        }
+
 
         private string GenModalProgress()
         {
@@ -573,6 +557,7 @@ namespace StkGenCode.Code.Template
 
         public override void Gen()
         {
+            innitProperties();
             string _code = "";
             _code += GenHeadeFile();
             _code += GenContentHeadBegin();
@@ -599,51 +584,9 @@ namespace StkGenCode.Code.Template
 
             _code += GenModalProgress();
             _code += GenContentBodyEnd();
-            NameMing name = new NameMing();
-            name._TableName = _TableName;
-            name._ds = _ds;
-            _FileCode.writeFile(name.AspxTableCodeName(), _code);
+
+            _FileCode.writeFile(_FileName.AspxTableCodeName(), _code);
             //_FileCode.writeFile(FileName, _code, _fileType);
         }
-
-        //        <asp:Content ID = "Content1" ContentPlaceHolderID="head" runat="server">
-        //</asp:Content>
-        //<asp:Content ID = "Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-        //    <table class="striped">
-        //        <thead>
-        //            <tr>
-        //                <th>Currency</th>
-        //                <th>Description</th>
-        //                <th>Bank Note</th>
-        //                <th>Buying Rates	</th>
-        //            </tr>
-        //        </thead>
-        //        <tbody>
-        //            <asp:Repeater ID = "rptCustomers" runat= "server" >
-        //                < ItemTemplate >
-
-        //                    < tr >
-        //                        < td ><%# Eval("ENGAmpText") %></td>
-        //                        < td ><%# Eval("AmpText") %></td>
-        //                        < td ><%# Eval("RecordCount") %></td>
-        //                        < td ><%# Eval("RecordCount") %></td>
-        //                    </ tr >
-        //                </ ItemTemplate >
-        //            </ asp:Repeater>
-        //        </tbody>
-        //    </table>
-
-        //    <ul class="pagination">
-
-        //        <asp:Repeater ID = "rptPager" runat="server">
-        //            <ItemTemplate>
-        //                <li class="<%# LiPaggerClass(Eval("Enabled"), Eval("Text")) %>">
-        //                    <asp:LinkButton ID = "lnkPage" runat="server" Text='<%#Eval("Text") %>' CommandArgument='<%# Eval("Value") %>'
-        //                        OnClick="Page_Changed" OnClientClick='<%# !Convert.ToBoolean(Eval("Enabled")) ? "javascript:return false;" : "" %>'></asp:LinkButton></li>
-        //            </ItemTemplate>
-        //        </asp:Repeater>
-        //    </ul>
-        //</asp:Content>
     }
 }

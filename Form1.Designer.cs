@@ -67,7 +67,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(578, 113);
+            this.button2.Location = new System.Drawing.Point(578, 43);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 4;
@@ -100,7 +100,7 @@
             this.checkedListBox1.Location = new System.Drawing.Point(61, 110);
             this.checkedListBox1.MultiColumn = true;
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(494, 394);
+            this.checkedListBox1.Size = new System.Drawing.Size(1015, 394);
             this.checkedListBox1.Sorted = true;
             this.checkedListBox1.TabIndex = 7;
             // 
@@ -124,7 +124,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(693, 488);
+            this.ClientSize = new System.Drawing.Size(1088, 488);
             this.Controls.Add(this.txtNameSpace);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkedListBox1);

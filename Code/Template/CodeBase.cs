@@ -12,7 +12,7 @@ namespace StkGenCode.Code.Template
         public FileCode _FileCode;
         public DataSet _ds;
         public string _TableName;
-
+        protected FileName _FileName;
 
         public string _NewLine = " \r\n";
 
@@ -20,5 +20,12 @@ namespace StkGenCode.Code.Template
 
         public abstract void Gen();
 
+        protected void  innitProperties()
+        {
+            _FileName = new FileName();
+            _FileName._TableName = _TableName;
+            _FileName._ds = _ds;
+
+        }
     }
 }

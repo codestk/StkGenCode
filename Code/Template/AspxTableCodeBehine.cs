@@ -160,8 +160,11 @@ namespace StkGenCode.Code.Template
             code += " { " + _NewLine;
             code += " int pageIndex = int.Parse((sender as LinkButton).CommandArgument);" + _NewLine;
             code += " this.GetPageWise(pageIndex); " + _NewLine;
+
+            code += " ViewState[\"CurrentPage\"] = pageIndex;";
             code += " }" + _NewLine;
             code += "  " + _NewLine;
+ 
 
             return code;
         }
@@ -348,7 +351,7 @@ namespace StkGenCode.Code.Template
             _code += EndClass();
 
 
-            NameMing name = new NameMing();
+            FileName name = new FileName();
             name._TableName = _TableName;
             name._ds = _ds;
             _FileCode.writeFile(name.AspxTableCodeBehineName(), _code);

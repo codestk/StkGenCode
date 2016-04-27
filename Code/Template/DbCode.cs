@@ -437,7 +437,7 @@ namespace StkGenCode.Code.Template
             code += "            var prset = new List<IDataParameter>(); " + _NewLine;
             code += "            prset.Add(Db.CreateParameterDb(\"@" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\", id)); " + _NewLine;
             code += "            prset.Add(Db.CreateParameterDb(\"@Data\", value)); " + _NewLine;
-            code += "             var sql = @\"UPDATE   " + _TableName + " SET  \"+column+ \"=@Data where " + _ds.Tables[0].PrimaryKey[0].ColumnName + " = @" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\"; " + _NewLine;
+            code += "             var sql = @\"UPDATE   " + _TableName + " SET  [\"+column+ \"]=@Data where " + _ds.Tables[0].PrimaryKey[0].ColumnName + " = @" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\"; " + _NewLine;
             code += " " + _NewLine;
             code += "            int output = Db.FbExecuteNonQuery(sql, prset); " + _NewLine;
             code += "            if (output == 1) " + _NewLine;
@@ -475,7 +475,7 @@ namespace StkGenCode.Code.Template
             _code += GenEndNameSpaceAndClass();
             _code += Comment();
 
-            NameMing name = new NameMing();
+            FileName name = new FileName();
             name._TableName = _TableName;
             name._ds = _ds;
             _FileCode.writeFile(name.DbCodeName(), _code);
