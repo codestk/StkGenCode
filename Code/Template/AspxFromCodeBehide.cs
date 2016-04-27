@@ -3,16 +3,16 @@ using System.Data;
 
 namespace StkGenCode.Code.Template
 {
-    public class AspxFromCodeBehide
+    public class AspxFromCodeBehide:CodeBase
     {
-        public FileCode _FileCode;
-        public DataSet _ds;
-        public string _TableName;
+        //public FileCode _FileCode;
+        //public DataSet _ds;
+        //public string _TableName;
 
-        private string _fileType = ".aspx.cs";
-        private string _NewLine = " \r\n";
+      
+        //private string _NewLine = " \r\n";
 
-        private string _NotImplement = "throw new Exception(\"Not implement\");";
+        //private string _NotImplement = "throw new Exception(\"Not implement\");";
 
  
 
@@ -215,7 +215,7 @@ namespace StkGenCode.Code.Template
             return "}";
         }
 
-        public void Gen()
+        public override void Gen()
         {
             string _code = "";
             _code += GenUsing();
@@ -230,7 +230,11 @@ namespace StkGenCode.Code.Template
             _code += EndClass();
             //_FileCode.writeFile(FileName, _code, _fileType);
             string FileName = _TableName + "Web";
-            _FileCode.writeFile(FileName, _code, _fileType);
+            NameMing name = new NameMing();
+            name._TableName = _TableName;
+            name._ds = _ds;
+            _FileCode.writeFile(name.AspxFromCodeBehideName(), _code);
+            //  _FileCode.writeFile(FileName, _code, _fileType);
         }
     }
 }

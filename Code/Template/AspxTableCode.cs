@@ -2,16 +2,16 @@
 
 namespace StkGenCode.Code.Template
 {
-    public class AspxTableCode
+    public class AspxTableCode:CodeBase
     {
-        public FileCode _FileCode;
-        public DataSet _ds;
-        public string _TableName;
+        //public FileCode _FileCode;
+        //public DataSet _ds;
+        //public string _TableName;
 
-        private string _fileType = ".aspx";
-        private string _NewLine = " \r\n";
+        //private string _fileType = ".aspx";
+        //private string _NewLine = " \r\n";
 
-        private string _NotImplement = "throw new Exception(\"Not implement\");";
+        //private string _NotImplement = "throw new Exception(\"Not implement\");";
 
         private string GenHeadeFile()
         {
@@ -95,7 +95,29 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
                 //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
-                code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
+                //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
+                if (_DataColumn.DataType.ToString() == "System.Boolean")
+                {
+                    code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
+                    code += "                                    <p> " + _NewLine;
+                    code += "                                        <input name='' type='radio' data-column-id=\"" + _DataColumn.ColumnName + "\" data-column-key=\"<%# Eval(\"" + _ds.Tables[0].PrimaryKey[0].ToString() + "\") %>\" <%# TagCheck(Eval(\"" + _DataColumn.ColumnName + "\")) %> /><label> </label> " + _NewLine;
+                    code += "                                    </p> " + _NewLine;
+                    code += "                                </td> " + _NewLine;
+                }
+                else
+                {
+                    code += " <td class=\"tdEnglishAddress3\"> " + _NewLine;
+                    code += "       <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
+                    code += "                                    <div style=\"display: none\"> " + _NewLine;
+                    code += "                                        <input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate " + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\"> " + _NewLine;
+                    code += "                                        <label class=\"lblSave\">Save</label> " + _NewLine;
+                    code += "                                        <label class=\"lblCancel\">" + _NewLine;
+                    code += "                                            Cancel</label> " + _NewLine;
+                    code += "                                    </div> " + _NewLine;
+                    code += "  </td>" + _NewLine;
+                }
+
+                // < input name = '' data - column - id = "BualuangExclusive" data - column - key = "<%# Eval("ID1") %>" type = 'radio' <%# ServiceSet(Eval("BualuangExclusive")) %> /><label for='test1'></label>
             }
             code += "   </tr> " + _NewLine;
             code += "   </ItemTemplate > " + _NewLine;
@@ -208,6 +230,33 @@ namespace StkGenCode.Code.Template
             code += "   });//End Document Ready" + _NewLine;
             return code;
         }
+
+        string GenCallSaveJquery()
+        {
+
+            string code = "";
+
+            code += " " + _NewLine;
+            code += "var "+_TableName+"JService = {}; " + _NewLine;
+            code += "(function () { " + _NewLine;
+            code += "    var url = \"/WebTemplate/LocationManage.aspx/\"; " + _NewLine;
+            code += " " + _NewLine;
+            code += "    this.SaveColumn =  function (id, column, value) { " + _NewLine;
+            code += "            var result; " + _NewLine;
+            code += "            ////data \"{ssss:1,ddddd:1}\" " + _NewLine;
+            code += "            var tag = '{id:\"' + id + '\",column:\"' + column + '\",value:\"' + value + '\"}'; " + _NewLine;
+            code += "            var F = CallServices(url + \"SaveColumn\", tag, false, function (msg) { " + _NewLine;
+            code += "                result = msg.d; " + _NewLine;
+            code += "            }); " + _NewLine;
+            code += "            return result; " + _NewLine;
+            code += "        };//SaveColumn " + _NewLine;
+            code += "   " + _NewLine;
+            code += "}).apply(LocationManageService); " + _NewLine;
+
+            return code;
+        }
+
+
 
         private string GenSearch()
         {
@@ -497,11 +546,12 @@ namespace StkGenCode.Code.Template
             code += "            $(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
             code += "        } " + _NewLine;
 
+
+            code += GenCallSaveJquery();
+
             code += " </script>";
             return code;
         }
-
-
 
         private string GenModalProgress()
         {
@@ -520,7 +570,8 @@ namespace StkGenCode.Code.Template
             code += "    </div>" + _NewLine;
             return code;
         }
-        public void Gen()
+
+        public override void Gen()
         {
             string _code = "";
             _code += GenHeadeFile();
@@ -546,10 +597,12 @@ namespace StkGenCode.Code.Template
 
             _code += GenNoResult();
 
-
             _code += GenModalProgress();
             _code += GenContentBodyEnd();
-            _FileCode.writeFile(_TableName + "List", _code, _fileType);
+            NameMing name = new NameMing();
+            name._TableName = _TableName;
+            name._ds = _ds;
+            _FileCode.writeFile(name.AspxTableCodeName(), _code);
             //_FileCode.writeFile(FileName, _code, _fileType);
         }
 

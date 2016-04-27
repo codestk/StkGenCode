@@ -2,14 +2,14 @@
 
 namespace StkGenCode.Code.Template
 {
-    public class PropertiesCode
+    public class PropertiesCode:CodeBase
     {
-        public FileCode _FileCode;
-        public DataSet _ds;
-        public string _TableName;
+        //public FileCode _FileCode;
+        //public DataSet _ds;
+        //public string _TableName;
 
-        private string _fileType = ".cs";
-        private string _NewLine = " \r\n";
+      
+        //private string _NewLine = " \r\n";
 
         private string GenUsign()
         {
@@ -57,14 +57,19 @@ namespace StkGenCode.Code.Template
  
         }
 
-        public void Gen()
+        public override void Gen()
         {
             string _code = "";
             _code += GenUsign();
             _code += GenBeginNameSpaceAndClass();
             _code += GenProperties();
             _code += GenEndNameSpaceAndClass();
-            _FileCode.writeFile(_TableName, _code, _fileType);
+
+            NameMing name = new NameMing();
+            name._TableName = _TableName;
+            name._ds = _ds;
+            _FileCode.writeFile(name.PropertiesCodeName(), _code);
+           // _FileCode.writeFile(_TableName, _code, _fileType);
         }
     }
 }

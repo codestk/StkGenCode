@@ -2,16 +2,16 @@
 
 namespace StkGenCode.Code.Template
 {
-    public class AspxTableCodeBehine
+    public class AspxTableCodeBehine:CodeBase
     {
-        public FileCode _FileCode;
-        public DataSet _ds;
-        public string _TableName;
+        //public FileCode _FileCode;
+        //public DataSet _ds;
+        //public string _TableName;
 
-        private string _fileType = ".aspx.cs";
-        private string _NewLine = " \r\n";
+        //private string _fileType = ".aspx.cs";
+        //private string _NewLine = " \r\n";
 
-        private string _NotImplement = "throw new Exception(\"Not implement\");";
+        //private string _NotImplement = "throw new Exception(\"Not implement\");";
 
         private string GenUsign()
         {
@@ -22,6 +22,8 @@ namespace StkGenCode.Code.Template
             _code += "using System.Linq;" + _NewLine;
             _code += "using System.Web;" + _NewLine;
             _code += "using System.Web.UI.WebControls;" + _NewLine;
+            _code += "using System.Web.Services;" + _NewLine;
+            
             //_code += "using ExchangeService.Code;" + _NewLine;
 
             return _code;
@@ -83,7 +85,7 @@ namespace StkGenCode.Code.Template
             code += "if (result.Count == 0) " + _NewLine;
             code += "{ " + _NewLine;
             code += "//No data " + _NewLine;
-            //code += "hideTool(); " + _NewLine;
+            code += "hideTool(); " + _NewLine;
             //rptauth_dtData
             code += "rpt" + _TableName + "Data.DataBind(); " + _NewLine;
             code += "DivNoresults.Visible = true; " + _NewLine;
@@ -270,8 +272,58 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        private string GedTagCheck()
+        {
+            string code = "";
 
-        public void Gen()
+            code += "   public string TagCheck(Object val) " + _NewLine;
+            code += "    { " + _NewLine;
+            code += "        string status = \"\"; " + _NewLine;
+            code += "        if (val == null) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            return \"\"; " + _NewLine;
+            code += "        } " + _NewLine;
+            code += " " + _NewLine;
+            code += "        if (Convert.ToBoolean(val) ==true) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            // inputbox = \" <p><input name = '' type = 'radio' id = 'test1'  checked= 'true'/><label for= 'test1'></label></p>\"; " + _NewLine;
+            code += "            status = \"checked\"; " + _NewLine;
+            code += "        } " + _NewLine;
+            code += "        else " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            status = \"\"; " + _NewLine;
+            code += "        } " + _NewLine;
+            code += "        return status; " + _NewLine;
+            code += "    }" + _NewLine;
+
+            return code;
+        }
+
+        private string GenSaveColumn()
+        {
+            string code = "";
+
+            code += " //For Jquery  ---------------------------------------------------------------------------------------------- " + _NewLine;
+            code += "        [WebMethod] " + _NewLine;
+            code += "        public static Boolean SaveColumn(string id, string column, string value) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+         
+            code += " " + _NewLine;
+    
+            code += " " + _NewLine;
+            code += "            bool isUpdate = _" + _TableName + "Db.UpdateColumn(id, column, value); " + _NewLine;
+            code += "            return isUpdate; " + _NewLine;
+            code += "        }" + _NewLine;
+
+            return code;
+        }
+
+
+
+
+
+        public override void Gen()
         {
             string _code = "";
 
@@ -289,9 +341,18 @@ namespace StkGenCode.Code.Template
 
             _code += GenHideResult();
             _code += GenShowResult();
+            _code += GedTagCheck();
+            _code += GenSaveColumn();
+
 
             _code += EndClass();
-            _FileCode.writeFile(_TableName + "List", _code, _fileType);
+
+
+            NameMing name = new NameMing();
+            name._TableName = _TableName;
+            name._ds = _ds;
+            _FileCode.writeFile(name.AspxTableCodeBehineName(), _code);
+           // _FileCode.writeFile(_TableName + "List", _code);
         }
     }
 }

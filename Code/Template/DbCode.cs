@@ -1,17 +1,18 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace StkGenCode.Code.Template
 {
-    public class DbCode
+    public class DbCode:CodeBase
     {
-        public FileCode _FileCode;
-        public DataSet _ds;
-        public string _TableName;
+        //public FileCode _FileCode;
+        //public DataSet _ds;
+        //public string _TableName;
 
-        private string _fileType = ".cs";
-        private string _NewLine = " \r\n";
+        //private string _fileType = ".cs";
+        //private string _NewLine = " \r\n";
 
-        private string _NotImplement = "throw new Exception(\"Not implement\");";
+        //private string _NotImplement = "throw new Exception(\"Not implement\");";
 
         private string GenUsign()
         {
@@ -358,6 +359,9 @@ namespace StkGenCode.Code.Template
             _code += "RecordCount = temp.Field<Int32>(\"RecordCount\"),";
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
+                if ((_DataColumn.DataType.ToString() == "System.Guid"))
+                { continue; }
+
                 if (_DataColumn.DataType.ToString() == "System.Decimal")
                 {
                     _code += _DataColumn.ColumnName + "= Convert.ToDecimal (temp.Field<Object>(\"" + _DataColumn.ColumnName + "\")), \r\n ";
@@ -424,7 +428,32 @@ namespace StkGenCode.Code.Template
             return _code;
         }
 
-        public void Gen()
+        private string GenUpdateColumn()
+        {
+            string code = "";
+            //id, column, value
+            code += "   public Boolean UpdateColumn(string id, string column,string value) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            var prset = new List<IDataParameter>(); " + _NewLine;
+            code += "            prset.Add(Db.CreateParameterDb(\"@" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\", id)); " + _NewLine;
+            code += "            prset.Add(Db.CreateParameterDb(\"@Data\", value)); " + _NewLine;
+            code += "             var sql = @\"UPDATE   " + _TableName + " SET  \"+column+ \"=@Data where " + _ds.Tables[0].PrimaryKey[0].ColumnName + " = @" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\"; " + _NewLine;
+            code += " " + _NewLine;
+            code += "            int output = Db.FbExecuteNonQuery(sql, prset); " + _NewLine;
+            code += "            if (output == 1) " + _NewLine;
+            code += "            { " + _NewLine;
+            code += "                return true; " + _NewLine;
+            code += "            } " + _NewLine;
+            code += " " + _NewLine;
+            code += "            return false;   " + _NewLine;
+            code += "        } " + _NewLine;
+
+            return code;
+        }
+
+        public override void Gen()
+       
+       
         {
             string _code = "";
             _code = GenUsign();
@@ -442,9 +471,15 @@ namespace StkGenCode.Code.Template
             _code += GenUpdate();
             _code += GenDelete();
             _code += GenConvertDataList();
+            _code += GenUpdateColumn();
             _code += GenEndNameSpaceAndClass();
             _code += Comment();
-            _FileCode.writeFile(_TableName + "Db", _code, _fileType);
+
+            NameMing name = new NameMing();
+            name._TableName = _TableName;
+            name._ds = _ds;
+            _FileCode.writeFile(name.DbCodeName(), _code);
+            //_FileCode.writeFile(_TableName + "Db", _code, _fileType);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace StkGenCode.Code
     {
         public string path;
 
-        public void writeFile(string Table, string content, string FileType)
+        public void writeFile(string name, string content)
         {
             // string path = textBox1.Text;
             // check if directory exists
@@ -16,7 +16,7 @@ namespace StkGenCode.Code
             //}
             string _pathFull;
             // _pathFull = path + Table + "_" + DateTime.Today.ToString("dd-MM-yy") + FileType;
-            _pathFull = path + Table + FileType;
+            _pathFull = path + name;
 
             // check if file exist
             //File.Delete(path);
@@ -53,10 +53,10 @@ namespace StkGenCode.Code
             // File.Delete(path);
         }
 
-        public void AddSpace(string Table, string FileType)
-        {
-            string space = "\r\n";
-            writeFile(Table, space, FileType);
-        }
+        //public void AddSpace(string Table, string FileType)
+        //{
+        //    string space = "\r\n";
+        //    writeFile(Table, space);
+        //}
     }
 }
