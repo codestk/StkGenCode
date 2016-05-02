@@ -1,5 +1,4 @@
-﻿using StkGenCode.Code.Column;
-using System.Data;
+﻿using System.Data;
 
 namespace StkGenCode.Code.Template
 {
@@ -51,7 +50,7 @@ namespace StkGenCode.Code.Template
             //code += "  <th>Buying Rates	</th> " + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                code += " <th>" + _DataColumn.ColumnName.ToUpper() + "</th> " + _NewLine;
+                code += " <th style=\"width: 300px; \">" + _DataColumn.ColumnName.ToUpper() + "</th> " + _NewLine;
             }
 
             code += "  </tr> " + _NewLine;
@@ -67,17 +66,57 @@ namespace StkGenCode.Code.Template
                 if (_DataColumn.DataType.ToString() == "System.Boolean")
                 {
                     code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
-                    code += "                                    <p> " + _NewLine;
+                    code += "                                    <p>" + _NewLine;
                     code += "                                        <input name='' type='radio' data-column-id=\"" + _DataColumn.ColumnName + "\" data-column-key=\"<%# Eval(\"" + _ds.Tables[0].PrimaryKey[0].ToString() + "\") %>\" <%# TagCheck(Eval(\"" + _DataColumn.ColumnName + "\")) %> /><label> </label> " + _NewLine;
                     code += "                                    </p> " + _NewLine;
                     code += "                                </td> " + _NewLine;
                 }
                 else
                 {
-                    code += " <td class=\"td"+ _DataColumn.ColumnName + "\"> " + _NewLine;
-                    code += "       <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
+                    code += " <td class=\"td" + _DataColumn.ColumnName + "\"> " + _NewLine;
+
+
+                    if ((_DataColumn.DataType.ToString() == "System.DateTime"))
+                    {
+                        code += "       <span><%# StkGlobalDate.DateToTextEngFormat(Eval(\"" + _DataColumn.ColumnName + "\")) %> </span> " + _NewLine;
+                    }
+                    else if ((_DataColumn.DataType.ToString() == "System.String"))
+                    {
+                        code += "       <span class=\"truncate\"><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
+                    }
+                    else
+                    {
+                        code += "<span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
+                    }
+
                     code += "                                    <div style=\"display: none\"> " + _NewLine;
-                    code += "                                        <input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate " + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\"> " + _NewLine;
+
+                    if ((_DataColumn.DataType.ToString() == "System.String"))
+                    {
+                        code += "<input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" MaxLength=\"" + _DataColumn.MaxLength + "\" length=\"" + _DataColumn.MaxLength + "\" class=\"validate truncate" + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\" style=\"height: unset; margin: 0px;\"> " + _NewLine;
+                    }
+                   else if ((_DataColumn.DataType.ToString() == "System.Int32"))
+
+                    {
+                        code +="<input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate ForceNumber \" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\" style=\"height: unset; margin: 0px;\"> " + _NewLine;
+
+
+                    }
+                    else if ((_DataColumn.DataType.ToString() == "System.Decimal"))
+
+                    {
+                        code += "                                        <input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate ForceNumber2Digit \" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\" style=\"height: unset; margin: 0px;\"> " + _NewLine;
+
+
+                    }
+                    else if ((_DataColumn.DataType.ToString() == "System.DateTime"))
+
+                    {
+                        code += "                                        <input data-column-id=\"" + _DataColumn.ColumnName + "\"    class=\"datepicker\" type=\"date\" value=\"<%# StkGlobalDate.DateToTextEngFormat(Eval(\"" + _DataColumn.ColumnName + "\")) %>\" style=\"height: unset; margin: 0px;\"> " + _NewLine;
+
+
+                    }
+
                     code += "                                        <label class=\"lblSave\">Save</label> " + _NewLine;
                     code += "                                        <label class=\"lblCancel\">" + _NewLine;
                     code += "                                            Cancel</label> " + _NewLine;
@@ -124,18 +163,7 @@ namespace StkGenCode.Code.Template
 
             return code;
         }
-
-        private string T()
-        {
-            string code = "  ";
-            code += "  " + _NewLine;
-            code += "  " + _NewLine; code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            return code;
-        }
+ 
 
         private string GenReferJavaScript()
         {
@@ -155,7 +183,6 @@ namespace StkGenCode.Code.Template
             return code = " <link href=\"Module/Search/SearchControl.css\" rel=\"stylesheet\" />" + _NewLine;
             return code;
         }
- 
 
         private string GenSearch()
         {
@@ -217,20 +244,28 @@ namespace StkGenCode.Code.Template
             code += "        $(document).ready(function () { " + _NewLine;
             code += "            ForceNumberTextBox(); " + _NewLine;
             code += "            //For Change Lange " + _NewLine;
-            code += "            $('.dropdown-button').dropdown({ " + _NewLine;
-            code += "                inDuration: 300, " + _NewLine;
-            code += "                outDuration: 225, " + _NewLine;
-            code += "                constrain_width: true, // Does not change width of dropdown to that of the activator " + _NewLine;
-            code += "                hover: false, // Activate on hover " + _NewLine;
-            code += "                gutter: 0, // Spacing from edge " + _NewLine;
-            code += "                belowOrigin: true, // Displays dropdown below the button " + _NewLine;
-            code += "                alignment: 'left' // Displays dropdown with edge aligned to the left of button " + _NewLine;
-            code += "            }); " + _NewLine;
-            code += "            $('.dropdown-button').hover(function () { " + _NewLine;
-            code += "                GotoTop(); " + _NewLine;
-            code += "            }); " + _NewLine;
+            //code += "            $('.dropdown-button').dropdown({ " + _NewLine;
+            //code += "                inDuration: 300, " + _NewLine;
+            //code += "                outDuration: 225, " + _NewLine;
+            //code += "                constrain_width: true, // Does not change width of dropdown to that of the activator " + _NewLine;
+            //code += "                hover: false, // Activate on hover " + _NewLine;
+            //code += "                gutter: 0, // Spacing from edge " + _NewLine;
+            //code += "                belowOrigin: true, // Displays dropdown below the button " + _NewLine;
+            //code += "                alignment: 'left' // Displays dropdown with edge aligned to the left of button " + _NewLine;
+            //code += "            }); " + _NewLine;
+
+            code += "            $('.datepicker').pickadate({ " + _NewLine;
+            code += "                selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
+            code += "                selectYears: 15,// Creates a dropdown of 15 years to control year,  " + _NewLine;
+            code += "                format: 'd mmmm yyyy', " + _NewLine;
+            code += "            });" + _NewLine;
+
+
+            //code += "            $('.dropdown-button').hover(function () { " + _NewLine;
+            //code += "                GotoTop(); " + _NewLine;
+            //code += "            }); " + _NewLine;
             code += " " + _NewLine;
-            code += "            $('select').material_select(); " + _NewLine;
+            //code += "            $('select').material_select(); " + _NewLine;
             code += " " + _NewLine;
             code += "            $('#ulpage').pagination({ " + _NewLine;
             code += "                items: '<%=  ViewState[\"recordCount\"].ToString()%>', " + _NewLine;
@@ -249,7 +284,7 @@ namespace StkGenCode.Code.Template
             code += "                    else { " + _NewLine;
             code += "                        pagenum = event; " + _NewLine;
             code += "                    } " + _NewLine;
-            code += "                    var code = 'ctl00$ContentPlaceHolder1$rpt"+_TableName+"Pagger$ctl' + pagenum + '$lnkPage'; " + _NewLine;
+            code += "                    var code = 'ctl00$ContentPlaceHolder1$rpt" + _TableName + "Pagger$ctl' + pagenum + '$lnkPage'; " + _NewLine;
             code += " " + _NewLine;
             code += "                    __doPostBack(code, ''); " + _NewLine;
             code += "                } " + _NewLine;
@@ -278,15 +313,15 @@ namespace StkGenCode.Code.Template
 
             //code += "            $('.tdThaiName,.tdThaiAddress1,.tdThaiAddress2,.tdThaiAddress3,.tdThaiProvince,.tdPostcode,.tdEnglishName,.tdEnglishAddress1,.tdEnglishAddress2,.tdEnglishAddress3,.tdEnglishProvince').dblclick(function () { " + _NewLine;
 
-            code += "                var ClassEvent = trim(this.className, ' '); " + _NewLine;
-            code += " " + _NewLine;
-            code += "                if ((ClassEvent == 'tdThaiName') || (ClassEvent == 'tdThaiAddress1') || (ClassEvent == 'tdEnglishName') || (ClassEvent == 'tdEnglishAddress1')) { " + _NewLine;
-            code += "                    //Add Space for edit " + _NewLine;
-            code += "                    $(this).addClass(\"widthEditBig\"); " + _NewLine;
-            code += "                } " + _NewLine;
-            code += "                else { " + _NewLine;
-            code += "                    $(this).addClass(\"widthEditSmall\"); " + _NewLine;
-            code += "                } " + _NewLine;
+            //code += "                var ClassEvent = trim(this.className, ' '); " + _NewLine;
+            //code += " " + _NewLine;
+            //code += "                if ((ClassEvent == 'tdThaiName') || (ClassEvent == 'tdThaiAddress1') || (ClassEvent == 'tdEnglishName') || (ClassEvent == 'tdEnglishAddress1')) { " + _NewLine;
+            //code += "                    //Add Space for edit " + _NewLine;
+            //code += "                    $(this).addClass(\"widthEditBig\"); " + _NewLine;
+            //code += "                } " + _NewLine;
+            //code += "                else { " + _NewLine;
+            //code += "                    $(this).addClass(\"widthEditSmall\"); " + _NewLine;
+            //code += "                } " + _NewLine;
             code += " " + _NewLine;
             code += "                var sp = $(this).find(\"span\"); " + _NewLine;
             code += "                var di = $(this).find(\"div\"); " + _NewLine;
@@ -299,39 +334,54 @@ namespace StkGenCode.Code.Template
             code += "            $(\".lblCancel\").click(function (event) { " + _NewLine;
             code += "                $(this).parent().parent().find(\"span\").show(); " + _NewLine;
             code += "                $(this).parent().parent().find(\"div\").hide(); " + _NewLine;
-            code += "                $(this).parent().parent().removeClass(\"widthEditBig\"); " + _NewLine;
-            code += "                $(this).parent().parent().removeClass(\"widthEditSmall\"); " + _NewLine;
+            //code += "                $(this).parent().parent().removeClass(\"widthEditBig\"); " + _NewLine;
+            //code += "                $(this).parent().parent().removeClass(\"widthEditSmall\"); " + _NewLine;
             code += " " + _NewLine;
             code += "            }); " + _NewLine;
             code += " " + _NewLine;
-            code += "            $(\".lblSave\").click(function (event) { " + _NewLine;
+            code += "  $(\".lblSave\").click(function (event) { " + _NewLine;
             code += "                var tdContent = $(this).parent().parent(); " + _NewLine;
             code += "                var inputBox = tdContent.find(\"input:text\")[0]; //Get Data inputbox " + _NewLine;
             code += "                var id = $(this).parent().parent().parent().find(\"td:first\")[0].outerText; //Get first Td (ID1) " + _NewLine;
-            code += " " + _NewLine;
             code += "                var column = inputBox.attributes['data-column-id'].value; " + _NewLine;
             code += "                var data = inputBox.value; " + _NewLine;
             code += " " + _NewLine;
+            code += "                var txtspan = tdContent.find(\"span\")[0]; " + _NewLine;
+            code += "                var oldData = trim(txtspan.innerText,\" \"); " + _NewLine;
+            code += " " + _NewLine;
+            code += "              " + _NewLine;
+            code += "                if (data == oldData) " + _NewLine;
+            code += "                { " + _NewLine;
+            code += "                    //CalCell " + _NewLine;
+            code += "                    tdContent.find(\"span\").show(); " + _NewLine;
+            code += "                    tdContent.find(\"div\").hide(); " + _NewLine;
+            code += "                    return; " + _NewLine;
+            code += "                    // " + _NewLine;
+            code += "                } " + _NewLine;
+            code += " " + _NewLine;
             code += "                //Save Data To CodeBehide " + _NewLine;
-            code += "                var result = " + _TableName + "Service.SaveColumn(id, column, data); " + _NewLine;
+            code += "                var result = fxrates_familyService.SaveColumn(id, column, data); " + _NewLine;
             code += " " + _NewLine;
             code += "                if (result == true) { " + _NewLine;
             code += "                    tdContent.find(\"span\").show(); " + _NewLine;
             code += "                    tdContent.find(\"div\").hide(); " + _NewLine;
             code += "                    tdContent.removeClass(\"widthEditBig\"); " + _NewLine;
             code += "                    tdContent.removeClass(\"widthEditSmall\"); " + _NewLine;
-            code += " " + _NewLine;
-            code += "                    //var txtVal = tdContent.find(\"input:text\")[0].value; " + _NewLine;
-            code += " " + _NewLine;
-            code += "                    tdContent.find(\"span\")[0].innerText = data; //Swap Value " + _NewLine;
+            code += "                    //tdContent.addClass(\"saved\"); " + _NewLine;
+            code += "                   " + _NewLine;
+            code += "                    //tdContent.find(\"span\")[0].innerText = data; //Swap Value " + _NewLine;
+            code += "                    //tdContent.find(\"span\")[0].className += \"saved\"; " + _NewLine;
+            code += "                      " + _NewLine;
+            code += "                    txtspan.innerText = data; " + _NewLine;
+            code += "                    txtspan.className = \"saved\"; " + _NewLine;
             code += "                    Materialize.toast('Your data has been saved.', 3000, 'toastCss'); " + _NewLine;
             code += "                } " + _NewLine;
             code += "                else { " + _NewLine;
             code += "                    Materialize.toast(MsgError, 5000, 'toastCss'); " + _NewLine;
             code += "                } " + _NewLine;
             code += " " + _NewLine;
-            code += "            }); " + _NewLine;
-            code += " " + _NewLine;
+            code += "            });" + _NewLine;
+
 
 
             string ClassCheck = GenClassCheckBoxList();
@@ -452,7 +502,10 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "        //For Validate Type " + _NewLine;
             code += "        function ForceNumberTextBox() { " + _NewLine;
-            code += "            $(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
+           // code += "            $(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
+
+            code += "$(\".ForceNumber\").ForceNumericOnly();  " + _NewLine;
+            code += "$(\".ForceNumber2Digit\").ForceNumericOnly2Digit(); " + _NewLine;
             code += "        } " + _NewLine;
 
             code += " </script>";
@@ -462,7 +515,7 @@ namespace StkGenCode.Code.Template
         private string GenClassCheckBoxList()
         {
             string code = "";
-                     foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
                 //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
                 //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
@@ -492,17 +545,16 @@ namespace StkGenCode.Code.Template
             }
 
             code = code.TrimEnd(',');
-        return code;
-    }
+            return code;
+        }
 
         private string GenClassTextBoxList()
         {
             string code = "";
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-
-
-                if ((_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString()))               {
+                if ((_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString()))
+                {
                     continue;
                 }
                 //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
@@ -536,7 +588,6 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-
         private string GenModalProgress()
         {
             string code = "";
@@ -551,7 +602,7 @@ namespace StkGenCode.Code.Template
             code += "        </div> " + _NewLine;
             code += "      " + _NewLine;
             code += "    </div>" + _NewLine;
-            code += "    </div>" + _NewLine;
+          //  code += "    </div>" + _NewLine;
             return code;
         }
 
@@ -586,7 +637,7 @@ namespace StkGenCode.Code.Template
             _code += GenContentBodyEnd();
 
             _FileCode.writeFile(_FileName.AspxTableCodeName(), _code);
-            //_FileCode.writeFile(FileName, _code, _fileType);
+          
         }
     }
 }
