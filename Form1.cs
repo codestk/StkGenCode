@@ -56,7 +56,8 @@ namespace StkGenCode
             //    Gen(_TableName);
             //}
             Gen("fxrates_family");
-
+            Gen("STK_USER");
+           
             //MessageBox.Show("Ok");
 
             System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
@@ -97,6 +98,9 @@ namespace StkGenCode
             _AspxTableCodeBehine._TableName = _TableName;
             _AspxTableCodeBehine.Gen();
 
+
+            string pathSQlScript = _path + @"SQL\";
+            F.path = pathSQlScript;
             StoreProCode _StoreProCode = new StoreProCode();
             _StoreProCode._FileCode = F;
             _StoreProCode._ds = _ds;
@@ -123,7 +127,7 @@ namespace StkGenCode
             Pcode._ds = _ds;
             Pcode._TableName = _TableName;
             Pcode.Gen();
-
+           
             DbCode _DbCode = new DbCode();
             _DbCode._FileCode = F;
             _DbCode._ds = _ds;
