@@ -11,14 +11,14 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenContentHeadBegin()
+        protected string GenContentHeadBegin()
         {
             string code = "<asp:Content ID=\"Content1\" ContentPlaceHolderID=\"head\" runat=\"server\">  " + _NewLine;
 
             return code;
         }
 
-        private string GenContentHeadEnd()
+        protected string GenContentHeadEnd()
         {
             string code = "";
 
@@ -26,19 +26,19 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenContentBodyBegin()
+        protected string GenContentBodyBegin()
         {
             string code = "<asp:Content ID=\"Content2\" ContentPlaceHolderID=\"ContentPlaceHolder1\" runat=\"server\" > " + _NewLine;
             return code;
         }
 
-        private string GenContentBodyEnd()
+        protected string GenContentBodyEnd()
         {
             string code = "</asp:Content>" + _NewLine;
             return code;
         }
 
-        private string GenTableRepeater()
+        protected string GenTableRepeater()
         {
             string code = "  ";
             code += "   <table class=\"striped\"> " + _NewLine;
@@ -63,6 +63,9 @@ namespace StkGenCode.Code.Template
             {
                 //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
                 //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
+
+
+
                 if (_DataColumn.DataType.ToString() == "System.Boolean")
                 {
                     code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
@@ -74,8 +77,14 @@ namespace StkGenCode.Code.Template
                 else
                 {
                     code += " <td class=\"td" + _DataColumn.ColumnName + "\"> " + _NewLine;
-
-
+                    if (_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString()) 
+                    {
+                        code += "     <a id=\"btnShowPopup0\" target=\"_blank\" href=\"" + _TableName+"Web.aspx?Q=<%# Stk_QueryString.EncryptQuery( (Eval(\"" + _DataColumn.ColumnName + "\")))%>\"" + _NewLine;
+                        code += "                        title=\"\"> " + _NewLine;
+                        code += "                        <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span>  " + _NewLine;
+                        code += "                    </a>" + _NewLine;
+                    }
+                    else 
                     if ((_DataColumn.DataType.ToString() == "System.DateTime"))
                     {
                         code += "       <span><%# StkGlobalDate.DateToTextEngFormat(Eval(\"" + _DataColumn.ColumnName + "\")) %> </span> " + _NewLine;
@@ -95,26 +104,20 @@ namespace StkGenCode.Code.Template
                     {
                         code += "<input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" MaxLength=\"" + _DataColumn.MaxLength + "\" length=\"" + _DataColumn.MaxLength + "\" class=\"validate truncate" + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\" style=\"height: unset; margin: 0px;\"> " + _NewLine;
                     }
-                   else if ((_DataColumn.DataType.ToString() == "System.Int32"))
+                    else if ((_DataColumn.DataType.ToString() == "System.Int32"))
 
                     {
-                        code +="<input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate ForceNumber \" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\" style=\"height: unset; margin: 0px;\"> " + _NewLine;
-
-
+                        code += "<input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate ForceNumber \" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\" style=\"height: unset; margin: 0px;\"> " + _NewLine;
                     }
                     else if ((_DataColumn.DataType.ToString() == "System.Decimal"))
 
                     {
                         code += "                                        <input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate ForceNumber2Digit \" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\" style=\"height: unset; margin: 0px;\"> " + _NewLine;
-
-
                     }
                     else if ((_DataColumn.DataType.ToString() == "System.DateTime"))
 
                     {
                         code += "                                        <input data-column-id=\"" + _DataColumn.ColumnName + "\"    class=\"datepicker\" type=\"date\" value=\"<%# StkGlobalDate.DateToTextEngFormat(Eval(\"" + _DataColumn.ColumnName + "\")) %>\" style=\"height: unset; margin: 0px;\"> " + _NewLine;
-
-
                     }
 
                     code += "                                        <label class=\"lblSave\">Save</label> " + _NewLine;
@@ -135,7 +138,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenPagger()
+        protected string GenPagger()
         {
             //string code = "  ";
             //code += "  <ul class=\"pagination\"> " + _NewLine;
@@ -163,9 +166,8 @@ namespace StkGenCode.Code.Template
 
             return code;
         }
- 
 
-        private string GenReferJavaScript()
+        protected string GenReferJavaScript()
         {
             string code = "";
             // code += "<script src=\"Bu/LocationManageCallServices.js\"></script>" + _NewLine;
@@ -176,12 +178,12 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenReferCSS()
+        protected string GenReferCSS()
 
         {
             string code = "";
             return code = " <link href=\"Module/Search/SearchControl.css\" rel=\"stylesheet\" />" + _NewLine;
-            return code;
+            
         }
 
         private string GenSearch()
@@ -201,7 +203,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenNoResult()
+        protected string GenNoResult()
         {
             string code = "";
 
@@ -221,7 +223,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenBeginResult()
+        protected string GenBeginResult()
         {
             string code = "";
             code = "<div id=\"divResult\" runat=\"server\">";
@@ -229,44 +231,16 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenEndResult()
+        protected string GenEndResult()
         {
             string code = "";
             code = "</div>";
             return code;
         }
-
-        private string GenDocumentReady()
+        //JavaScript Method ==================================================================================
+        public string paginationJavaScript()
         {
-            string code = " <script> " + _NewLine;
-            code += "     var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.'; " + _NewLine;
-            code += " " + _NewLine;
-            code += "        $(document).ready(function () { " + _NewLine;
-            code += "            ForceNumberTextBox(); " + _NewLine;
-            code += "            //For Change Lange " + _NewLine;
-            //code += "            $('.dropdown-button').dropdown({ " + _NewLine;
-            //code += "                inDuration: 300, " + _NewLine;
-            //code += "                outDuration: 225, " + _NewLine;
-            //code += "                constrain_width: true, // Does not change width of dropdown to that of the activator " + _NewLine;
-            //code += "                hover: false, // Activate on hover " + _NewLine;
-            //code += "                gutter: 0, // Spacing from edge " + _NewLine;
-            //code += "                belowOrigin: true, // Displays dropdown below the button " + _NewLine;
-            //code += "                alignment: 'left' // Displays dropdown with edge aligned to the left of button " + _NewLine;
-            //code += "            }); " + _NewLine;
-
-            code += "            $('.datepicker').pickadate({ " + _NewLine;
-            code += "                selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
-            code += "                selectYears: 15,// Creates a dropdown of 15 years to control year,  " + _NewLine;
-            code += "                format: 'd mmmm yyyy', " + _NewLine;
-            code += "            });" + _NewLine;
-
-
-            //code += "            $('.dropdown-button').hover(function () { " + _NewLine;
-            //code += "                GotoTop(); " + _NewLine;
-            //code += "            }); " + _NewLine;
-            code += " " + _NewLine;
-            //code += "            $('select').material_select(); " + _NewLine;
-            code += " " + _NewLine;
+            string code = "";
             code += "            $('#ulpage').pagination({ " + _NewLine;
             code += "                items: '<%=  ViewState[\"recordCount\"].ToString()%>', " + _NewLine;
             code += "                itemsOnPage: '<%= PageSize%>', " + _NewLine;
@@ -290,7 +264,11 @@ namespace StkGenCode.Code.Template
             code += "                } " + _NewLine;
             code += " " + _NewLine;
             code += "            }); " + _NewLine;
-            code += " " + _NewLine;
+            return code;
+        }
+
+        public string leanModalJavaScript()
+        { string code = "";
             code += "            $('.modal-trigger').leanModal({ " + _NewLine;
             code += "                dismissible: false, // Modal can be dismissed by clicking outside of the modal " + _NewLine;
             code += "                opacity: .5, // Opacity of modal background " + _NewLine;
@@ -301,8 +279,14 @@ namespace StkGenCode.Code.Template
             code += "                //  ready: function () { alert('Ready'); }, // Callback for Modal open " + _NewLine;
             code += "                //  complete: function () { alert('Closed'); } // Callback for Modal close " + _NewLine;
             code += "            }); " + _NewLine;
-            code += " " + _NewLine;
-            code += "            //Edit table-------------------------------------------------------------------------------------------- " + _NewLine;
+                return code;
+        }
+
+        public string EditTableJavaScript()
+        {
+            string code = "";
+
+            code += "//Edit table-------------------------------------------------------------------------------------------- " + _NewLine;
 
             string ClassTextBox = "";
             //ClassSet = ColumnString.GenLineString(_ds, _TableName, ".td{0},");
@@ -311,17 +295,6 @@ namespace StkGenCode.Code.Template
             ClassTextBox = GenClassTextBoxList();
             code += "            $('" + ClassTextBox + "').dblclick(function () { " + _NewLine;
 
-            //code += "            $('.tdThaiName,.tdThaiAddress1,.tdThaiAddress2,.tdThaiAddress3,.tdThaiProvince,.tdPostcode,.tdEnglishName,.tdEnglishAddress1,.tdEnglishAddress2,.tdEnglishAddress3,.tdEnglishProvince').dblclick(function () { " + _NewLine;
-
-            //code += "                var ClassEvent = trim(this.className, ' '); " + _NewLine;
-            //code += " " + _NewLine;
-            //code += "                if ((ClassEvent == 'tdThaiName') || (ClassEvent == 'tdThaiAddress1') || (ClassEvent == 'tdEnglishName') || (ClassEvent == 'tdEnglishAddress1')) { " + _NewLine;
-            //code += "                    //Add Space for edit " + _NewLine;
-            //code += "                    $(this).addClass(\"widthEditBig\"); " + _NewLine;
-            //code += "                } " + _NewLine;
-            //code += "                else { " + _NewLine;
-            //code += "                    $(this).addClass(\"widthEditSmall\"); " + _NewLine;
-            //code += "                } " + _NewLine;
             code += " " + _NewLine;
             code += "                var sp = $(this).find(\"span\"); " + _NewLine;
             code += "                var di = $(this).find(\"div\"); " + _NewLine;
@@ -382,8 +355,6 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "            });" + _NewLine;
 
-
-
             string ClassCheck = GenClassCheckBoxList();
             //code += "            $('.chekBoxAtm,.chekBoxBranch,.chekBoxSubBranch,.chekBoxMicroBranch,.chekBoxInternationalBranch,.chekBoxBusinessCenter,.chekBoxFXBooth,.chekBoxBualuangExclusive,.chekBoxFCDService,.chekBoxRemittanceService ,.chekBoxWesternUnionService').dblclick(function () { " + _NewLine;
             code += "            $('" + ClassCheck + "').dblclick(function () { " + _NewLine;
@@ -421,31 +392,26 @@ namespace StkGenCode.Code.Template
             code += "            }); " + _NewLine;
             code += "            //Edit table===================================================================================================================== " + _NewLine;
             code += " " + _NewLine;
-            code += "            //Fix Stlyte " + _NewLine;
-            code += "            var UA = navigator.userAgent; " + _NewLine;
-            code += "            var html = document.documentElement; " + _NewLine;
-            code += "            if (UA.indexOf(\"IEMobile\") === -1) { " + _NewLine;
-            code += "                if ((UA.indexOf(\"rv:11.\") !== -1) && (!html.classList.contains('ie11')) && window.navigator.msPointerEnabled) { " + _NewLine;
-            code += "                    html.classList.add(\"ie11\"); " + _NewLine;
-            code += "                } else if ((UA.indexOf(\"MSIE 10.\") !== -1) && (!html.classList.contains('ie10')) && window.navigator.msPointerEnabled) { " + _NewLine;
-            code += "                    html.classList.add(\"ie10\"); " + _NewLine;
-            code += "                } " + _NewLine;
-            code += "                else if ((UA.indexOf(\"MSIE 8.\") !== -1) && (!html.classList.contains('ie8')) && window.navigator.msPointerEnabled) { " + _NewLine;
-            code += "                    html.classList.add(\"ie8\"); " + _NewLine;
-            code += "                } " + _NewLine;
-            code += "            } " + _NewLine;
-            code += " " + _NewLine;
-            code += "            //For Autocomplete  ----------------------------------------------------------------------------------- " + _NewLine;
-            // code += "            $(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
-            code += "              $('" + ClassTextBox + "').autocomplete({ " + _NewLine;
 
+            return code;
+
+        }
+
+        public  string AutocompleteJavaScript()
+        {
+            string code = "";
+            code += "//For Autocomplete  ----------------------------------------------------------------------------------- " + _NewLine;
+            //code += "            $(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
+            //code += "              $('" + ClassTextBox + "').autocomplete({ " + _NewLine;
+            code += " $('#<%= txtSearch.ClientID%>').autocomplete({ " + _NewLine;
             code += " " + _NewLine;
-            code += "                source: function (request, response) { " + _NewLine;
+            code += "  source: function (request, response) { " + _NewLine;
             code += " " + _NewLine;
-            code += "                    var postCode = this.element[0].parentNode.parentNode.parentNode.childNodes[13].innerText; " + _NewLine;
-            code += "                    var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
+            //code += "                    var postCode = this.element[0].parentNode.parentNode.parentNode.childNodes[13].innerText; " + _NewLine;
+            //code += "                    var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
+            code += "var keyword = this.element[0].value " + _NewLine;
             code += " " + _NewLine;
-            code += "                    var data = AutoCompleteService.GetAutoComplete(column, request.term, postCode); " + _NewLine;
+            code += "                    var data = " + _TableName + "Service.GetKeyWordsAllColumn(keyword); " + _NewLine;
             code += " " + _NewLine;
             code += "                    response(data); " + _NewLine;
             code += "                    //$.ajax({ " + _NewLine;
@@ -480,8 +446,32 @@ namespace StkGenCode.Code.Template
             code += "            }); " + _NewLine;
             code += "            //For Autocomplete================================================================================== " + _NewLine;
             code += " " + _NewLine;
-            code += "        });//End " + _NewLine;
-            code += " " + _NewLine;
+            return code;
+
+        }
+
+        public string ForceNumberTextBoxJavaScript()
+        {
+            string code = "";
+
+
+            code += "        //For Validate Type " + _NewLine;
+            code += "        function ForceNumberTextBox() { " + _NewLine;
+            // code += "            $(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
+
+            code += "$(\".ForceNumber\").ForceNumericOnly();  " + _NewLine;
+            code += "$(\".ForceNumber2Digit\").ForceNumericOnly2Digit(); " + _NewLine;
+            code += "        } " + _NewLine;
+
+        
+
+            return code;
+        }
+
+
+        public string SearchJavaScript()
+        {
+            string code = "";
             code += "        function Search() { " + _NewLine;
             code += " " + _NewLine;
             code += "            if ($('#<%=txtSearch.ClientID%>').val() == '') { " + _NewLine;
@@ -493,26 +483,117 @@ namespace StkGenCode.Code.Template
             code += "            return true; " + _NewLine;
             code += "        } " + _NewLine;
             code += " " + _NewLine;
+            return code;
+
+        }
+        private string GenDocumentReady()
+        {
+            string code = " <script> " + _NewLine;
+            code += "     var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.'; " + _NewLine;
+            code += " " + _NewLine;
+            code += "        $(document).ready(function () { " + _NewLine;
+            code += "            ForceNumberTextBox(); " + _NewLine;
+            code += "            //For Change Lange " + _NewLine;
+            //code += "            $('.dropdown-button').dropdown({ " + _NewLine;
+            //code += "                inDuration: 300, " + _NewLine;
+            //code += "                outDuration: 225, " + _NewLine;
+            //code += "                constrain_width: true, // Does not change width of dropdown to that of the activator " + _NewLine;
+            //code += "                hover: false, // Activate on hover " + _NewLine;
+            //code += "                gutter: 0, // Spacing from edge " + _NewLine;
+            //code += "                belowOrigin: true, // Displays dropdown below the button " + _NewLine;
+            //code += "                alignment: 'left' // Displays dropdown with edge aligned to the left of button " + _NewLine;
+            //code += "            }); " + _NewLine;
+
+            code += "            $('.datepicker').pickadate({ " + _NewLine;
+            code += "                selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
+            code += "                selectYears: 15,// Creates a dropdown of 15 years to control year,  " + _NewLine;
+            code += "                format: 'd mmmm yyyy', " + _NewLine;
+            code += "            });" + _NewLine;
+
+            //code += "            $('.dropdown-button').hover(function () { " + _NewLine;
+            //code += "                GotoTop(); " + _NewLine;
+            //code += "            }); " + _NewLine;
+            code += " " + _NewLine;
+            //code += "            $('select').material_select(); " + _NewLine;
+            code += " " + _NewLine;
+            //code += "            $('#ulpage').pagination({ " + _NewLine;
+            //code += "                items: '<%=  ViewState[\"recordCount\"].ToString()%>', " + _NewLine;
+            //code += "                itemsOnPage: '<%= PageSize%>', " + _NewLine;
+            //code += " " + _NewLine;
+            //code += "                prevText: '<img class=\"iconDirection\" src=\"Images/1457020750_arrow-left-01.svg\" />', " + _NewLine;
+            //code += "                nextText: '<img class=\"iconDirection\" src=\"Images/1457020740_arrow-right-01.svg\" />', " + _NewLine;
+            //code += " " + _NewLine;
+            //code += "                currentPage: '<%=  ViewState[\"CurrentPage\"].ToString()%>', " + _NewLine;
+            //code += "                //cssStyle: 'light-theme', " + _NewLine;
+            //code += "                onPageClick: function (event, page) { " + _NewLine;
+            //code += "                    var pagenum = ''; " + _NewLine;
+            //code += "                    if (event < 10) { " + _NewLine;
+            //code += "                        pagenum = '0' + event; " + _NewLine;
+            //code += "                    } " + _NewLine;
+            //code += "                    else { " + _NewLine;
+            //code += "                        pagenum = event; " + _NewLine;
+            //code += "                    } " + _NewLine;
+            //code += "                    var code = 'ctl00$ContentPlaceHolder1$rpt" + _TableName + "Pagger$ctl' + pagenum + '$lnkPage'; " + _NewLine;
+            //code += " " + _NewLine;
+            //code += "                    __doPostBack(code, ''); " + _NewLine;
+            //code += "                } " + _NewLine;
+            //code += " " + _NewLine;
+            //code += "            }); " + _NewLine;
+            code += paginationJavaScript();
+
+            code += " " + _NewLine;
+
+            code += leanModalJavaScript();
+
+            code += EditTableJavaScript();
+
+            code += AutocompleteJavaScript();
+
+
+            //code += "            //Fix Stlyte " + _NewLine;
+            //code += "            var UA = navigator.userAgent; " + _NewLine;
+            //code += "            var html = document.documentElement; " + _NewLine;
+            //code += "            if (UA.indexOf(\"IEMobile\") === -1) { " + _NewLine;
+            //code += "                if ((UA.indexOf(\"rv:11.\") !== -1) && (!html.classList.contains('ie11')) && window.navigator.msPointerEnabled) { " + _NewLine;
+            //code += "                    html.classList.add(\"ie11\"); " + _NewLine;
+            //code += "                } else if ((UA.indexOf(\"MSIE 10.\") !== -1) && (!html.classList.contains('ie10')) && window.navigator.msPointerEnabled) { " + _NewLine;
+            //code += "                    html.classList.add(\"ie10\"); " + _NewLine;
+            //code += "                } " + _NewLine;
+            //code += "                else if ((UA.indexOf(\"MSIE 8.\") !== -1) && (!html.classList.contains('ie8')) && window.navigator.msPointerEnabled) { " + _NewLine;
+            //code += "                    html.classList.add(\"ie8\"); " + _NewLine;
+            //code += "                } " + _NewLine;
+            //code += "            } " + _NewLine;
+            //code += " " + _NewLine;
+
+            code += "        });//End " + _NewLine;
+            code += " " + _NewLine;
+
+            code += SearchJavaScript();
+
+
+
             code += "        $('select').material_select(); " + _NewLine;
             code += " " + _NewLine;
-            code += "        function GotoTop() { " + _NewLine;
-            code += "            $(\"html, body\").animate({ scrollTop: 0 }, \"verry fast\"); " + _NewLine;
-            code += "            //    $(\"html, body\").scrollTop(); " + _NewLine;
-            code += "        } " + _NewLine;
-            code += " " + _NewLine;
-            code += "        //For Validate Type " + _NewLine;
-            code += "        function ForceNumberTextBox() { " + _NewLine;
-           // code += "            $(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
+            //code += "        function GotoTop() { " + _NewLine;
+            //code += "            $(\"html, body\").animate({ scrollTop: 0 }, \"verry fast\"); " + _NewLine;
+            //code += "            //    $(\"html, body\").scrollTop(); " + _NewLine;
+            //code += "        } " + _NewLine;
+            //code += " " + _NewLine;
 
-            code += "$(\".ForceNumber\").ForceNumericOnly();  " + _NewLine;
-            code += "$(\".ForceNumber2Digit\").ForceNumericOnly2Digit(); " + _NewLine;
-            code += "        } " + _NewLine;
 
-            code += " </script>";
+            //code += "        //For Validate Type " + _NewLine;
+            //code += "        function ForceNumberTextBox() { " + _NewLine;
+            //// code += "            $(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
+
+            //code += "$(\".ForceNumber\").ForceNumericOnly();  " + _NewLine;
+            //code += "$(\".ForceNumber2Digit\").ForceNumericOnly2Digit(); " + _NewLine;
+            //code += "        } " + _NewLine;
+            code += ForceNumberTextBoxJavaScript();
+            code += "</script>";
             return code;
         }
 
-        private string GenClassCheckBoxList()
+        protected string GenClassCheckBoxList()
         {
             string code = "";
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
@@ -548,7 +629,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenClassTextBoxList()
+        protected string GenClassTextBoxList()
         {
             string code = "";
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
@@ -588,7 +669,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenModalProgress()
+        protected string GenModalProgress()
         {
             string code = "";
             code += " " + _NewLine;
@@ -602,7 +683,7 @@ namespace StkGenCode.Code.Template
             code += "        </div> " + _NewLine;
             code += "      " + _NewLine;
             code += "    </div>" + _NewLine;
-          //  code += "    </div>" + _NewLine;
+            //  code += "    </div>" + _NewLine;
             return code;
         }
 
@@ -637,7 +718,6 @@ namespace StkGenCode.Code.Template
             _code += GenContentBodyEnd();
 
             _FileCode.writeFile(_FileName.AspxTableCodeName(), _code);
-          
         }
     }
 }

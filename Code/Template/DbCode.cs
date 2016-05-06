@@ -1,9 +1,8 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 
 namespace StkGenCode.Code.Template
 {
-    public class DbCode:CodeBase
+    public class DbCode : CodeBase
     {
         //public FileCode _FileCode;
         //public DataSet _ds;
@@ -61,10 +60,11 @@ namespace StkGenCode.Code.Template
         private string GenSelectOne()
         {
             string _code = "";
-            string column = _ds.Tables[0].Columns[0].ColumnName;
-            _code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
+            string column =  _ds.Tables[0].PrimaryKey[0].ToString();
+           
+                _code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
             _code += "{ " + _NewLine;
-            _code += " string _sql1 = \"SELECT * FROM " + _TableName + " where AmpBangkokIndex = @" + column + "; \"; " + _NewLine;
+            _code += " string _sql1 = \"SELECT *,0 AS RecordCount FROM " + _TableName + " where "+ column + " = @" + column + "; \"; " + _NewLine;
             _code += "   var prset = new List<IDataParameter>();" + _NewLine;
             _code += "  prset.Add(Db.CreateParameterDb(\"@" + column + "\", " + column + "));" + _NewLine;
             _code += "  DataSet ds = Db.GetDataSet(_sql1,prset);" + _NewLine;
@@ -135,15 +135,15 @@ namespace StkGenCode.Code.Template
             code += "prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex)); " + _NewLine;
             code += "prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize)); " + _NewLine;
             code += "" + _NewLine;
-            code += "string commandFilter = \"\"; " + _NewLine;
-            code += "if (Wordfilter != \"\") " + _NewLine;
-            code += "{" + _NewLine;
-            code += "if (commandFilter == \"\") " + _NewLine;
-            code += "{ " + _NewLine;
-            code += "commandFilter = \"Where \"; " + _NewLine;
-            code += "} " + _NewLine;
-            code += "commandFilter += SearchUtility.GenWordfilter(Wordfilter); " + _NewLine;
-            code += "} " + _NewLine;
+            //code += "string commandFilter = \"\"; " + _NewLine;
+            //code += "if (Wordfilter != \"\") " + _NewLine;
+            //code += "{" + _NewLine;
+            //code += "if (commandFilter == \"\") " + _NewLine;
+            //code += "{ " + _NewLine;
+            //code += "commandFilter = \"Where \"; " + _NewLine;
+            //code += "} " + _NewLine;
+            //code += "commandFilter += SearchUtility.GenWordfilter(Wordfilter); " + _NewLine;
+            //code += "} " + _NewLine;
             code += "  " + _NewLine;
             //code += "if (Servicesfilter != \"\") " + _NewLine;
             //code += "{ " + _NewLine;
@@ -156,7 +156,7 @@ namespace StkGenCode.Code.Template
             //code += "commandFilter += \"(\"+ SearchUtility.GenServicesfilter(Servicesfilter)+\")\"; " + _NewLine;
             //code += "} " + _NewLine;
             code += " " + _NewLine;
-            code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", commandFilter)); " + _NewLine;
+            code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", Wordfilter)); " + _NewLine;
             code += " " + _NewLine;
             code += "DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure); " + _NewLine;
             code += "return DataSetToList(ds); " + _NewLine;
@@ -451,9 +451,73 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        private string GenAutoCompleteMethod()
+        {
+            string code = "";
+
+            code += " public List<string> GetKeyWordsAllColumn(string Keyword) " + _NewLine;
+            code += "    { " + _NewLine;
+            code += "        " + _NewLine;
+            //[Sp_Getfxrates_family_Autocomplete]
+            code += "        string sql = \"Sp_Get" + _TableName + "_Autocomplete\"; " + _NewLine;
+            code += "        var prset = new List<IDataParameter>(); " + _NewLine;
+            code += "        prset.Add(Db.CreateParameterDb(\"@Key_word\", Keyword)); " + _NewLine;
+            code += " " + _NewLine;
+            code += "        List<string> dataArray = new List<string>(); " + _NewLine;
+            code += " " + _NewLine;
+            code += "        DataSet ds = Db.GetDataSet(sql, prset,CommandType.StoredProcedure); " + _NewLine;
+            code += "        foreach (DataRow row in ds.Tables[0].Rows) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            dataArray.Add(row[0].ToString()); " + _NewLine;
+            code += "        } " + _NewLine;
+            code += " " + _NewLine;
+            code += "        return dataArray; " + _NewLine;
+            code += "    }" + _NewLine;
+
+            return code;
+        }
+
+
+        private string GenGetWhereformProperties()
+        {
+            string code = "";
+           
+            code += "public string GetWhereformProperties() " + _NewLine;
+            code += "{" + _NewLine;
+            code += "  String sql=\"\";"+ _NewLine;
+            code += "   sql += \"WHERE (1=1) \"; " + _NewLine;
+            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            {
+                //if (isfirst == true)
+                //{
+                //    code += "sql += string.Format(\" where ((''='{0}')or(" + _DataColumn.ColumnName + "='{0}'))\", _" + _TableName + "." + _DataColumn.ColumnName + ");";
+                //    code += _NewLine;
+                //    isfirst = false;
+                //}
+                //else
+                //{
+                //    code += "sql += string.Format(\"  and ((''='{0}')or(" + _DataColumn.ColumnName + "='{0}'))\", _" + _TableName + "." + _DataColumn.ColumnName + ");";
+                //    code += _NewLine;
+                //}
+
+                code += "            if ( _"+_TableName + "." + _DataColumn.ColumnName +"!= null) " + _NewLine;
+                code += "            { " + _NewLine;
+                code += "                sql += string.Format(\" AND ((''='{0}') or (" + _DataColumn.ColumnName + "='{0}') )\", _" + _TableName + "." + _DataColumn.ColumnName + "); " + _NewLine;
+                code += "            } " + _NewLine;
+             
+            
+
+               
+            }
+
+            code += "return sql;" + _NewLine;
+            code += "}" + _NewLine;
+            return code;
+        }
+
+
         public override void Gen()
-       
-       
+
         {
             string _code = "";
             _code = GenUsign();
@@ -472,7 +536,13 @@ namespace StkGenCode.Code.Template
             _code += GenDelete();
             _code += GenConvertDataList();
             _code += GenUpdateColumn();
+
+            _code += GenAutoCompleteMethod();
+
+            _code += GenGetWhereformProperties();
+
             _code += GenEndNameSpaceAndClass();
+
             _code += Comment();
 
             FileName name = new FileName();

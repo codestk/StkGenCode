@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-
+using FirebirdSql.Data.FirebirdClient;
 namespace StkGenCode.Code
 {
     public class Db
@@ -24,5 +24,29 @@ namespace StkGenCode.Code
 
             return ds;
         }
+
+
+        public static DataSet GetDataFireBird(string connectstring, string TableName)
+        {
+            string sql;
+
+            sql = "select * from " + TableName + " where 1=0;";
+            FbConnection _FbConnection = new FbConnection();
+            _FbConnection.ConnectionString = connectstring;
+
+            _FbConnection.Open();
+            DataSet ds = new DataSet();
+
+            FbDataAdapter adapter = new FbDataAdapter(sql, _FbConnection);
+            adapter.Fill(ds);
+
+            //For Get Lenght
+            var dataTables = adapter.FillSchema(ds, SchemaType.Source);
+            ds.Tables.Clear();
+            ds.Tables.Add(dataTables[0]);
+
+            return ds;
+        }
+
     }
 }

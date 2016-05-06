@@ -3,20 +3,15 @@ using System.Data;
 
 namespace StkGenCode.Code.Template
 {
-    public class AspxFromCodeBehide:CodeBase
+    public class AspxFromCodeBehide : CodeBase
     {
         //public FileCode _FileCode;
         //public DataSet _ds;
         //public string _TableName;
 
-      
         //private string _NewLine = " \r\n";
 
         //private string _NotImplement = "throw new Exception(\"Not implement\");";
-
- 
-
-
 
         private string GenPageLoad()
         {
@@ -31,7 +26,6 @@ namespace StkGenCode.Code.Template
 
             return code;
         }
-
 
         private string GenBtnSave()
         {
@@ -168,7 +162,15 @@ namespace StkGenCode.Code.Template
                 if ((_DataColumn.DataType.ToString() == "System.Guid"))
                 { continue; }
 
-                code += "txt" + _DataColumn.ColumnName + ".Text = Stk_TextNull.StringTotext(_" + _TableName + "." + _DataColumn.ColumnName + ".ToString()); " + _NewLine;
+                if (_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ColumnName)
+                {
+                    code += "txt" + _DataColumn.ColumnName + ".Enabled = false;" + _NewLine;
+                }
+              
+                if ((_DataColumn.DataType.ToString() == "System.Boolean"))
+                { code += "txt" + _DataColumn.ColumnName + ".Checked = Convert.ToBoolean( _" + _TableName + "." + _DataColumn.ColumnName + ");" + _NewLine; }
+                else
+                { code += "txt" + _DataColumn.ColumnName + ".Text = Stk_TextNull.StringTotext(_" + _TableName + "." + _DataColumn.ColumnName + ".ToString()); " + _NewLine; }
             }
             code += " } " + _NewLine;
             code += "  " + _NewLine;
@@ -206,7 +208,6 @@ namespace StkGenCode.Code.Template
             code += "public partial class " + _TableName + "Web: System.Web.UI.Page" + _NewLine;
             code += "{" + _NewLine;
 
-         
             return code;
         }
 

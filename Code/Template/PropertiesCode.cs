@@ -49,8 +49,13 @@ namespace StkGenCode.Code.Template
             string _code = "";
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                _code += _DataColumn.DataType.Name + " _" + _DataColumn.ColumnName + "; \r\n";
-                _code += "public " + _DataColumn.DataType.Name + " " + _DataColumn.ColumnName + " { get { return _" + _DataColumn.ColumnName + "; } set { _" + _DataColumn.ColumnName + " = value; } } \r\n \r\n";
+                string NullType = "";
+                if ((_DataColumn.DataType.ToString() == "System.String"))
+                { NullType = ""; }
+                else
+                { NullType = "?"; }
+                    _code += _DataColumn.DataType.Name +NullType + " _" + _DataColumn.ColumnName + "; \r\n";
+                _code += "public " + _DataColumn.DataType.Name + NullType + " " + _DataColumn.ColumnName + " { get { return _" + _DataColumn.ColumnName + "; } set { _" + _DataColumn.ColumnName + " = value; } } \r\n \r\n";
             }
 
             return _code;

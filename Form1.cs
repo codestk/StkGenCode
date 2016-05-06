@@ -18,8 +18,10 @@ namespace StkGenCode
         //List All Table to display
         private void button1_Click(object sender, EventArgs e)
         {
-       
 
+            //string con = @"Server=localhost;User=SYSDBA;Password=P@ssw0rd;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            //var _ds = Db.GetDataFireBird(con, "MPO_FISH");
+        
 
             string sql;
             sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
@@ -48,7 +50,7 @@ namespace StkGenCode
             _path = textBox1.Text;
 
             //string _TableName = "mktsum_log";
-            string _TableName = "";
+           // string _TableName = "";
 
             //foreach (var item in checkedListBox1.CheckedItems)
             //{
@@ -56,11 +58,16 @@ namespace StkGenCode
             //    Gen(_TableName);
             //}
             Gen("fxrates_family");
-            Gen("STK_USER");
+            //Gen("STK_USER");
            
             //MessageBox.Show("Ok");
 
             System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
+
+
+
+       
+
 
             this.Close();
         }
@@ -98,6 +105,36 @@ namespace StkGenCode
             _AspxTableCodeBehine._TableName = _TableName;
             _AspxTableCodeBehine.Gen();
 
+            AspxTableCodeFilterColumn _AspxTableCodeFilterColumn = new AspxTableCodeFilterColumn();
+            _AspxTableCodeFilterColumn._FileCode = F;
+            _AspxTableCodeFilterColumn._ds = _ds;
+            _AspxTableCodeFilterColumn._TableName = _TableName;
+            _AspxTableCodeFilterColumn.Gen();
+
+             
+
+            AspxTableCodeFilterColumnCodeBehide _AspxTableCodeFilterColumnCodeBehide = new AspxTableCodeFilterColumnCodeBehide();
+            _AspxTableCodeFilterColumnCodeBehide._FileCode = F;
+            _AspxTableCodeFilterColumnCodeBehide._ds = _ds;
+            _AspxTableCodeFilterColumnCodeBehide._TableName = _TableName;
+            _AspxTableCodeFilterColumnCodeBehide.Gen();
+
+
+            PageService _PageService = new PageService();
+            _PageService._FileCode = F;
+            _PageService._ds = _ds;
+            _PageService._TableName = _TableName;
+            _PageService.Gen();
+
+
+            string pathPageServiceCodeBehide = _path + @"App_Code\Services\";
+            F.path = pathPageServiceCodeBehide;
+            PageServiceCodeBehide _PageServiceCodeBehide = new PageServiceCodeBehide();
+            _PageServiceCodeBehide._FileCode = F;
+            _PageServiceCodeBehide._ds = _ds;
+            _PageServiceCodeBehide._TableName = _TableName;
+            _PageServiceCodeBehide.Gen();
+         
 
             string pathSQlScript = _path + @"SQL\";
             F.path = pathSQlScript;
@@ -156,6 +193,8 @@ namespace StkGenCode
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //string con = @"Server=localhost;User=SYSDBA;Password=masterket;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            //var _ds = Db.GetDataFireBird(con, "MPO_FISH");
             //Gen("fxrates_family");
             //this.Close();
             //button1_Click(sender, e);

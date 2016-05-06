@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FirebirdSql.Data.FirebirdClient">
+      <HintPath>..\CoreDb\CoreDb\bin\Debug\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,9 +57,13 @@
     <Compile Include="Code\Template\AspxFromCode.cs" />
     <Compile Include="Code\Template\AspxTableCode.cs" />
     <Compile Include="Code\Template\AspxTableCodeBehine.cs" />
+    <Compile Include="Code\Template\AspxTableCodeFilterColumn.cs" />
+    <Compile Include="Code\Template\AspxTableCodeFilterColumnCodeBehide.cs" />
     <Compile Include="Code\Template\CodeBase.cs" />
     <Compile Include="Code\Template\DbCode.cs" />
     <Compile Include="Code\Template\JsCode.cs" />
+    <Compile Include="Code\Template\PageService.cs" />
+    <Compile Include="Code\Template\PageServiceCodeBehide.cs" />
     <Compile Include="Code\Template\PropertiesCode.cs" />
     <Compile Include="Code\Template\StoreProCode.cs" />
     <Compile Include="Code\Type\DbType.cs" />

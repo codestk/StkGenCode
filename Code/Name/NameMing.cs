@@ -25,7 +25,7 @@ namespace StkGenCode.Code
 
         //=================================================================================================
 
-        //auth_dtList.aspx
+      
         public string AspxTableCodeName()
         {
             string name = "";
@@ -40,6 +40,42 @@ namespace StkGenCode.Code
             name = string.Format("{0}List.aspx.cs", _TableName);
             return name;
         }
+        //===================================================================================================
+        public string AspxTableCodeFilterColumnName()
+        {
+            string name = "";
+            name = string.Format("{0}ListFilter.aspx", _TableName);
+            return name;
+        }
+
+        //auth_dtList.aspx.cs
+        public string AspxTableCodeFilterColumnBehineName()
+        {
+            string name = "";
+            name = string.Format("{0}ListFilter.aspx.cs", _TableName);
+            return name;
+        }
+        //
+
+        //Service NAme
+        public string PageServiceName()
+        {
+            //AutoCompleteService.asmx
+            string name = "";
+            name = string.Format("{0}Service.asmx", _TableName);
+            return name;
+        }
+
+        public string PageServiceCodeBehideName()
+        {
+            //AutoCompleteService.asmx
+            string name = "";
+            name = string.Format("{0}Service.cs", _TableName);
+            return name;
+        }
+
+
+
 
         //Sp_auth_dtStore
         public string DbCodeName()
@@ -56,13 +92,17 @@ namespace StkGenCode.Code
             return name;
         }
 
+     
+
+
+
         //=================================================================================================
         //DataBase
         //Sp_auth_dtStore
         public string StoreProCodeName()
         {
             string name = "";
-            name = string.Format("Sp_{0}PageWise.sql", _TableName);
+            name = string.Format("Store_{0}.sql", _TableName);
             return name;
         }
 
@@ -74,6 +114,7 @@ namespace StkGenCode.Code
             name = string.Format("{0}.js", _TableName);
             return name;
         }
+
 
     }
 }

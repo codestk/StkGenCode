@@ -8,12 +8,12 @@ namespace StkGenCode.Code.Template
         //public DataSet _ds;
         //public string _TableName;
 
-        //private string _fileType = ".aspx.cs";
-        //private string _NewLine = " \r\n";
+        //protected string _fileType = ".aspx.cs";
+        //protected string _NewLine = " \r\n";
 
-        //private string _NotImplement = "throw new Exception(\"Not implement\");";
+        //protected string _NotImplement = "throw new Exception(\"Not implement\");";
 
-        private string GenUsign()
+        protected string GenUsign()
         {
             string _code = "";
             _code += "using System;" + _NewLine;
@@ -29,7 +29,7 @@ namespace StkGenCode.Code.Template
             return _code;
         }
 
-        private string GenConstance()
+        protected string GenConstance()
         {
             string code = "  ";
             //code += " public int PageSize = 10; " + _NewLine;
@@ -37,7 +37,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenPageLoad()
+        protected string GenPageLoad()
         {
             string code = "  ";
             //code += " protected void Page_Load(object sender, EventArgs e) " + _NewLine;
@@ -62,10 +62,10 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenGetPageWise()
+        protected string GenGetPageWise()
         {
             string code = "  ";
-            //code += " private void GetPageWise(int pageIndex) " + _NewLine;
+            //code += " protected void GetPageWise(int pageIndex) " + _NewLine;
             //code += "{" + _NewLine;
             //code += " " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
             //code += "  var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize);  " + _NewLine;
@@ -74,12 +74,13 @@ namespace StkGenCode.Code.Template
             //code += "  rpt" + _TableName + "Data.DataSource = result; " + _NewLine;
             //code += "  rpt" + _TableName + "Data.DataBind(); " + _NewLine;
             //code += " } " + _NewLine;
-            code += "    private void GetPageWise(int pageIndex) " + _NewLine;
+            code += "    protected void GetPageWise(int pageIndex) " + _NewLine;
             code += "{ " + _NewLine;
             code += " " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
-
+            code += " string wherefilter = SearchUtility.SqlContain(txtSearch.Text);" + _NewLine;
+            code += "var result = _"+ _TableName + ".GetPageWise(pageIndex, PageSize, wherefilter); " + _NewLine;
             //code += "string services = GetSelectedService(); " + _NewLine;
-            code += "var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize, txtSearch.Text); " + _NewLine;
+            //code += "var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize, txtSearch.Text); " + _NewLine;
             code += "           // var result = _" + _TableName + ".GetWithFilter(false, \"\"); " + _NewLine;
 
             code += "if (result.Count == 0) " + _NewLine;
@@ -107,10 +108,10 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenPopulatePager()
+        protected string GenPopulatePager()
         {
             string code = "  ";
-            //code += " private void PopulatePager(int recordCount, int currentPage) " + _NewLine;
+            //code += " protected void PopulatePager(int recordCount, int currentPage) " + _NewLine;
             //code += "  {" + _NewLine;
             //code += "  double dblPageCount = (double)((decimal)recordCount / (PageSize)); " + _NewLine;
             //code += "  int pageCount = (int)Math.Ceiling(dblPageCount);";
@@ -130,7 +131,7 @@ namespace StkGenCode.Code.Template
             //code += " rpt" + _TableName + "Pagger.DataBind();  " + _NewLine;
             //code += "  }" + _NewLine;
 
-            code += "  private void PopulatePager(int recordCount, int currentPage) " + _NewLine;
+            code += "  protected void PopulatePager(int recordCount, int currentPage) " + _NewLine;
             code += "        { " + _NewLine;
             code += "            double dblPageCount = (double)((decimal)recordCount / (PageSize)); " + _NewLine;
             code += "            int pageCount = (int)Math.Ceiling(dblPageCount); List<ListItem> pages = new List<ListItem>(); " + _NewLine;
@@ -169,7 +170,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenPaggerClass()
+        protected string GenPaggerClass()
         {
             string code = "  ";
             code += "public string PaggerClass(object Enabled, object Value) " + _NewLine;
@@ -202,10 +203,10 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenHideResult()
+        protected string GenHideResult()
         {
             string code = "  ";
-            code += "  private void hideTool() " + _NewLine;
+            code += "  protected void hideTool() " + _NewLine;
             code += "        { " + _NewLine;
             code += "             " + _NewLine;
             code += "            divResult.Visible = false; " + _NewLine;
@@ -214,10 +215,10 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenShowResult()
+        protected string GenShowResult()
         {
             string code = "  ";
-            code += "   private void ShowTool() " + _NewLine;
+            code += "   protected void ShowTool() " + _NewLine;
             code += "        { " + _NewLine;
             code += "            // divfilter.Visible = true; " + _NewLine;
             code += "            divResult.Visible = true; " + _NewLine;
@@ -226,7 +227,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string T()
+        protected string T()
         {
             string code = "  ";
             code += "  " + _NewLine;
@@ -243,7 +244,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string BeginClass()
+        protected string BeginClass()
         {
             string code = "  ";
             code += "public partial class " + _TableName + "List: System.Web.UI.Page" + _NewLine;
@@ -251,7 +252,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string EndClass()
+        protected string EndClass()
         {
             return "}";
         }
@@ -275,7 +276,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GedTagCheck()
+        protected string GedTagCheck()
         {
             string code = "";
 
@@ -302,25 +303,25 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenSaveColumn()
-        {
-            string code = "";
+        //protected string GenSaveColumn()
+        //{
+        //    string code = "";
 
-            code += " //For Jquery  ---------------------------------------------------------------------------------------------- " + _NewLine;
-            code += "        [WebMethod] " + _NewLine;
-            code += "        public static Boolean SaveColumn(string id, string column, string value) " + _NewLine;
-            code += "        { " + _NewLine;
-            code += "            " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+        //    code += " //For Jquery  ---------------------------------------------------------------------------------------------- " + _NewLine;
+        //    code += "        [WebMethod] " + _NewLine;
+        //    code += "        public static Boolean SaveColumn(string id, string column, string value) " + _NewLine;
+        //    code += "        { " + _NewLine;
+        //    code += "            " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
          
-            code += " " + _NewLine;
+        //    code += " " + _NewLine;
     
-            code += " " + _NewLine;
-            code += "            bool isUpdate = _" + _TableName + "Db.UpdateColumn(id, column, value); " + _NewLine;
-            code += "            return isUpdate; " + _NewLine;
-            code += "        }" + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "            bool isUpdate = _" + _TableName + "Db.UpdateColumn(id, column, value); " + _NewLine;
+        //    code += "            return isUpdate; " + _NewLine;
+        //    code += "        }" + _NewLine;
 
-            return code;
-        }
+        //    return code;
+        //}
 
 
 
@@ -345,7 +346,7 @@ namespace StkGenCode.Code.Template
             _code += GenHideResult();
             _code += GenShowResult();
             _code += GedTagCheck();
-            _code += GenSaveColumn();
+            //_code += GenSaveColumn();
 
 
             _code += EndClass();

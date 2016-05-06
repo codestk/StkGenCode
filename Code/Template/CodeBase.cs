@@ -26,6 +26,8 @@ namespace StkGenCode.Code.Template
             _FileName._TableName = _TableName;
             _FileName._ds = _ds;
 
+
+           
         }
     }
 }
