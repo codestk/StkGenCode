@@ -21,6 +21,8 @@ namespace StkGenCode.Code.Template
             _code += "using System.Data;" + _NewLine;
             _code += "using System.Linq;" + _NewLine;
             _code += "using System.Web;" + _NewLine;
+            _code += "using System.Web.UI.WebControls;" + _NewLine;
+            
             //_code += "using ExchangeService.Code;" + _NewLine;
 
             return _code;
@@ -105,7 +107,7 @@ namespace StkGenCode.Code.Template
             sql += "}" + _NewLine;
             sql += "else" + _NewLine;
             sql += "{" + _NewLine;
-            sql += " SetSort(sortAscending, sortExpression);";
+            //sql += " SetSort(sortAscending, sortExpression);";
             sql += "}" + _NewLine;
 
             sql += _NewLine;
@@ -130,35 +132,40 @@ namespace StkGenCode.Code.Template
 
             code += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter) " + _NewLine;
             code += "{ " + _NewLine;
-            code += "string _sql1 = \"Sp_Get" + _TableName + "PageWise\"; " + _NewLine;
+            code += "string store = \"Sp_Get" + _TableName + "PageWise\"; " + _NewLine;
+
+
+            code += "            string sql = \"\"; " + _NewLine;
+            code += " " + _NewLine;
+            code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [" + _TableName + "]' + @CommandFilter; " + _NewLine;
+            code += "            string ColumnSort = \"\"; " + _NewLine;
+            code += "            if (_SortExpression == null) " + _NewLine;
+            code += "            { " + _NewLine;
+            code += "                ColumnSort = DataKey; " + _NewLine;
+            code += "            } " + _NewLine;
+            code += "            else " + _NewLine;
+            code += "            { " + _NewLine;
+            code += "                ColumnSort = _SortExpression; " + _NewLine;
+            code += "            } " + _NewLine;
+            code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
+            code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
+            code += " sql += Wordfilter; " + _NewLine;
+           
+            code += " " + _NewLine;
+            
             code += "var prset = new List<IDataParameter>(); " + _NewLine;
             code += "prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex)); " + _NewLine;
             code += "prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize)); " + _NewLine;
             code += "" + _NewLine;
-            //code += "string commandFilter = \"\"; " + _NewLine;
-            //code += "if (Wordfilter != \"\") " + _NewLine;
-            //code += "{" + _NewLine;
-            //code += "if (commandFilter == \"\") " + _NewLine;
-            //code += "{ " + _NewLine;
-            //code += "commandFilter = \"Where \"; " + _NewLine;
-            //code += "} " + _NewLine;
-            //code += "commandFilter += SearchUtility.GenWordfilter(Wordfilter); " + _NewLine;
-            //code += "} " + _NewLine;
-            code += "  " + _NewLine;
-            //code += "if (Servicesfilter != \"\") " + _NewLine;
-            //code += "{ " + _NewLine;
-            //code += "if (commandFilter == \"\") " + _NewLine;
-            //code += "{ " + _NewLine;
-            //code += "commandFilter = \"Where \"; " + _NewLine;
-            //code += "} " + _NewLine;
-            //code += "else " + _NewLine;
-            //code += "{ commandFilter += \" and \"; } " + _NewLine;
-            //code += "commandFilter += \"(\"+ SearchUtility.GenServicesfilter(Servicesfilter)+\")\"; " + _NewLine;
-            //code += "} " + _NewLine;
+  
+
+
+
+
             code += " " + _NewLine;
-            code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", Wordfilter)); " + _NewLine;
+            code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", sql)); " + _NewLine;
             code += " " + _NewLine;
-            code += "DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure); " + _NewLine;
+            code += "DataSet ds = Db.GetDataSet(store, prset, CommandType.StoredProcedure); " + _NewLine;
             code += "return DataSetToList(ds); " + _NewLine;
             code += "}" + _NewLine;
 
@@ -390,8 +397,10 @@ namespace StkGenCode.Code.Template
         private string GenConStance()
         {
             string _code = "";
-            _code += "  public " + _TableName + " _" + _TableName + ";";
-            _code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
+            _code += "  public " + _TableName + " _" + _TableName + ";" + _NewLine;
+
+            _code += "public const string DataKey = \""+_ds.Tables[0].PrimaryKey[0].ColumnName+"\";"+ _NewLine;
+        _code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
             _code += "public const string DataValue = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
             return _code;
         }
@@ -478,11 +487,11 @@ namespace StkGenCode.Code.Template
         }
 
 
-        private string GenGetWhereformProperties()
+        private string GenWhereformProperties()
         {
             string code = "";
            
-            code += "public string GetWhereformProperties() " + _NewLine;
+            code += "public string GenWhereformProperties() " + _NewLine;
             code += "{" + _NewLine;
             code += "  String sql=\"\";"+ _NewLine;
             code += "   sql += \"WHERE (1=1) \"; " + _NewLine;
@@ -515,7 +524,40 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        public string GenSql()
+        {
+            string code = "";
+            code += "  public string GenSql() " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            string sql = \"\"; " + _NewLine;
+            code += " " + _NewLine;
+            code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM ["+_TableName+"]' + @CommandFilter; " + _NewLine;
+            code += "            string ColumnSort = \"\"; " + _NewLine;
+            code += "            if (_SortExpression == null) " + _NewLine;
+            code += "            { " + _NewLine;
+            code += "                ColumnSort = DataKey; " + _NewLine;
+            code += "            } " + _NewLine;
+            code += "            else " + _NewLine;
+            code += "            { " + _NewLine;
+            code += "                ColumnSort = _SortExpression; " + _NewLine;
+            code += "            } " + _NewLine;
+            code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
+            code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM ["+ _TableName + "] \", sortCommnad); " + _NewLine;
+            code += " " + _NewLine;
+            code += "            sql += GenWhereformProperties(); " + _NewLine;
+            code += "            return sql; " + _NewLine;
+            code += "        }" + _NewLine;
+            return code;
+        }
 
+        string GenProperties()
+
+        {
+            string code = "";
+            code += " public SortDirection _SortDirection { get; set; }" + _NewLine;
+            code += " public string _SortExpression { get; set; }" + _NewLine;
+            return code;
+        }
         public override void Gen()
 
         {
@@ -523,7 +565,7 @@ namespace StkGenCode.Code.Template
             _code = GenUsign();
 
             _code += GenBeginNameSpaceAndClass();
-            // _code += GenProperties();
+          _code += GenProperties();
             _code += GenConStance();
 
             _code += GenGetAll();
@@ -538,8 +580,8 @@ namespace StkGenCode.Code.Template
             _code += GenUpdateColumn();
 
             _code += GenAutoCompleteMethod();
-
-            _code += GenGetWhereformProperties();
+            _code += GenSql();
+            _code += GenWhereformProperties();
 
             _code += GenEndNameSpaceAndClass();
 

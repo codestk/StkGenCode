@@ -12,7 +12,7 @@ namespace StkGenCode.Code.Template
         private string BeginClass()
         {
             string code = "  ";
-            code += "public partial class " + _TableName + "Filter: System.Web.UI.Page" + _NewLine;
+            code += "public partial class " + _TableName + "Filter: StkRepeaterExten" + _NewLine;
             code += "{" + _NewLine;
             return code;
         }
@@ -209,8 +209,9 @@ namespace StkGenCode.Code.Template
             string code = "";
             code += " protected void btnSearch_Click(object sender, EventArgs e) " + _NewLine;
             code += "   { " + _NewLine;
-            code += "ViewState[\"CurrentPage\"] = 1;" + _NewLine;
-            code += "Bind();" + _NewLine;
+            code += "  SortExpression = null;// ClearSort " + _NewLine;
+            code += "        CurrentPage = 1; " + _NewLine;
+            code += "        Bind();" + _NewLine;
             code += "    }" + _NewLine;
             return code;
         }
@@ -218,18 +219,53 @@ namespace StkGenCode.Code.Template
         private string GenBind()
         {
             string code = "";
-            code += "void Bind()" + _NewLine;
+            code += "   protected override void Bind()" + _NewLine;
             code += "   { " + _NewLine;
+
+            code += "int pageIndex = Convert.ToInt32(CurrentPage);" + _NewLine;
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
 
             code += MapControlToProPerties(_ds, false);
 
-            code += "_" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
+
+            code += "    _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
             code += " " + _NewLine;
-            code += "        string wherefilter = _" + _TableName + "Db.GetWhereformProperties();" + _NewLine;
-            code += " int pageInt = Convert.ToInt32(ViewState[\"CurrentPage\"]);" + _NewLine;
-            code += " GetPageWise(pageInt, wherefilter);" + _NewLine;
+            code += "        if (SortExpression != null) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            _"+_TableName+"Db._SortDirection = SortDirection; " + _NewLine;
+            code += "            _" + _TableName + "Db._SortExpression = SortExpression; " + _NewLine;
+            code += "        } " + _NewLine;
+            code += " " + _NewLine;
+            code += " " + _NewLine;
+            code += "        _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
+            code += "         string wherefilter = _STK_USERDb.GenWhereformProperties();" + _NewLine;
+            code += "        var result = _" + _TableName + "Db.GetPageWise(pageIndex, PageSize, wherefilter); " + _NewLine;
+            code += " " + _NewLine;
+            code += " " + _NewLine;
+            code += "  " + _NewLine;
+            code += "        if (result.Count == 0) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            //No data " + _NewLine;
+            code += "            hideTool(); " + _NewLine;
+            code += "            rpt" + _TableName + "Data.DataBind(); " + _NewLine;
+            code += "            DivNoresults.Visible = true; " + _NewLine;
+            code += "            return; " + _NewLine;
+            code += "        } " + _NewLine;
+            code += "        //Hide MEssage " + _NewLine;
+            code += "        DivNoresults.Visible = false; " + _NewLine;
+            code += "        int rowCount = result[0].RecordCount; " + _NewLine;
+            code += "        RecordCount = rowCount; " + _NewLine;
+            code += "        divResult.Visible = true; " + _NewLine;
+            code += "        this.PopulatePager(RecordCount, pageIndex); " + _NewLine;
+            code += "        rpt" + _TableName + "Data.DataSource = result; " + _NewLine;
+            code += "        rpt" + _TableName + "Data.DataBind(); " + _NewLine;
+
+            //code += "_" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
+            //code += " " + _NewLine;
+            //code += "        string wherefilter = _" + _TableName + "Db.GetWhereformProperties();" + _NewLine;
+            //code += " int pageInt = Convert.ToInt32(ViewState[\"CurrentPage\"]);" + _NewLine;
+            //code += " GetPageWise(pageInt, wherefilter);" + _NewLine;
             code += "    }" + _NewLine;
             return code;
 
@@ -246,16 +282,16 @@ namespace StkGenCode.Code.Template
             _code += GenPageLoad();
             _code += GenSearchEvent();
             _code += GenBind();
-          _code += GenGetPageWise();
-            _code += GenPageChange();
+         // _code += GenGetPageWise();
+            //_code += GenPageChange();
             //_code += GenGetPageWise();
-            _code += GenPopulatePager();
+           // _code += GenPopulatePager();
 
-            _code += GenPaggerClass();
+           // _code += GenPaggerClass();
 
             _code += GenHideResult();
             _code += GenShowResult();
-            _code += GedTagCheck();
+           // _code += GedTagCheck();
             //_code += GenSaveColumn();
 
 

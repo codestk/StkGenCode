@@ -25,12 +25,12 @@
             //Usign Gen Text Box
 
             string txtBoxSet = _AspxFromCodeaspx.GenTextBox();
-            txtBoxSet = txtBoxSet.Replace("s12", "s3");
+            //txtBoxSet = txtBoxSet.Replace("s12", "s3");
             code += txtBoxSet;
             code += "                <div class=\"input-field col s12\"> " + _NewLine;
             code += " " + _NewLine;
             // code += "                    <a class=\"waves-effect waves-light btn center\">Search</a> " + _NewLine;
-            code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\" runat=\"server\" Text=\"Search\" />" + _NewLine;
+            code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\" OnClientClick=\"return Search();\" runat=\"server\" Text=\"Search\" />" + _NewLine;
 
             code += "                </div> " + _NewLine;
             code += "            </div> " + _NewLine;

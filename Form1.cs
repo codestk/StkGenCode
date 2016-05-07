@@ -57,8 +57,8 @@ namespace StkGenCode
             //    _TableName = item.ToString();
             //    Gen(_TableName);
             //}
-            Gen("fxrates_family");
-            //Gen("STK_USER");
+            //Gen("fxrates_family");
+            Gen("STK_USER");
            
             //MessageBox.Show("Ok");
 

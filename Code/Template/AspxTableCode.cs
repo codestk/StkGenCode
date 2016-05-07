@@ -41,7 +41,9 @@ namespace StkGenCode.Code.Template
         protected string GenTableRepeater()
         {
             string code = "  ";
-            code += "   <table class=\"striped\"> " + _NewLine;
+            code += "  <asp:Repeater ID = \"rpt" + _TableName + "Data\" runat= \"server\"  OnItemCommand=\"Sort_Click\"  OnItemCreated=\"rptSTK_USERData_ItemCreated\"    > " + _NewLine;
+
+            code += "    <HeaderTemplate>  <table class=\"striped\"> " + _NewLine;
             code += "  <thead> " + _NewLine;
             code += "  <tr> " + _NewLine;
             //code += " <th>Currency</th>  " + _NewLine;
@@ -50,13 +52,16 @@ namespace StkGenCode.Code.Template
             //code += "  <th>Buying Rates	</th> " + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                code += " <th style=\"width: 300px; \">" + _DataColumn.ColumnName.ToUpper() + "</th> " + _NewLine;
+                //code += " <th style=\"width: 300px; \">" + _DataColumn.ColumnName.ToUpper() + "</th> " + _NewLine;
+
+                code += "<th> <asp:LinkButton ID =\"lnk" + _DataColumn.ColumnName + "\"  Width =\"300px\"  runat =\"server\" CommandName=\""+ _DataColumn.ColumnName + "\" CssClass=\"hrefclass\"  >"+ _DataColumn.ColumnName + "</asp:LinkButton></th> " + _NewLine;
             }
 
             code += "  </tr> " + _NewLine;
             code += "   </thead>" + _NewLine;
             code += "   <tbody> " + _NewLine;
-            code += "  <asp:Repeater ID = \"rpt" + _TableName + "Data\" runat= \"server\" > " + _NewLine;
+            code += "  </HeaderTemplate> " + _NewLine;
+             
             code += "   <ItemTemplate>" + _NewLine;
             code += " <tr> " + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
@@ -242,13 +247,16 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
             code += "            $('#ulpage').pagination({ " + _NewLine;
-            code += "                items: '<%=  ViewState[\"recordCount\"].ToString()%>', " + _NewLine;
+            //code += "                items: '<%=  ViewState[\"recordCount\"].ToString()%>', " + _NewLine;
+
+            code += "items: '<%= RecordCount.ToString()%>',   " + _NewLine;
             code += "                itemsOnPage: '<%= PageSize%>', " + _NewLine;
             code += " " + _NewLine;
             code += "                prevText: '<img class=\"iconDirection\" src=\"Images/1457020750_arrow-left-01.svg\" />', " + _NewLine;
             code += "                nextText: '<img class=\"iconDirection\" src=\"Images/1457020740_arrow-right-01.svg\" />', " + _NewLine;
             code += " " + _NewLine;
-            code += "                currentPage: '<%=  ViewState[\"CurrentPage\"].ToString()%>', " + _NewLine;
+            //code += "                currentPage: '<%=  ViewState[\"CurrentPage\"].ToString()%>', " + _NewLine;
+            code += " currentPage: '<%=   CurrentPage.ToString()%>',";
             code += "                //cssStyle: 'light-theme', " + _NewLine;
             code += "                onPageClick: function (event, page) { " + _NewLine;
             code += "                    var pagenum = ''; " + _NewLine;
@@ -260,6 +268,9 @@ namespace StkGenCode.Code.Template
             code += "                    } " + _NewLine;
             code += "                    var code = 'ctl00$ContentPlaceHolder1$rpt" + _TableName + "Pagger$ctl' + pagenum + '$lnkPage'; " + _NewLine;
             code += " " + _NewLine;
+
+
+            code += "   $('#modal1').openModal();  " + _NewLine;
             code += "                    __doPostBack(code, ''); " + _NewLine;
             code += "                } " + _NewLine;
             code += " " + _NewLine;
@@ -333,7 +344,7 @@ namespace StkGenCode.Code.Template
             code += "                } " + _NewLine;
             code += " " + _NewLine;
             code += "                //Save Data To CodeBehide " + _NewLine;
-            code += "                var result = fxrates_familyService.SaveColumn(id, column, data); " + _NewLine;
+            code += "                var result = "+_TableName+"Service.SaveColumn(id, column, data); " + _NewLine;
             code += " " + _NewLine;
             code += "                if (result == true) { " + _NewLine;
             code += "                    tdContent.find(\"span\").show(); " + _NewLine;
@@ -474,10 +485,11 @@ namespace StkGenCode.Code.Template
             string code = "";
             code += "        function Search() { " + _NewLine;
             code += " " + _NewLine;
-            code += "            if ($('#<%=txtSearch.ClientID%>').val() == '') { " + _NewLine;
-            code += "                Materialize.toast('Please specify the filter.', 3000, 'toastCss'); " + _NewLine;
-            code += "                return false; " + _NewLine;
-            code += "            } " + _NewLine;
+            code += "//Uncoment for chek empty" + _NewLine;
+            code += "//if ($('#< % =txtSearch.ClientID % >').val() == '') { " + _NewLine;
+            code += "//Materialize.toast('Please specify the filter.', 3000, 'toastCss'); " + _NewLine;
+            code += "//return false; " + _NewLine;
+            code += "//} " + _NewLine;
             code += "            $('#modal1').openModal(); " + _NewLine;
             code += " " + _NewLine;
             code += "            return true; " + _NewLine;

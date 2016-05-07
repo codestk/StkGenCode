@@ -33,7 +33,7 @@ namespace StkGenCode.Code.Template
         {
             string code = "  ";
             //code += " public int PageSize = 10; " + _NewLine;
-            code += "public int PageSize = 20;" + _NewLine;
+            //code += "public int PageSize = 20;" + _NewLine;
             return code;
         }
 
@@ -51,8 +51,10 @@ namespace StkGenCode.Code.Template
             code += "        { " + _NewLine;
             code += "            if (!IsPostBack) " + _NewLine;
             code += "            { " + _NewLine;
-            code += "                ViewState[\"CurrentPage\"] = 1; " + _NewLine;
-            code += "                ViewState[\"recordCount\"] = 0; " + _NewLine;
+            //code += "                ViewState[\"CurrentPage\"] = 1; " + _NewLine;
+            //code += "                ViewState[\"recordCount\"] = 0; " + _NewLine;
+            code += "   CurrentPage = 1; " + _NewLine;
+            code += "            RecordCount = 0;" + _NewLine;
             code += "             " + _NewLine;
             code += "                hideTool(); " + _NewLine;
             code += "               " + _NewLine;
@@ -62,50 +64,60 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        protected string GenGetPageWise()
+        private string GenBind()
         {
-            string code = "  ";
-            //code += " protected void GetPageWise(int pageIndex) " + _NewLine;
-            //code += "{" + _NewLine;
-            //code += " " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
-            //code += "  var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize);  " + _NewLine;
-            //code += "  int recordCount = result[0].RecordCount; " + _NewLine;
-            //code += " this.PopulatePager(recordCount, pageIndex);  " + _NewLine;
-            //code += "  rpt" + _TableName + "Data.DataSource = result; " + _NewLine;
-            //code += "  rpt" + _TableName + "Data.DataBind(); " + _NewLine;
-            //code += " } " + _NewLine;
-            code += "    protected void GetPageWise(int pageIndex) " + _NewLine;
-            code += "{ " + _NewLine;
-            code += " " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
-            code += " string wherefilter = SearchUtility.SqlContain(txtSearch.Text);" + _NewLine;
-            code += "var result = _"+ _TableName + ".GetPageWise(pageIndex, PageSize, wherefilter); " + _NewLine;
-            //code += "string services = GetSelectedService(); " + _NewLine;
-            //code += "var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize, txtSearch.Text); " + _NewLine;
-            code += "           // var result = _" + _TableName + ".GetWithFilter(false, \"\"); " + _NewLine;
+            string code = "";
+            code += "   protected override void  Bind()" + _NewLine;
+            code += "   { " + _NewLine;
 
-            code += "if (result.Count == 0) " + _NewLine;
-            code += "{ " + _NewLine;
-            code += "//No data " + _NewLine;
-            code += "hideTool(); " + _NewLine;
-            //rptauth_dtData
-            code += "rpt" + _TableName + "Data.DataBind(); " + _NewLine;
-            code += "DivNoresults.Visible = true; " + _NewLine;
-            code += "   return; " + _NewLine;
-            code += "} " + _NewLine;
-            code += "//Hide MEssage " + _NewLine;
-            code += "DivNoresults.Visible = false; " + _NewLine;
-            //code += "ShowTool(); " + _NewLine;
-            code += "int recordCount = result[0].RecordCount; " + _NewLine;
-            code += "ViewState[\"recordCount\"] = recordCount; " + _NewLine;
+            code += "int pageIndex = Convert.ToInt32(CurrentPage);" + _NewLine;
+            code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
+            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
 
-            //code += "divfilter.Visible = true; " + _NewLine;
-            code += "divResult.Visible = true; " + _NewLine;
-            code += "this.PopulatePager(recordCount, pageIndex); " + _NewLine;
-            code += "rpt" + _TableName + "Data.DataSource = result; " + _NewLine;
-            code += "rpt" + _TableName + "Data.DataBind(); " + _NewLine;
+           
+
+
+            code += "    _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
+            code += " " + _NewLine;
+            code += "        if (SortExpression != null) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            _" + _TableName + "Db._SortDirection = SortDirection; " + _NewLine;
+            code += "            _" + _TableName + "Db._SortExpression = SortExpression; " + _NewLine;
             code += "        } " + _NewLine;
+            code += " " + _NewLine;
+            code += " " + _NewLine;
+            code += "        _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
+            //code += "        string wherefilter = _" + _TableName + "Db.GenSql(); " + _NewLine;
+            code += "      string filterCommnad = SearchUtility.SqlContain(txtSearch.Text);";
+            code += "        var result = _" + _TableName + "Db.GetPageWise(pageIndex, PageSize, filterCommnad); " + _NewLine;
+            code += " " + _NewLine;
+            code += " " + _NewLine;
+            code += "  " + _NewLine;
+            code += "        if (result.Count == 0) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            //No data " + _NewLine;
+            code += "            hideTool(); " + _NewLine;
+            code += "            rpt" + _TableName + "Data.DataBind(); " + _NewLine;
+            code += "            DivNoresults.Visible = true; " + _NewLine;
+            code += "            return; " + _NewLine;
+            code += "        } " + _NewLine;
+            code += "        //Hide MEssage " + _NewLine;
+            code += "        DivNoresults.Visible = false; " + _NewLine;
+            code += "        int rowCount = result[0].RecordCount; " + _NewLine;
+            code += "        RecordCount = rowCount; " + _NewLine;
+            code += "        divResult.Visible = true; " + _NewLine;
+            code += "        this.PopulatePager(RecordCount, pageIndex); " + _NewLine;
+            code += "        rpt" + _TableName + "Data.DataSource = result; " + _NewLine;
+            code += "        rpt" + _TableName + "Data.DataBind(); " + _NewLine;
 
+            //code += "_" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
+            //code += " " + _NewLine;
+            //code += "        string wherefilter = _" + _TableName + "Db.GetWhereformProperties();" + _NewLine;
+            //code += " int pageInt = Convert.ToInt32(ViewState[\"CurrentPage\"]);" + _NewLine;
+            //code += " GetPageWise(pageInt, wherefilter);" + _NewLine;
+            code += "    }" + _NewLine;
             return code;
+
         }
 
         protected string GenPopulatePager()
@@ -247,7 +259,7 @@ namespace StkGenCode.Code.Template
         protected string BeginClass()
         {
             string code = "  ";
-            code += "public partial class " + _TableName + "List: System.Web.UI.Page" + _NewLine;
+            code += "public partial class " + _TableName + "List: StkRepeaterExten" + _NewLine;
             code += "{" + _NewLine;
             return code;
         }
@@ -269,8 +281,9 @@ namespace StkGenCode.Code.Template
             //divResult.Visible = false;
             code += "  return;" + _NewLine;
             code += " }" + _NewLine;
-            code += "ViewState[\"CurrentPage\"] = 1;" + _NewLine;
-            code += "GetPageWise(1);" + _NewLine;
+            code += "  SortExpression = null;// ClearSort " + _NewLine;
+            code += "        CurrentPage = 1; " + _NewLine;
+            code += "        Bind();" + _NewLine;
             code += "}" + _NewLine;
 
             return code;
@@ -337,15 +350,15 @@ namespace StkGenCode.Code.Template
 
             _code += GenPageLoad();
             _code += GenSearchEvent();
-            _code += GenPageChange();
-            _code += GenGetPageWise();
-            _code += GenPopulatePager();
+            //_code += GenPageChange();
+            _code += GenBind();
+            //_code += GenPopulatePager();
 
-            _code += GenPaggerClass();
+            //_code += GenPaggerClass();
 
             _code += GenHideResult();
             _code += GenShowResult();
-            _code += GedTagCheck();
+           // _code += GedTagCheck();
             //_code += GenSaveColumn();
 
 
