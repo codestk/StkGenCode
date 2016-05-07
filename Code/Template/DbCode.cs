@@ -22,7 +22,7 @@ namespace StkGenCode.Code.Template
             _code += "using System.Linq;" + _NewLine;
             _code += "using System.Web;" + _NewLine;
             _code += "using System.Web.UI.WebControls;" + _NewLine;
-            
+
             //_code += "using ExchangeService.Code;" + _NewLine;
 
             return _code;
@@ -62,11 +62,11 @@ namespace StkGenCode.Code.Template
         private string GenSelectOne()
         {
             string _code = "";
-            string column =  _ds.Tables[0].PrimaryKey[0].ToString();
-           
-                _code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
+            string column = _ds.Tables[0].PrimaryKey[0].ToString();
+
+            _code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
             _code += "{ " + _NewLine;
-            _code += " string _sql1 = \"SELECT *,0 AS RecordCount FROM " + _TableName + " where "+ column + " = @" + column + "; \"; " + _NewLine;
+            _code += " string _sql1 = \"SELECT *,0 AS RecordCount FROM " + _TableName + " where " + column + " = @" + column + "; \"; " + _NewLine;
             _code += "   var prset = new List<IDataParameter>();" + _NewLine;
             _code += "  prset.Add(Db.CreateParameterDb(\"@" + column + "\", " + column + "));" + _NewLine;
             _code += "  DataSet ds = Db.GetDataSet(_sql1,prset);" + _NewLine;
@@ -134,7 +134,6 @@ namespace StkGenCode.Code.Template
             code += "{ " + _NewLine;
             code += "string store = \"Sp_Get" + _TableName + "PageWise\"; " + _NewLine;
 
-
             code += "            string sql = \"\"; " + _NewLine;
             code += " " + _NewLine;
             code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [" + _TableName + "]' + @CommandFilter; " + _NewLine;
@@ -150,17 +149,13 @@ namespace StkGenCode.Code.Template
             code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
             code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
             code += " sql += Wordfilter; " + _NewLine;
-           
+
             code += " " + _NewLine;
-            
+
             code += "var prset = new List<IDataParameter>(); " + _NewLine;
             code += "prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex)); " + _NewLine;
             code += "prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize)); " + _NewLine;
             code += "" + _NewLine;
-  
-
-
-
 
             code += " " + _NewLine;
             code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", sql)); " + _NewLine;
@@ -399,8 +394,8 @@ namespace StkGenCode.Code.Template
             string _code = "";
             _code += "  public " + _TableName + " _" + _TableName + ";" + _NewLine;
 
-            _code += "public const string DataKey = \""+_ds.Tables[0].PrimaryKey[0].ColumnName+"\";"+ _NewLine;
-        _code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
+            _code += "public const string DataKey = \"" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\";" + _NewLine;
+            _code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
             _code += "public const string DataValue = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
             return _code;
         }
@@ -486,14 +481,13 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-
         private string GenWhereformProperties()
         {
             string code = "";
-           
+
             code += "public string GenWhereformProperties() " + _NewLine;
             code += "{" + _NewLine;
-            code += "  String sql=\"\";"+ _NewLine;
+            code += "  String sql=\"\";" + _NewLine;
             code += "   sql += \"WHERE (1=1) \"; " + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
@@ -509,14 +503,10 @@ namespace StkGenCode.Code.Template
                 //    code += _NewLine;
                 //}
 
-                code += "            if ( _"+_TableName + "." + _DataColumn.ColumnName +"!= null) " + _NewLine;
+                code += "            if ( _" + _TableName + "." + _DataColumn.ColumnName + "!= null) " + _NewLine;
                 code += "            { " + _NewLine;
                 code += "                sql += string.Format(\" AND ((''='{0}') or (" + _DataColumn.ColumnName + "='{0}') )\", _" + _TableName + "." + _DataColumn.ColumnName + "); " + _NewLine;
                 code += "            } " + _NewLine;
-             
-            
-
-               
             }
 
             code += "return sql;" + _NewLine;
@@ -531,7 +521,7 @@ namespace StkGenCode.Code.Template
             code += "        { " + _NewLine;
             code += "            string sql = \"\"; " + _NewLine;
             code += " " + _NewLine;
-            code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM ["+_TableName+"]' + @CommandFilter; " + _NewLine;
+            code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [" + _TableName + "]' + @CommandFilter; " + _NewLine;
             code += "            string ColumnSort = \"\"; " + _NewLine;
             code += "            if (_SortExpression == null) " + _NewLine;
             code += "            { " + _NewLine;
@@ -542,7 +532,7 @@ namespace StkGenCode.Code.Template
             code += "                ColumnSort = _SortExpression; " + _NewLine;
             code += "            } " + _NewLine;
             code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
-            code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM ["+ _TableName + "] \", sortCommnad); " + _NewLine;
+            code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
             code += " " + _NewLine;
             code += "            sql += GenWhereformProperties(); " + _NewLine;
             code += "            return sql; " + _NewLine;
@@ -550,7 +540,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        string GenProperties()
+        private string GenProperties()
 
         {
             string code = "";
@@ -558,6 +548,7 @@ namespace StkGenCode.Code.Template
             code += " public string _SortExpression { get; set; }" + _NewLine;
             return code;
         }
+
         public override void Gen()
 
         {
@@ -565,7 +556,7 @@ namespace StkGenCode.Code.Template
             _code = GenUsign();
 
             _code += GenBeginNameSpaceAndClass();
-          _code += GenProperties();
+            _code += GenProperties();
             _code += GenConStance();
 
             _code += GenGetAll();

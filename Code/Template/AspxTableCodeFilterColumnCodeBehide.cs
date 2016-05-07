@@ -257,7 +257,11 @@ namespace StkGenCode.Code.Template
             code += "        int rowCount = result[0].RecordCount; " + _NewLine;
             code += "        RecordCount = rowCount; " + _NewLine;
             code += "        divResult.Visible = true; " + _NewLine;
-            code += "        this.PopulatePager(RecordCount, pageIndex); " + _NewLine;
+            //code += "        this.PopulatePager(RecordCount, pageIndex); " + _NewLine;
+
+            code += " " + _NewLine;
+            code += "             rpt" + _TableName + "Pagger.DataSource = this.PopulatePager(RecordCount, pageIndex);  " + _NewLine;
+            code += "             rpt" + _TableName + "Pagger.DataBind();" + _NewLine;
             code += "        rpt" + _TableName + "Data.DataSource = result; " + _NewLine;
             code += "        rpt" + _TableName + "Data.DataBind(); " + _NewLine;
 
