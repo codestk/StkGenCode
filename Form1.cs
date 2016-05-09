@@ -24,7 +24,7 @@ namespace StkGenCode
 
         private void Gen(DataSet _ds, string _TableName)
         {
-            StkGenCode.Code.FileCode F = new FileCode();
+            FileCode F = new FileCode();
             F.path = _path;
             F.ClearAllFile();
 
@@ -81,15 +81,15 @@ namespace StkGenCode
             _PageServiceCodeBehide._TableName = _TableName;
             _PageServiceCodeBehide.Gen();
 
-            string pathSQlScript = _path + @"SQL\";
-            F.path = pathSQlScript;
-            StoreProCode _StoreProCode = new StoreProCode();
-            _StoreProCode._FileCode = F;
-            _StoreProCode._ds = _ds;
-            _StoreProCode._TableName = _TableName;
-            _StoreProCode.Gen();
+            //string pathSQlScript = _path + @"SQL\";
+            //F.path = pathSQlScript;
+            //StoreProCode _StoreProCode = new StoreProCode();
+            //_StoreProCode._FileCode = F;
+            //_StoreProCode._ds = _ds;
+            //_StoreProCode._TableName = _TableName;
+            //_StoreProCode.Gen();
 
-            //Gen Js
+            //Gen Javascript
 
             string pathJs_U = _path + @"Js_U\";
             F.path = pathJs_U;
@@ -99,9 +99,9 @@ namespace StkGenCode
             _JsCode._TableName = _TableName;
             _JsCode.Gen();
 
-            //========Foder Cdoe
+            //========Folder Code
 
-            string pathBuCode = _path + @"App_Code\Code\Business\";
+            string pathBuCode = _path + @"App_Code\Business\";
             F.path = pathBuCode;
             PropertiesCode Pcode = new PropertiesCode();
             Pcode._FileCode = F;
@@ -109,11 +109,11 @@ namespace StkGenCode
             Pcode._TableName = _TableName;
             Pcode.Gen();
 
-            DbCode _DbCode = new DbCode();
-            _DbCode._FileCode = F;
-            _DbCode._ds = _ds;
-            _DbCode._TableName = _TableName;
-            _DbCode.Gen();
+            //DbCode _DbCode = new DbCode();
+            //_DbCode._FileCode = F;
+            //_DbCode._ds = _ds;
+            //_DbCode._TableName = _TableName;
+            //_DbCode.Gen();
 
             DbCodeFireBird _DbCodeFireBird = new DbCodeFireBird();
             _DbCodeFireBird._FileCode = F;

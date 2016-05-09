@@ -1,8 +1,6 @@
-﻿using System.Data;
-
-namespace StkGenCode.Code.Template
+﻿namespace StkGenCode.Code.Template
 {
-    public class AspxTableCodeBehine:CodeBase
+    public class AspxTableCodeBehine : CodeBase
     {
         //public FileCode _FileCode;
         //public DataSet _ds;
@@ -23,7 +21,7 @@ namespace StkGenCode.Code.Template
             _code += "using System.Web;" + _NewLine;
             _code += "using System.Web.UI.WebControls;" + _NewLine;
             _code += "using System.Web.Services;" + _NewLine;
-            
+
             //_code += "using ExchangeService.Code;" + _NewLine;
 
             return _code;
@@ -74,15 +72,12 @@ namespace StkGenCode.Code.Template
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
 
-           
-
-
             code += "    _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
             code += " " + _NewLine;
-            code += "        if (SortExpression != null) " + _NewLine;
+            code += "        if (_SortExpression != null) " + _NewLine;
             code += "        { " + _NewLine;
-            code += "            _" + _TableName + "Db._SortDirection = SortDirection; " + _NewLine;
-            code += "            _" + _TableName + "Db._SortExpression = SortExpression; " + _NewLine;
+            code += "            _" + _TableName + "Db._SortDirection = _SortDirection; " + _NewLine;
+            code += "            _" + _TableName + "Db._SortExpression = _SortExpression; " + _NewLine;
             code += "        } " + _NewLine;
             code += " " + _NewLine;
             code += " " + _NewLine;
@@ -117,7 +112,6 @@ namespace StkGenCode.Code.Template
             //code += " GetPageWise(pageInt, wherefilter);" + _NewLine;
             code += "    }" + _NewLine;
             return code;
-
         }
 
         protected string GenPopulatePager()
@@ -177,7 +171,6 @@ namespace StkGenCode.Code.Template
             code += " ViewState[\"CurrentPage\"] = pageIndex;";
             code += " }" + _NewLine;
             code += "  " + _NewLine;
- 
 
             return code;
         }
@@ -256,7 +249,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        protected string BeginClass()
+        private string BeginClass()
         {
             string code = "  ";
             code += "public partial class " + _TableName + "List: StkRepeaterExten" + _NewLine;
@@ -281,7 +274,7 @@ namespace StkGenCode.Code.Template
             //divResult.Visible = false;
             code += "  return;" + _NewLine;
             code += " }" + _NewLine;
-            code += "  SortExpression = null;// ClearSort " + _NewLine;
+            code += "  _SortExpression = null;// ClearSort " + _NewLine;
             code += "        CurrentPage = 1; " + _NewLine;
             code += "        Bind();" + _NewLine;
             code += "}" + _NewLine;
@@ -325,9 +318,9 @@ namespace StkGenCode.Code.Template
         //    code += "        public static Boolean SaveColumn(string id, string column, string value) " + _NewLine;
         //    code += "        { " + _NewLine;
         //    code += "            " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
-         
+
         //    code += " " + _NewLine;
-    
+
         //    code += " " + _NewLine;
         //    code += "            bool isUpdate = _" + _TableName + "Db.UpdateColumn(id, column, value); " + _NewLine;
         //    code += "            return isUpdate; " + _NewLine;
@@ -335,10 +328,6 @@ namespace StkGenCode.Code.Template
 
         //    return code;
         //}
-
-
-
-
 
         public override void Gen()
         {
@@ -358,18 +347,16 @@ namespace StkGenCode.Code.Template
 
             _code += GenHideResult();
             _code += GenShowResult();
-           // _code += GedTagCheck();
+            // _code += GedTagCheck();
             //_code += GenSaveColumn();
 
-
             _code += EndClass();
-
 
             FileName name = new FileName();
             name._TableName = _TableName;
             name._ds = _ds;
             _FileCode.writeFile(name.AspxTableCodeBehineName(), _code);
-           // _FileCode.writeFile(_TableName + "List", _code);
+            // _FileCode.writeFile(_TableName + "List", _code);
         }
     }
 }

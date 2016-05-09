@@ -23,8 +23,8 @@
             //code += "                </div> " + _NewLine;
             //code += "              " + _NewLine;
             //Usign Gen Text Box
-
-            string txtBoxSet = _AspxFromCodeaspx.GenTextBox();
+            code += "        <div class=\"row\"> " + _NewLine;
+            string txtBoxSet = _AspxFromCodeaspx.GenTextBox(6);
             //txtBoxSet = txtBoxSet.Replace("s12", "s3");
             code += txtBoxSet;
             code += "                <div class=\"input-field col s12\"> " + _NewLine;
@@ -36,7 +36,7 @@
             code += "            </div> " + _NewLine;
             code += "        " + _NewLine;
             code += "        </div> " + _NewLine;
-           
+            code += "        </div> " + _NewLine;
 
             return code;
         }
@@ -84,7 +84,7 @@
             code += EditTableJavaScript();
 
             //code += AutocompleteJavaScript();
-
+            code += AutocompleteMutilColumnJavaScript();
             code += "        });//End " + _NewLine;
             code += " " + _NewLine;
 

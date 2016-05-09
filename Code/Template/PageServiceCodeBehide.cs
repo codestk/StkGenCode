@@ -77,21 +77,39 @@
             return code;
         }
 
-        string GenAutoCompleteMethod()
+        string GenGetKeyWordsAllColumn()
         {
             string code = "";
             code += "[WebMethod] " + _NewLine;
             code += "       public List<string> GetKeyWordsAllColumn(string keyword) " + _NewLine;
             code += "       { " + _NewLine;
             code += "           "+_TableName+"Db _"+ _TableName + "Db = new "+ _TableName + "Db(); " + _NewLine;
-  
-            code += "           List<string> keywords = _"+ _TableName + "Db.GetKeyWordsAllColumn(keyword); " + _NewLine;
+
+            code += "           List<string> keywords = _" + _TableName + "Db.GetKeyWordsAllColumn(keyword); " + _NewLine;
             code += "           return keywords; " + _NewLine;
             code += "       }" + _NewLine;
             code += "" + _NewLine;
 
             return code;
         }
+        string GenGetKeyWordsOneColumn()
+        {
+            string code = "";
+            code += "[WebMethod] " + _NewLine;
+            code += "       public List<string> GetKeyWordsOneColumn(string column, string keyword) " + _NewLine;
+            code += "       { " + _NewLine;
+            code += "           " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+
+            code += "           List<string> keywords = _" + _TableName + "Db.GetKeyWordsOneColumn(column,keyword); " + _NewLine;
+            code += "           return keywords; " + _NewLine;
+            code += "       }" + _NewLine;
+            code += "" + _NewLine;
+
+
+            return code;
+        }
+
+        
 
         public override void Gen()
         {
@@ -106,8 +124,8 @@
             _code += GenVersionMethod();
 
             _code += GenSaveColumn();
-            _code += GenAutoCompleteMethod();
-
+            _code += GenGetKeyWordsAllColumn();
+            _code += GenGetKeyWordsOneColumn();
 
             _code += GenEndClass();
 

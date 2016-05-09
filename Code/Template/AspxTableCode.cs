@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using StkGenCode.Code.Column;
+using System.Data;
 
 namespace StkGenCode.Code.Template
 {
@@ -218,7 +219,7 @@ namespace StkGenCode.Code.Template
             code += "            Make sure all words are spelled correctly. " + _NewLine;
             code += "        </p> " + _NewLine;
             code += "        <p> " + _NewLine;
-            code += "            Try differrent keywords. " + _NewLine;
+            code += "            Try different keywords. " + _NewLine;
             code += "        </p> " + _NewLine;
             code += "        <p> " + _NewLine;
             code += "            Try more general keywords. " + _NewLine;
@@ -375,7 +376,7 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "                //  var id = $(this).parent().parent().parent().find(\"td:first\")[0].outerText; //Get first Td (ID1) " + _NewLine;
             code += "                var id = chk.attributes['data-column-key'].value; " + _NewLine;
-            code += "                debugger " + _NewLine;
+           
             code += "                var column = chk.attributes['data-column-id'].value; " + _NewLine;
             code += "                var Data = \"\"; " + _NewLine;
             code += " " + _NewLine;
@@ -408,7 +409,7 @@ namespace StkGenCode.Code.Template
 
         }
 
-        public  string AutocompleteJavaScript()
+        public  string AutocompleteOneJavaScript()
         {
             string code = "";
             code += "//For Autocomplete  ----------------------------------------------------------------------------------- " + _NewLine;
@@ -426,7 +427,7 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "                    response(data); " + _NewLine;
             code += "                    //$.ajax({ " + _NewLine;
-            code += "                    //    url: \"/WebTemplate/LocationManage.aspx/GetAutoComplete\", " + _NewLine;
+            code += "                    //    url: \"/WebTemplate/LocationManage.aspx/GenGetKeyWordsAllColumn\", " + _NewLine;
             code += "                    //    dataType: \"json\", " + _NewLine;
             code += "                    //    data: { " + _NewLine;
             code += "                    //        Column: 'EnglishAddress3', " + _NewLine;
@@ -460,6 +461,43 @@ namespace StkGenCode.Code.Template
             return code;
 
         }
+
+
+        protected string AutocompleteMutilColumnJavaScript()
+        {
+            string code = "";
+           string classIds= ColumnString.GenLineString(_ds, ".{0},");
+            classIds = classIds.TrimEnd(',');
+            //code += "    $(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
+            code += "    $(\""+ classIds + "\").autocomplete({ " + _NewLine;
+
+            code += " " + _NewLine;
+            code += "                source: function (request, response) { " + _NewLine;
+            code += " " + _NewLine;
+           
+            code += "                    var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
+            code += " " + _NewLine;
+            code += "                    var data = " + _TableName + "Service.GetKeyWordsOneColumn(column, request.term); " + _NewLine;
+            code += " " + _NewLine;
+            code += "                    response(data); " + _NewLine;
+            code += "                   " + _NewLine;
+            code += "                }, " + _NewLine;
+            code += "                minLength: 3, " + _NewLine;
+            code += "                select: function (event, ui) { " + _NewLine;
+            code += "                    //log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " + _NewLine;
+            code += "                }, " + _NewLine;
+            code += "                open: function () { " + _NewLine;
+            code += "                    $(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + _NewLine;
+            code += "                }, " + _NewLine;
+            code += "                close: function () { " + _NewLine;
+            code += "                    $(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + _NewLine;
+            code += "                } " + _NewLine;
+            code += "            });" + _NewLine;
+            return code;
+
+        }
+
+
 
         public string ForceNumberTextBoxJavaScript()
         {
@@ -559,7 +597,7 @@ namespace StkGenCode.Code.Template
 
             code += EditTableJavaScript();
 
-            code += AutocompleteJavaScript();
+            code += AutocompleteOneJavaScript();
 
 
             //code += "            //Fix Stlyte " + _NewLine;

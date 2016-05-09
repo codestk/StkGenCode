@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StkGenCode.Code.Template
 {
-    public class AspxTableCodeFilterColumnCodeBehide: AspxTableCodeBehine
+    public class AspxTableCodeFilterColumnCodeBehide : AspxTableCodeBehine
     {
         private string BeginClass()
         {
@@ -16,9 +12,6 @@ namespace StkGenCode.Code.Template
             code += "{" + _NewLine;
             return code;
         }
-
-
-
 
         private String MapControlToProPerties(DataSet _ds, bool CommentKey = false)
         {
@@ -72,15 +65,12 @@ namespace StkGenCode.Code.Template
                 //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = txt" + _DataColumn.ColumnName + ".Text;" + _NewLine;
                 //}
 
-
-
                 if ((_DataColumn.DataType.ToString() == "System.Int32"))
                 {
-
                     code += string.Format("if (txt{0}.Text != \"\") ", _DataColumn.ColumnName) + _NewLine;
                     code += " {" + _NewLine;
                     code += string.Format("_{0}.{1} = Convert.ToInt32(txt{1}.Text);", _TableName, _DataColumn.ColumnName) + _NewLine;
-                    code +="}" + _NewLine;
+                    code += "}" + _NewLine;
                 }
                 else if (_DataColumn.DataType.ToString() == "System.Decimal")
                 {
@@ -109,49 +99,15 @@ namespace StkGenCode.Code.Template
                     code += string.Format("_{0}.{1} = txt{1}.Text;", _TableName, _DataColumn.ColumnName) + _NewLine;
                     code += "}" + _NewLine;
                 }
-              
-
             }
 
-         
             return code;
         }
-
-        //if (txt_OR_ID.Text != "")
-        //{
-        //    orders.OR_ID = Convert.ToInt32(txt_OR_ID.Text);
-        //}
-        //if (drpCustomer.SelectedIndex != 0)
-        //{
-        //    orders.CUS_ID = drpCustomer.SelectedValue;
-        //}
-        //if ((drpStatus.SelectedIndex != 0))
-        //{
-        //    orders.STATUS = drpStatus.SelectedValue;
-        //}
-
-        //if (txt_BYUSER.Text != "")
-        //{
-        //    orders.BYUSER = txt_BYUSER.Text;
-        //}
-        //if (txt_ORDER_DATE.Text != "")
-        //{
-        //    orders.ORDER_DATE = StkDate.TextToDateThToEn(txt_ORDER_DATE.Text);
-        //}
-
 
         protected new string GenGetPageWise()
         {
             string code = "  ";
-            //code += " protected void GetPageWise(int pageIndex) " + _NewLine;
-            //code += "{" + _NewLine;
-            //code += " " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
-            //code += "  var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize);  " + _NewLine;
-            //code += "  int recordCount = result[0].RecordCount; " + _NewLine;
-            //code += " this.PopulatePager(recordCount, pageIndex);  " + _NewLine;
-            //code += "  rpt" + _TableName + "Data.DataSource = result; " + _NewLine;
-            //code += "  rpt" + _TableName + "Data.DataBind(); " + _NewLine;
-            //code += " } " + _NewLine;
+
             code += "     protected void GetPageWise(int pageIndex,string wherefilter)  " + _NewLine;
             code += "{ " + _NewLine;
             code += "\\ " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
@@ -187,13 +143,13 @@ namespace StkGenCode.Code.Template
 
             return code;
         }
+
         private string GenPageChange()
         {
             string code = "  ";
             code += " protected void Page_Changed(object sender, EventArgs e) " + _NewLine;
             code += " { " + _NewLine;
             code += " int pageIndex = int.Parse((sender as LinkButton).CommandArgument);" + _NewLine;
-            
 
             code += " ViewState[\"CurrentPage\"] = pageIndex;" + _NewLine;
             code += " Bind();" + _NewLine;
@@ -201,20 +157,18 @@ namespace StkGenCode.Code.Template
             code += " }" + _NewLine;
             code += "  " + _NewLine;
 
-
             return code;
         }
-
 
         private string GenSearchEvent()
         {
             string code = "";
             code += " protected void btnSearch_Click(object sender, EventArgs e) " + _NewLine;
             code += "   { " + _NewLine;
-            code += "  SortExpression = null;// ClearSort " + _NewLine;
-            code += "        CurrentPage = 1; " + _NewLine;
-            code += "        Bind();" + _NewLine;
-            code += "    }" + _NewLine;
+            code += "   _SortExpression = null;// ClearSort " + _NewLine;
+            code += "   CurrentPage = 1; " + _NewLine;
+            code += "   Bind();" + _NewLine;
+            code += "   }" + _NewLine;
             return code;
         }
 
@@ -227,16 +181,15 @@ namespace StkGenCode.Code.Template
             code += "int pageIndex = Convert.ToInt32(CurrentPage);" + _NewLine;
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  //" + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
-            code += " " + DbCodeFireBird.ClassName(_TableName) + " _" +  _TableName + "Db = new " + DbCodeFireBird.ClassName(_TableName) + "(); " + _NewLine;
+            code += " " + DbCodeFireBird.ClassName(_TableName) + " _" + _TableName + "Db = new " + DbCodeFireBird.ClassName(_TableName) + "(); " + _NewLine;
             code += MapControlToProPerties(_ds, false);
-
 
             code += "    _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
             code += " " + _NewLine;
-            code += "        if (SortExpression != null) " + _NewLine;
+            code += "        if (_SortExpression != null) " + _NewLine;
             code += "        { " + _NewLine;
-            code += "            _"+_TableName+"Db._SortDirection = SortDirection; " + _NewLine;
-            code += "            _" + _TableName + "Db._SortExpression = SortExpression; " + _NewLine;
+            code += "            _" + _TableName + "Db._SortDirection = _SortDirection; " + _NewLine;
+            code += "            _" + _TableName + "Db._SortExpression = _SortExpression; " + _NewLine;
             code += "        } " + _NewLine;
             code += " " + _NewLine;
             code += " " + _NewLine;
@@ -274,7 +227,6 @@ namespace StkGenCode.Code.Template
             //code += " GetPageWise(pageInt, wherefilter);" + _NewLine;
             code += "    }" + _NewLine;
             return code;
-
         }
 
         public override void Gen()
@@ -288,21 +240,19 @@ namespace StkGenCode.Code.Template
             _code += GenPageLoad();
             _code += GenSearchEvent();
             _code += GenBind();
-         // _code += GenGetPageWise();
+            // _code += GenGetPageWise();
             //_code += GenPageChange();
             //_code += GenGetPageWise();
-           // _code += GenPopulatePager();
+            // _code += GenPopulatePager();
 
-           // _code += GenPaggerClass();
+            // _code += GenPaggerClass();
 
             _code += GenHideResult();
             _code += GenShowResult();
-           // _code += GedTagCheck();
+            // _code += GedTagCheck();
             //_code += GenSaveColumn();
 
-
             _code += EndClass();
-
 
             FileName name = new FileName();
             name._TableName = _TableName;

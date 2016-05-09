@@ -5,18 +5,14 @@ namespace StkGenCode.Code.Template
 {
     public class DbCodeFireBird : CodeBase
     {
-        //public static string FileName = "STK_USERDb_FireBird.cs";
-
-        //public static string ClassName = "STK_USERDb_FireBird.cs";
-
         public static string FileName(string tablename)
         {
-            return string.Format("{0}DbFireBird.cs", tablename);
+            return string.Format("{0}Db.cs", tablename);
         }
 
         public static string ClassName(string tablename)
         {
-            return string.Format("{0}DbFireBird", tablename);
+            return string.Format("{0}Db", tablename);
         }
 
         private string GenUsign()
@@ -26,7 +22,7 @@ namespace StkGenCode.Code.Template
             _code += "using System.Collections.Generic;" + _NewLine;
             _code += "using System.Data;" + _NewLine;
             _code += "using System.Linq;" + _NewLine;
-            _code += "using System.Web;" + _NewLine;
+
             _code += "using System.Web.UI.WebControls;" + _NewLine;
 
             return _code;
@@ -73,7 +69,7 @@ namespace StkGenCode.Code.Template
             _code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
             _code += "{ " + _NewLine;
 
-            _code += " string sql = \"SELECT "+ sqlColumnList + "0 AS RecordCount FROM " + _TableName + " where " + column + " = @" + column + "; \"; " + _NewLine;
+            _code += " string sql = \"SELECT " + sqlColumnList + "0 AS RecordCount FROM " + _TableName + " where " + column + " = @" + column + "; \"; " + _NewLine;
             _code += "  var prset = new List<IDataParameter>();" + _NewLine;
             _code += "  prset.Add(Db.CreateParameterDb(\"@" + column + "\", " + column + "));" + _NewLine;
             _code += "  DataSet ds = Db.GetDataSet(sql,prset);" + _NewLine;
@@ -128,11 +124,11 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
             string columnSql = ColumnString.GenLineString(_ds, "{0},");
-            code += "  public List< "+ _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter = \"NonUseForFirebird\") " + _NewLine;
+            code += "  public List< " + _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter = \"NonUseForFirebird\") " + _NewLine;
             code += "    { " + _NewLine;
             code += "        string sql = \"\"; " + _NewLine;
             code += " " + _NewLine;
-            code += "        //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [ "+ _TableName + "]' + @CommandFilter; " + _NewLine;
+            code += "        //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [ " + _TableName + "]' + @CommandFilter; " + _NewLine;
             code += "        string ColumnSort = \"\"; " + _NewLine;
             code += "        if (_SortExpression == null) " + _NewLine;
             code += "        { " + _NewLine;
@@ -148,12 +144,11 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "        int startRow = ((pageIndex - 1) * PageSize) + 1; " + _NewLine;
             code += "        int toRow = (startRow + PageSize) - 1; " + _NewLine;
-            code += "        sql = string.Format(\"SELECT  {4},"+ columnSql + "  (SELECT count(*) FROM  "+ _TableName + "  {1}) as RecordCount FROM  "+ _TableName + " A {1} {0} ROWS {2} TO {3}; \", sortCommnad, whereCommnad, startRow, toRow, Get_row_number_comand()); " + _NewLine;
+            code += "        sql = string.Format(\"SELECT  {4}," + columnSql + "  (SELECT count(*) FROM  " + _TableName + "  {1}) as RecordCount FROM  " + _TableName + " A {1} {0} ROWS {2} TO {3}; \", sortCommnad, whereCommnad, startRow, toRow, Get_row_number_command()); " + _NewLine;
             code += " " + _NewLine;
             code += "        DataSet ds = Db.GetDataSet(sql); " + _NewLine;
             code += "        return DataSetToList(ds); " + _NewLine;
             code += "    }" + _NewLine;
-
 
             //Version 1
             //code += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter) " + _NewLine;
@@ -199,7 +194,7 @@ namespace StkGenCode.Code.Template
             string inservalue = "";
             string insertparameter = "";
 
-            string ReturnPrimary = "SELECT SCOPE_IDENTITY();";
+            string ReturnPrimary = "";
             // string updateCommand = "";
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
@@ -221,7 +216,8 @@ namespace StkGenCode.Code.Template
                     else
                     {
                         //ถ้าไม่เป็น Auto ให้เลือกตัวมันเอง Return
-                        ReturnPrimary = "Select @" + _DataColumn.Table.PrimaryKey[0];
+                        //
+                        ReturnPrimary = "returning " + _DataColumn.Table.PrimaryKey[0];
                     }
                 }
 
@@ -241,7 +237,7 @@ namespace StkGenCode.Code.Template
             _code += "public object Insert() {";
             _code += _NewLine + "var prset = new List<IDataParameter>();";
             _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
-            _code += " VALUES (" + inservalue + ") ;" + ReturnPrimary + "\";";
+            _code += " VALUES (" + inservalue + ") " + ReturnPrimary + "\";";
             //textBox4.Text +=_NewLine + "var prset = new List<FbParameter> { " + insertparameter + "};";
             _code += _NewLine + insertparameter;
             _code += _NewLine;
@@ -314,18 +310,6 @@ namespace StkGenCode.Code.Template
             return _code;
         }
 
-        //void Delete()
-        //{
-        //    var prset = new List<IDataParameter>();
-        //    prset.Add(Db.CreateParameterDb("@AmpBangkokIndex", _AmpBangkok.AmpBangkokIndex)); prset.Add(Db.CreateParameterDb("@AmpText", _AmpBangkok.AmpText)); prset.Add(Db.CreateParameterDb("@ENGAmpText", _AmpBangkok.ENGAmpText)); prset.Add(Db.CreateParameterDb("@ZoneID", _AmpBangkok.ZoneID)); prset.Add(Db.CreateParameterDb("@rowguid", _AmpBangkok.rowguid)); prset.Add(Db.CreateParameterDb("@msrepl_tran_version", _AmpBangkok.msrepl_tran_version));
-        //    var sql = @"DELETE FROM AmpBangkok where ";
-
-        //    int output = Db.FbExecuteNonQuery(sql, prset);
-        //    if (output != 1)
-        //    {
-        //        throw new System.Exception("Save" + this.ToString());
-        //    }
-        //}
         private string GenDelete()
         {
             string insercolumn = "";
@@ -412,9 +396,6 @@ namespace StkGenCode.Code.Template
             return _code;
         }
 
-        //public const string DataText = "COMPANY";
-        //public const string DataValue = "CUSTNO";
-
         private string GenConStance()
         {
             string _code = "";
@@ -467,7 +448,7 @@ namespace StkGenCode.Code.Template
             code += "            var prset = new List<IDataParameter>(); " + _NewLine;
             code += "            prset.Add(Db.CreateParameterDb(\"@" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\", id)); " + _NewLine;
             code += "            prset.Add(Db.CreateParameterDb(\"@Data\", value)); " + _NewLine;
-            code += "             var sql = @\"UPDATE   " + _TableName + " SET  [\"+column+ \"]=@Data where " + _ds.Tables[0].PrimaryKey[0].ColumnName + " = @" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\"; " + _NewLine;
+            code += "             var sql = @\"UPDATE   " + _TableName + " SET \"+column+ \"=@Data where " + _ds.Tables[0].PrimaryKey[0].ColumnName + " = @" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\"; " + _NewLine;
             code += " " + _NewLine;
             code += "            int output = Db.FbExecuteNonQuery(sql, prset); " + _NewLine;
             code += "            if (output == 1) " + _NewLine;
@@ -481,7 +462,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenAutoCompleteMethod()
+        private string GenGetKeyWordsAllColumn()
         {
             string code = "";
 
@@ -506,6 +487,33 @@ namespace StkGenCode.Code.Template
 
             return code;
         }
+
+
+        private string GenGetKeyWordsOneColumn()
+        {
+            string code = "";
+            code += "  public List<string> GetKeyWordsOneColumn(string column, string keyword) " + _NewLine;
+            code += "    { " + _NewLine;
+            code += "          " + _NewLine;
+            code += " " + _NewLine;
+            code += "        string sql = \"SELECT distinct \" + column + \" FROM " + _TableName + " where \" + column + \" like '\" + keyword + \"%'\"; " + _NewLine;
+            code += " " + _NewLine;
+            code += "          " + _NewLine;
+            code += "         " + _NewLine;
+            code += "        List<string> dataArray = new List<string>(); " + _NewLine;
+            code += " " + _NewLine;
+            code += " " + _NewLine;
+            code += "        DataSet ds = Db.GetDataSet(sql); " + _NewLine;
+            code += "        foreach (DataRow row in ds.Tables[0].Rows) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            dataArray.Add(row[0].ToString()); " + _NewLine;
+            code += "        } " + _NewLine;
+            code += " " + _NewLine;
+            code += "        return dataArray; " + _NewLine;
+            code += "    } " + _NewLine;
+            return code;
+        }
+
 
         private string GenWhereformProperties()
         {
@@ -575,6 +583,16 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        private string Get_row_number_command()
+        {
+            string code = "";
+            code += "    public string Get_row_number_command() " + _NewLine;
+            code += "    { " + _NewLine;
+            code += "        return \"rdb$get_context('USER_TRANSACTION', 'row#') as row_number,rdb$set_context('USER_TRANSACTION', 'row#', coalesce(cast(rdb$get_context('USER_TRANSACTION', 'row#') as integer), 0) + 1)\"; " + _NewLine;
+            code += "    }" + _NewLine;
+            return code;
+        }
+
         public override void Gen()
 
         {
@@ -596,9 +614,11 @@ namespace StkGenCode.Code.Template
             _code += GenConvertDataList();
             _code += GenUpdateColumn();
 
-            _code += GenAutoCompleteMethod();
+            _code += GenGetKeyWordsAllColumn();
+            _code += GenGetKeyWordsOneColumn();
             _code += GenSql();
             _code += GenWhereformProperties();
+            _code += Get_row_number_command();
 
             _code += GenEndNameSpaceAndClass();
 

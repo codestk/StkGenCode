@@ -154,7 +154,7 @@ namespace StkGenCode.Code.Template
             code += " { return; }" + _NewLine;
             code += "  String Q = Stk_QueryString.DecryptQuery(\"Q\");" + _NewLine;
             code += " // " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db();" + _NewLine;
-            code += "  " + _TableName + "DbFireBird _" + _TableName + "Db = new " + _TableName + "DbFireBird();" + _NewLine;
+            code += "  " + _TableName + "Db  _" + _TableName + "Db = new " + _TableName + "Db();" + _NewLine;
 
              
             code += "  " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;

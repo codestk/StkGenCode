@@ -36,6 +36,19 @@
             code += "    };//GetKeyWordsAllColumn  " + _NewLine;
             code += "   " + _NewLine;
 
+            code += "   " + _NewLine;
+            code += " this.GetKeyWordsOneColumn = function (column,keyword) { " + _NewLine;
+            code += "        var result; " + _NewLine;
+            code += "        ////data \"{ssss:1,ddddd:1}\"   " + _NewLine;
+
+            code +=    " var tag = '{column:\"' + column + '\",keyword:\"' + keyword + '\"}';" + _NewLine;
+            code += "        var F = CallServices(url + \"GetKeyWordsOneColumn\", tag, false, function (msg) { " + _NewLine;
+            code += "            result = msg.d; " + _NewLine;
+            code += "        }); " + _NewLine;
+            code += "        return result; " + _NewLine;
+            code += "    };//GetKeyWordsOneColumn  " + _NewLine;
+            code += "   " + _NewLine;
+
             code += "}).apply(" + _TableName + "Service); " + _NewLine;
 
             return code;
