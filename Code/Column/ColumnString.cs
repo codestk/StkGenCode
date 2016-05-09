@@ -10,7 +10,7 @@ namespace StkGenCode.Code.Column
         /// <param name="ds"></param>
         /// <param name="format">  ".chekBox{0},"</param>
         /// <returns></returns>
-        public static string GenLineString(DataSet _ds, string _TableName, string format)
+        public static string GenLineString(DataSet _ds, string format)
         {
             string code = "";
 

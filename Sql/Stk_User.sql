@@ -21,3 +21,13 @@ CREATE TABLE [dbo].[STK_USER](
 GO
 
 
+ 
+
+CREATE TABLE STK_USER (
+	EM_ID Varchar(50) NOT NULL,
+	EM_PASS Varchar(50) ,
+	EM_PERMISSION Varchar(10) ,
+	EM_FLAG Varchar(10) ,
+	EM_NAME Varchar(50) ,
+	EM_SURNAME Varchar(50) 
+ )

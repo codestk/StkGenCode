@@ -1,8 +1,8 @@
-﻿using StkGenCode.Code;
+﻿using CoreDb;
+using StkGenCode.Code;
 using StkGenCode.Code.Template;
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using System.Windows.Forms;
 
@@ -16,71 +16,21 @@ namespace StkGenCode
         }
 
         //List All Table to display
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            //string con = @"Server=localhost;User=SYSDBA;Password=P@ssw0rd;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
-            //var _ds = Db.GetDataFireBird(con, "MPO_FISH");
-        
-
-            string sql;
-            sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
-            SqlConnection _FbConnection = new SqlConnection();
-            _FbConnection.ConnectionString = textBox2.Text;
-            DataSet ds = new DataSet();
-
-            SqlDataAdapter adapter = new SqlDataAdapter(sql, _FbConnection);
-            adapter.Fill(ds);
-            //checkedListBox1.DataSource = ds.Tables[0];
-
-            foreach (DataRow item in ds.Tables[0].Rows)
-            {
-                checkedListBox1.Items.Add(item["TABLE_NAME"].ToString(), false);
-            }
-        }
 
         //Write file by path
         private string _constr;
 
         private string _path;
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            _constr = textBox2.Text;
-            _path = textBox1.Text;
-
-            //string _TableName = "mktsum_log";
-           // string _TableName = "";
-
-            //foreach (var item in checkedListBox1.CheckedItems)
-            //{
-            //    _TableName = item.ToString();
-            //    Gen(_TableName);
-            //}
-            //Gen("fxrates_family");
-            Gen("STK_USER");
-           
-            //MessageBox.Show("Ok");
-
-            System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
-
-
-
-       
-
-
-            this.Close();
-        }
-
-        private void Gen(string _TableName)
+        private void Gen(DataSet _ds, string _TableName)
         {
             StkGenCode.Code.FileCode F = new FileCode();
             F.path = _path;
             F.ClearAllFile();
 
-            Db _db = new Db();
-            var _ds = Db.GetData(_constr, _TableName);
-
+            //Db _db = new Db();
+            //var _ds = Db.GetData(_constr, _TableName);
+            //var _ds = Db.GetData(_constr, _TableName);
             AspxFromCode _AspxFromCodeaspx = new AspxFromCode();
             _AspxFromCodeaspx._FileCode = F;
             _AspxFromCodeaspx._ds = _ds;
@@ -111,21 +61,17 @@ namespace StkGenCode
             _AspxTableCodeFilterColumn._TableName = _TableName;
             _AspxTableCodeFilterColumn.Gen();
 
-             
-
             AspxTableCodeFilterColumnCodeBehide _AspxTableCodeFilterColumnCodeBehide = new AspxTableCodeFilterColumnCodeBehide();
             _AspxTableCodeFilterColumnCodeBehide._FileCode = F;
             _AspxTableCodeFilterColumnCodeBehide._ds = _ds;
             _AspxTableCodeFilterColumnCodeBehide._TableName = _TableName;
             _AspxTableCodeFilterColumnCodeBehide.Gen();
 
-
             PageService _PageService = new PageService();
             _PageService._FileCode = F;
             _PageService._ds = _ds;
             _PageService._TableName = _TableName;
             _PageService.Gen();
-
 
             string pathPageServiceCodeBehide = _path + @"App_Code\Services\";
             F.path = pathPageServiceCodeBehide;
@@ -134,7 +80,6 @@ namespace StkGenCode
             _PageServiceCodeBehide._ds = _ds;
             _PageServiceCodeBehide._TableName = _TableName;
             _PageServiceCodeBehide.Gen();
-         
 
             string pathSQlScript = _path + @"SQL\";
             F.path = pathSQlScript;
@@ -145,7 +90,7 @@ namespace StkGenCode
             _StoreProCode.Gen();
 
             //Gen Js
-          
+
             string pathJs_U = _path + @"Js_U\";
             F.path = pathJs_U;
             JsCode _JsCode = new JsCode();
@@ -154,7 +99,6 @@ namespace StkGenCode
             _JsCode._TableName = _TableName;
             _JsCode.Gen();
 
-             
             //========Foder Cdoe
 
             string pathBuCode = _path + @"App_Code\Code\Business\";
@@ -164,12 +108,18 @@ namespace StkGenCode
             Pcode._ds = _ds;
             Pcode._TableName = _TableName;
             Pcode.Gen();
-           
+
             DbCode _DbCode = new DbCode();
             _DbCode._FileCode = F;
             _DbCode._ds = _ds;
             _DbCode._TableName = _TableName;
             _DbCode.Gen();
+
+            DbCodeFireBird _DbCodeFireBird = new DbCodeFireBird();
+            _DbCodeFireBird._FileCode = F;
+            _DbCodeFireBird._ds = _ds;
+            _DbCodeFireBird._TableName = _TableName;
+            _DbCodeFireBird.Gen();
         }
 
         //Delete All Find in folder
@@ -185,12 +135,6 @@ namespace StkGenCode
             // File.Delete(path);
         }
 
-        #region apsxCode
-
-        //Gen Aspx File
-
-        #endregion apsxCode
-
         private void Form1_Load(object sender, EventArgs e)
         {
             //string con = @"Server=localhost;User=SYSDBA;Password=masterket;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
@@ -198,7 +142,99 @@ namespace StkGenCode
             //Gen("fxrates_family");
             //this.Close();
             //button1_Click(sender, e);
-            button2_Click (sender, e);
+            btnGen_Click(sender, e);
+        }
+
+        private DataAccessLayer Db = null;
+        private DataSet ds = null;
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            //string con = @"Server=localhost;User=SYSDBA;Password=P@ssw0rd;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            //var _ds = Db.GetDataFireBird(con, "MPO_FISH");
+
+            string sqlServer = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
+
+            string sqlFireBird = "select rdb$relation_name as TABLE_NAME from rdb$relations where rdb$view_blr is null  and(rdb$system_flag is null or rdb$system_flag = 0);";
+
+            var connecStionstring = txtConstring.Text;
+
+            //DataAccessLayer Db = null;
+            //DataSet ds = null;
+            //if (rsSqlServer.Checked)
+            //{
+            //    connecStionstring = "Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
+            //    Db = new DataBaseSql(connecStionstring);
+            //    ds = Db.GetDataSet(sqlServer);
+            //}
+            //else if (rdFireBird.Checked)
+            //{
+            //    connecStionstring = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            //    Db = new DataBaseFireBird(connecStionstring);
+            //    ds = Db.GetDataSet(sqlFireBird);
+            //}
+            //else
+            //{
+            //    throw new Exception("Fails");
+            //}
+
+            foreach (DataRow item in ds.Tables[0].Rows)
+            {
+                checkedListBox1.Items.Add(item["TABLE_NAME"].ToString(), false);
+            }
+        }
+
+        private void btnGen_Click(object sender, EventArgs e)
+        {
+            _constr = txtConstring.Text;
+            _path = textBox1.Text;
+
+            SetDb();
+            // string _TableName = "";
+
+            //foreach (var item in checkedListBox1.CheckedItems)
+            //{
+            //    _TableName = item.ToString();
+            //    Gen(_TableName);
+            //}
+            //Gen("fxrates_family");
+            //Db.GetData();
+            //Gen("STK_USER");
+
+            DataSet _ds = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "STK_USER");
+            Gen(_ds, "STK_USER");
+
+            //MessageBox.Show("Ok");
+
+           System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
+
+            this.Close();
+        }
+
+        private void SetDb()
+        {
+            string sqlServer = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
+
+            string sqlFireBird = "select rdb$relation_name as TABLE_NAME from rdb$relations where rdb$view_blr is null  and(rdb$system_flag is null or rdb$system_flag = 0);";
+
+            var connecStionstring = txtConstring.Text;
+
+            if (rsSqlServer.Checked)
+            {
+                connecStionstring = "Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
+                Db = new DataBaseSql(connecStionstring);
+                ds = Db.GetDataSet(sqlServer);
+            }
+            else if (rdFireBird.Checked)
+            {
+                connecStionstring = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+                Db = new DataBaseFireBird(connecStionstring);
+                ds = Db.GetDataSet(sqlFireBird);
+            }
+            else
+            {
+                throw new Exception("Fails");
+            }
         }
     }
 }

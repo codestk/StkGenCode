@@ -1,10 +1,23 @@
-﻿using System.Data;
+﻿using StkGenCode.Code.Column;
+using System.Data;
 
 namespace StkGenCode.Code.Template
 {
-    public class DbCode : CodeBase
+    public class DbCodeFireBird : CodeBase
     {
-        
+        //public static string FileName = "STK_USERDb_FireBird.cs";
+
+        //public static string ClassName = "STK_USERDb_FireBird.cs";
+
+        public static string FileName(string tablename)
+        {
+            return string.Format("{0}DbFireBird.cs", tablename);
+        }
+
+        public static string ClassName(string tablename)
+        {
+            return string.Format("{0}DbFireBird", tablename);
+        }
 
         private string GenUsign()
         {
@@ -16,8 +29,6 @@ namespace StkGenCode.Code.Template
             _code += "using System.Web;" + _NewLine;
             _code += "using System.Web.UI.WebControls;" + _NewLine;
 
-       
-
             return _code;
         }
 
@@ -26,7 +37,7 @@ namespace StkGenCode.Code.Template
             string _code = "";
             //_code = "namespace XXXXX.Code.Bu" + _NewLine;
             //_code += "{" + _NewLine;
-            _code += "public class  " + _TableName + "Db: DataAccess" + _NewLine;
+            _code += "public class  " + ClassName(_TableName) + ": DataAccess" + _NewLine;
             _code += "{" + _NewLine;
 
             return _code;
@@ -55,14 +66,17 @@ namespace StkGenCode.Code.Template
         private string GenSelectOne()
         {
             string _code = "";
-            string column = _ds.Tables[0].PrimaryKey[0].ToString();
+            string sqlColumnList = ""; //"A,B,C,D,E"
 
+            string column = _ds.Tables[0].PrimaryKey[0].ToString();
+            sqlColumnList = ColumnString.GenLineString(_ds, "{0},");
             _code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
             _code += "{ " + _NewLine;
-            _code += " string _sql1 = \"SELECT *,0 AS RecordCount FROM " + _TableName + " where " + column + " = @" + column + "; \"; " + _NewLine;
-            _code += "   var prset = new List<IDataParameter>();" + _NewLine;
+
+            _code += " string sql = \"SELECT "+ sqlColumnList + "0 AS RecordCount FROM " + _TableName + " where " + column + " = @" + column + "; \"; " + _NewLine;
+            _code += "  var prset = new List<IDataParameter>();" + _NewLine;
             _code += "  prset.Add(Db.CreateParameterDb(\"@" + column + "\", " + column + "));" + _NewLine;
-            _code += "  DataSet ds = Db.GetDataSet(_sql1,prset);" + _NewLine;
+            _code += "  DataSet ds = Db.GetDataSet(sql,prset);" + _NewLine;
             _code += "return DataSetToList(ds).FirstOrDefault(); " + _NewLine;
             _code += "}";
             return _code;
@@ -113,49 +127,68 @@ namespace StkGenCode.Code.Template
         private string GenGetPageWise()
         {
             string code = "";
-            //command += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize)" + _NewLine;
-            //command += "{" + _NewLine;
-            //command += " string _sql1 = \"Sp_Get" + _TableName + "PageWise\";" + _NewLine;
-            //command += "  var prset = new List<IDataParameter>();" + _NewLine;
-            //command += " prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex));" + _NewLine;
-            //command += " prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize));" + _NewLine;
-            //command += " DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure);" + _NewLine;
-            //command += "  return DataSetToList(ds);" + _NewLine;
-            //command += "}" + _NewLine;
-
-            code += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter) " + _NewLine;
-            code += "{ " + _NewLine;
-            code += "string store = \"Sp_Get" + _TableName + "PageWise\"; " + _NewLine;
-
-            code += "            string sql = \"\"; " + _NewLine;
+            string columnSql = ColumnString.GenLineString(_ds, "{0},");
+            code += "  public List< "+ _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter = \"NonUseForFirebird\") " + _NewLine;
+            code += "    { " + _NewLine;
+            code += "        string sql = \"\"; " + _NewLine;
             code += " " + _NewLine;
-            code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [" + _TableName + "]' + @CommandFilter; " + _NewLine;
-            code += "            string ColumnSort = \"\"; " + _NewLine;
-            code += "            if (_SortExpression == null) " + _NewLine;
-            code += "            { " + _NewLine;
-            code += "                ColumnSort = DataKey; " + _NewLine;
-            code += "            } " + _NewLine;
-            code += "            else " + _NewLine;
-            code += "            { " + _NewLine;
-            code += "                ColumnSort = _SortExpression; " + _NewLine;
-            code += "            } " + _NewLine;
-            code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
-            code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
-            code += " sql += Wordfilter; " + _NewLine;
-
+            code += "        //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [ "+ _TableName + "]' + @CommandFilter; " + _NewLine;
+            code += "        string ColumnSort = \"\"; " + _NewLine;
+            code += "        if (_SortExpression == null) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            ColumnSort = DataKey; " + _NewLine;
+            code += "        } " + _NewLine;
+            code += "        else " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            ColumnSort = _SortExpression; " + _NewLine;
+            code += "        } " + _NewLine;
+            code += "        string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
             code += " " + _NewLine;
-
-            code += "var prset = new List<IDataParameter>(); " + _NewLine;
-            code += "prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex)); " + _NewLine;
-            code += "prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize)); " + _NewLine;
-            code += "" + _NewLine;
-
+            code += "        string whereCommnad = GenWhereformProperties(); " + _NewLine;
             code += " " + _NewLine;
-            code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", sql)); " + _NewLine;
+            code += "        int startRow = ((pageIndex - 1) * PageSize) + 1; " + _NewLine;
+            code += "        int toRow = (startRow + PageSize) - 1; " + _NewLine;
+            code += "        sql = string.Format(\"SELECT  {4},"+ columnSql + "  (SELECT count(*) FROM  "+ _TableName + "  {1}) as RecordCount FROM  "+ _TableName + " A {1} {0} ROWS {2} TO {3}; \", sortCommnad, whereCommnad, startRow, toRow, Get_row_number_comand()); " + _NewLine;
             code += " " + _NewLine;
-            code += "DataSet ds = Db.GetDataSet(store, prset, CommandType.StoredProcedure); " + _NewLine;
-            code += "return DataSetToList(ds); " + _NewLine;
-            code += "}" + _NewLine;
+            code += "        DataSet ds = Db.GetDataSet(sql); " + _NewLine;
+            code += "        return DataSetToList(ds); " + _NewLine;
+            code += "    }" + _NewLine;
+
+
+            //Version 1
+            //code += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter) " + _NewLine;
+            //code += "{ " + _NewLine;
+            //code += "string store = \"Sp_Get" + _TableName + "PageWise\"; " + _NewLine;
+
+            //code += "            string sql = \"\"; " + _NewLine;
+            //code += " " + _NewLine;
+            //code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [" + _TableName + "]' + @CommandFilter; " + _NewLine;
+            //code += "            string ColumnSort = \"\"; " + _NewLine;
+            //code += "            if (_SortExpression == null) " + _NewLine;
+            //code += "            { " + _NewLine;
+            //code += "                ColumnSort = DataKey; " + _NewLine;
+            //code += "            } " + _NewLine;
+            //code += "            else " + _NewLine;
+            //code += "            { " + _NewLine;
+            //code += "                ColumnSort = _SortExpression; " + _NewLine;
+            //code += "            } " + _NewLine;
+            //code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
+            //code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
+            //code += " sql += Wordfilter; " + _NewLine;
+
+            //code += " " + _NewLine;
+
+            //code += "var prset = new List<IDataParameter>(); " + _NewLine;
+            //code += "prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex)); " + _NewLine;
+            //code += "prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize)); " + _NewLine;
+            //code += "" + _NewLine;
+
+            //code += " " + _NewLine;
+            //code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", sql)); " + _NewLine;
+            //code += " " + _NewLine;
+            //code += "DataSet ds = Db.GetDataSet(store, prset, CommandType.StoredProcedure); " + _NewLine;
+            //code += "return DataSetToList(ds); " + _NewLine;
+            //code += "}" + _NewLine;
 
             return code;
         }
@@ -574,7 +607,7 @@ namespace StkGenCode.Code.Template
             FileName name = new FileName();
             name._TableName = _TableName;
             name._ds = _ds;
-            _FileCode.writeFile(name.DbCodeName(), _code);
+            _FileCode.writeFile(FileName(_TableName), _code);
             //_FileCode.writeFile(_TableName + "Db", _code, _fileType);
         }
     }

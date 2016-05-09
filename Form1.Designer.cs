@@ -29,56 +29,57 @@
         private void InitializeComponent()
         {
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.txtConstring = new System.Windows.Forms.TextBox();
+            this.btnConnect = new System.Windows.Forms.Button();
+            this.btnGen = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtNameSpace = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.rsSqlServer = new System.Windows.Forms.RadioButton();
+            this.rdFireBird = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(156, 13);
+            this.textBox1.Location = new System.Drawing.Point(157, 47);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(399, 20);
             this.textBox1.TabIndex = 1;
             this.textBox1.Text = "C:\\Code\\";
             // 
-            // textBox2
+            // txtConstring
             // 
-            this.textBox2.Location = new System.Drawing.Point(156, 45);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(399, 20);
-            this.textBox2.TabIndex = 2;
-            this.textBox2.Text = "Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
+            this.txtConstring.Location = new System.Drawing.Point(157, 12);
+            this.txtConstring.Name = "txtConstring";
+            this.txtConstring.Size = new System.Drawing.Size(399, 20);
+            this.txtConstring.TabIndex = 2;
+            this.txtConstring.Text = "Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
             // 
-            // button1
+            // btnConnect
             // 
-            this.button1.Location = new System.Drawing.Point(578, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Connect";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnConnect.Location = new System.Drawing.Point(578, 11);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(75, 23);
+            this.btnConnect.TabIndex = 3;
+            this.btnConnect.Text = "Connect";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
-            // button2
+            // btnGen
             // 
-            this.button2.Location = new System.Drawing.Point(578, 43);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "GenFile";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btnGen.Location = new System.Drawing.Point(578, 46);
+            this.btnGen.Name = "btnGen";
+            this.btnGen.Size = new System.Drawing.Size(75, 23);
+            this.btnGen.TabIndex = 4;
+            this.btnGen.Text = "GenFile";
+            this.btnGen.UseVisualStyleBackColor = true;
+            this.btnGen.Click += new System.EventHandler(this.btnGen_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(58, 18);
+            this.label1.Location = new System.Drawing.Point(59, 51);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(28, 13);
             this.label1.TabIndex = 5;
@@ -87,7 +88,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(58, 45);
+            this.label2.Location = new System.Drawing.Point(59, 16);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(88, 13);
             this.label2.TabIndex = 6;
@@ -97,42 +98,58 @@
             // 
             this.checkedListBox1.ColumnWidth = 150;
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(61, 110);
+            this.checkedListBox1.Location = new System.Drawing.Point(61, 119);
             this.checkedListBox1.MultiColumn = true;
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(1015, 394);
+            this.checkedListBox1.Size = new System.Drawing.Size(592, 319);
             this.checkedListBox1.Sorted = true;
             this.checkedListBox1.TabIndex = 7;
             // 
-            // label3
+            // label4
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(58, 84);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(88, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "ConnectionString";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(59, 85);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(54, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "DataBase";
             // 
-            // txtNameSpace
+            // rsSqlServer
             // 
-            this.txtNameSpace.Location = new System.Drawing.Point(156, 84);
-            this.txtNameSpace.Name = "txtNameSpace";
-            this.txtNameSpace.Size = new System.Drawing.Size(399, 20);
-            this.txtNameSpace.TabIndex = 9;
+            this.rsSqlServer.AutoSize = true;
+            this.rsSqlServer.Checked = true;
+            this.rsSqlServer.Location = new System.Drawing.Point(157, 83);
+            this.rsSqlServer.Name = "rsSqlServer";
+            this.rsSqlServer.Size = new System.Drawing.Size(71, 17);
+            this.rsSqlServer.TabIndex = 11;
+            this.rsSqlServer.TabStop = true;
+            this.rsSqlServer.Text = "SqlServer";
+            this.rsSqlServer.UseVisualStyleBackColor = true;
+            // 
+            // rdFireBird
+            // 
+            this.rdFireBird.AutoSize = true;
+            this.rdFireBird.Location = new System.Drawing.Point(252, 83);
+            this.rdFireBird.Name = "rdFireBird";
+            this.rdFireBird.Size = new System.Drawing.Size(60, 17);
+            this.rdFireBird.TabIndex = 12;
+            this.rdFireBird.Text = "FireBird";
+            this.rdFireBird.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1088, 488);
-            this.Controls.Add(this.txtNameSpace);
-            this.Controls.Add(this.label3);
+            this.ClientSize = new System.Drawing.Size(678, 488);
+            this.Controls.Add(this.rdFireBird);
+            this.Controls.Add(this.rsSqlServer);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.btnGen);
+            this.Controls.Add(this.btnConnect);
+            this.Controls.Add(this.txtConstring);
             this.Controls.Add(this.textBox1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -144,14 +161,15 @@
 
         #endregion
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox txtConstring;
+        private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.Button btnGen;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtNameSpace;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.RadioButton rsSqlServer;
+        private System.Windows.Forms.RadioButton rdFireBird;
     }
 }
 

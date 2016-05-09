@@ -154,7 +154,9 @@ namespace StkGenCode.Code.Template
             //code += " } " + _NewLine;
             code += "     protected void GetPageWise(int pageIndex,string wherefilter)  " + _NewLine;
             code += "{ " + _NewLine;
-            code += " " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
+            code += "\\ " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
+
+            code += "\\ " + DbCodeFireBird.ClassName(_TableName) + "D _" + _TableName + " = new " + DbCodeFireBird.ClassName(_TableName) + "();" + _NewLine;
             //code += " string wherefilter = SearchUtility.SqlContain(txtSearch.Text);" + _NewLine;
             code += "var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize, wherefilter); " + _NewLine;
             //code += "string services = GetSelectedService(); " + _NewLine;
@@ -224,8 +226,8 @@ namespace StkGenCode.Code.Template
 
             code += "int pageIndex = Convert.ToInt32(CurrentPage);" + _NewLine;
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
-            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
-
+            code += "  //" + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            code += " " + DbCodeFireBird.ClassName(_TableName) + " _" +  _TableName + "Db = new " + DbCodeFireBird.ClassName(_TableName) + "(); " + _NewLine;
             code += MapControlToProPerties(_ds, false);
 
 

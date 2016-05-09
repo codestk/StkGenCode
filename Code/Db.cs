@@ -1,11 +1,13 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using FirebirdSql.Data.FirebirdClient;
+using System.Data.Common;
+
 namespace StkGenCode.Code
 {
     public class Db
     {
-        public static DataSet GetData(string connectstring, string TableName)
+        public static DataSet GetSchemaSqlServer(string connectstring, string TableName)
         {
             string sql;
 
@@ -26,7 +28,9 @@ namespace StkGenCode.Code
         }
 
 
-        public static DataSet GetDataFireBird(string connectstring, string TableName)
+
+
+        public static DataSet GetSchemaFireBird(string connectstring, string TableName)
         {
             string sql;
 

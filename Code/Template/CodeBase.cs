@@ -20,14 +20,13 @@ namespace StkGenCode.Code.Template
 
         public abstract void Gen();
 
+
+        
         protected void  innitProperties()
         {
             _FileName = new FileName();
             _FileName._TableName = _TableName;
             _FileName._ds = _ds;
-
-
-           
         }
     }
 }

@@ -153,7 +153,10 @@ namespace StkGenCode.Code.Template
             code += " if (Request.QueryString[\"Q\"] == null)" + _NewLine;
             code += " { return; }" + _NewLine;
             code += "  String Q = Stk_QueryString.DecryptQuery(\"Q\");" + _NewLine;
-            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db();" + _NewLine;
+            code += " // " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db();" + _NewLine;
+            code += "  " + _TableName + "DbFireBird _" + _TableName + "Db = new " + _TableName + "DbFireBird();" + _NewLine;
+
+             
             code += "  " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += " _" + _TableName + " = _" + _TableName + "Db.Select(Q); " + _NewLine;
             code += "  " + _NewLine;
@@ -170,7 +173,8 @@ namespace StkGenCode.Code.Template
                 if ((_DataColumn.DataType.ToString() == "System.Boolean"))
                 { code += "txt" + _DataColumn.ColumnName + ".Checked = Convert.ToBoolean( _" + _TableName + "." + _DataColumn.ColumnName + ");" + _NewLine; }
                 else
-                { code += "txt" + _DataColumn.ColumnName + ".Text = Stk_TextNull.StringTotext(_" + _TableName + "." + _DataColumn.ColumnName + ".ToString()); " + _NewLine; }
+                { code += "txt" + _DataColumn.ColumnName + ".Text = Stk_TextNull.StringTotext(_" + _TableName + "." + _DataColumn.ColumnName + "); " + _NewLine; }
+                //{ code += "txt" + _DataColumn.ColumnName + ".Text = Stk_TextNull.StringTotext(_" + _TableName + "." + _DataColumn.ColumnName + ".ToString()); " + _NewLine; } Vwersion 1
             }
             code += " } " + _NewLine;
             code += "  " + _NewLine;
