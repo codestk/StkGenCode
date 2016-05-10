@@ -30,7 +30,7 @@
             code += "                <div class=\"input-field col s12\"> " + _NewLine;
             code += " " + _NewLine;
             // code += "                    <a class=\"waves-effect waves-light btn center\">Search</a> " + _NewLine;
-            code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\" OnClientClick=\"return Search();\" runat=\"server\" Text=\"Search\" />" + _NewLine;
+            code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\"   runat=\"server\" Text=\"Search\" />" + _NewLine;
 
             code += "                </div> " + _NewLine;
             code += "            </div> " + _NewLine;
@@ -87,26 +87,12 @@
             code += AutocompleteMutilColumnJavaScript();
             code += "        });//End " + _NewLine;
             code += " " + _NewLine;
-
             //code += SearchJavaScript();
-
             //code += _AspxFromCodeaspx.Validate();
-            code += SearchJavaScript();
+            //code += SearchJavaScript();
             code += "        $('select').material_select(); " + _NewLine;
             code += " " + _NewLine;
-            //code += "        function GotoTop() { " + _NewLine;
-            //code += "            $(\"html, body\").animate({ scrollTop: 0 }, \"verry fast\"); " + _NewLine;
-            //code += "            //    $(\"html, body\").scrollTop(); " + _NewLine;
-            //code += "        } " + _NewLine;
-            //code += " " + _NewLine;
 
-            //code += "        //For Validate Type " + _NewLine;
-            //code += "        function ForceNumberTextBox() { " + _NewLine;
-            //// code += "            $(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
-
-            //code += "$(\".ForceNumber\").ForceNumericOnly();  " + _NewLine;
-            //code += "$(\".ForceNumber2Digit\").ForceNumericOnly2Digit(); " + _NewLine;
-            //code += "        } " + _NewLine;
             code += ForceNumberTextBoxJavaScript();
             code += "</script>";
             return code;
@@ -121,7 +107,9 @@
             _AspxFromCodeaspx._TableName = _TableName;
 
             string _code = "";
+
             _code += GenHeadeFile();
+
             _code += GenContentHeadBegin();
 
             _code += GenReferJavaScript();
@@ -129,15 +117,19 @@
             _code += GenDocumentReady();
 
             _code += GenReferCSS();
+
             _code += GenContentHeadEnd();
 
             _code += GenContentBodyBegin();
+
+            //_code += GenSectionHeader();
 
             _code += GenSearch();
 
             _code += GenBeginResult();
 
             _code += GenTableRepeater();
+
             _code += GenPagger();
 
             _code += GenEndResult();
@@ -145,6 +137,7 @@
             _code += GenNoResult();
 
             _code += GenModalProgress();
+
             _code += GenContentBodyEnd();
 
             _FileCode.writeFile(_FileName.AspxTableCodeFilterColumnName(), _code);

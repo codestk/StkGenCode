@@ -488,23 +488,22 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-
         private string GenGetKeyWordsOneColumn()
         {
             string code = "";
             code += "  public List<string> GetKeyWordsOneColumn(string column, string keyword) " + _NewLine;
-            code += "    { " + _NewLine;
+            code += "  { " + _NewLine;
             code += "          " + _NewLine;
             code += " " + _NewLine;
-            code += "        string sql = \"SELECT distinct \" + column + \" FROM " + _TableName + " where \" + column + \" like '\" + keyword + \"%'\"; " + _NewLine;
-            code += " " + _NewLine;
-            code += "          " + _NewLine;
+            code += "  string sql = \"SELECT  \" + column + \" FROM " + _TableName + " where lower(\" + column + \") like '\" + keyword.ToLower() + \"%'   group by \" + column + \" order by count(*) desc;\"; " + _NewLine;
+
             code += "         " + _NewLine;
-            code += "        List<string> dataArray = new List<string>(); " + _NewLine;
+            code += "         " + _NewLine;
+            code += "  List<string> dataArray = new List<string>(); " + _NewLine;
             code += " " + _NewLine;
             code += " " + _NewLine;
-            code += "        DataSet ds = Db.GetDataSet(sql); " + _NewLine;
-            code += "        foreach (DataRow row in ds.Tables[0].Rows) " + _NewLine;
+            code += "  DataSet ds = Db.GetDataSet(sql); " + _NewLine;
+            code += "  foreach (DataRow row in ds.Tables[0].Rows) " + _NewLine;
             code += "        { " + _NewLine;
             code += "            dataArray.Add(row[0].ToString()); " + _NewLine;
             code += "        } " + _NewLine;
@@ -513,7 +512,6 @@ namespace StkGenCode.Code.Template
             code += "    } " + _NewLine;
             return code;
         }
-
 
         private string GenWhereformProperties()
         {
@@ -525,18 +523,6 @@ namespace StkGenCode.Code.Template
             code += "   sql += \"WHERE (1=1) \"; " + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                //if (isfirst == true)
-                //{
-                //    code += "sql += string.Format(\" where ((''='{0}')or(" + _DataColumn.ColumnName + "='{0}'))\", _" + _TableName + "." + _DataColumn.ColumnName + ");";
-                //    code += _NewLine;
-                //    isfirst = false;
-                //}
-                //else
-                //{
-                //    code += "sql += string.Format(\"  and ((''='{0}')or(" + _DataColumn.ColumnName + "='{0}'))\", _" + _TableName + "." + _DataColumn.ColumnName + ");";
-                //    code += _NewLine;
-                //}
-
                 code += "            if ( _" + _TableName + "." + _DataColumn.ColumnName + "!= null) " + _NewLine;
                 code += "            { " + _NewLine;
                 code += "                sql += string.Format(\" AND ((''='{0}') or (" + _DataColumn.ColumnName + "='{0}') )\", _" + _TableName + "." + _DataColumn.ColumnName + "); " + _NewLine;

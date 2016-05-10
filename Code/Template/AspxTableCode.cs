@@ -524,10 +524,10 @@ namespace StkGenCode.Code.Template
             code += "        function Search() { " + _NewLine;
             code += " " + _NewLine;
             code += "//Uncoment for chek empty" + _NewLine;
-            code += "//if ($('#< % =txtSearch.ClientID % >').val() == '') { " + _NewLine;
-            code += "//Materialize.toast('Please specify the filter.', 3000, 'toastCss'); " + _NewLine;
-            code += "//return false; " + _NewLine;
-            code += "//} " + _NewLine;
+            code += "if ($('#<%=txtSearch.ClientID %>').val() == '') { " + _NewLine;
+            code += "Materialize.toast('Please specify the filter.', 3000, 'toastCss'); " + _NewLine;
+            code += "return false; " + _NewLine;
+            code += "} " + _NewLine;
             code += "            $('#modal1').openModal(); " + _NewLine;
             code += " " + _NewLine;
             code += "            return true; " + _NewLine;
@@ -736,7 +736,16 @@ namespace StkGenCode.Code.Template
             //  code += "    </div>" + _NewLine;
             return code;
         }
+        protected string GenSectionHeader()
+        {
+            string code = "";
+            code += " <div class=\"container\">";
+            code += "<h5>"+_TableName+"</h5> " + _NewLine;
+            code += "<div class=\"divider\"></div>" + _NewLine;
+            code += "</div>" + _NewLine;
+            return code;
 
+        }
         public override void Gen()
         {
             innitProperties();
@@ -752,7 +761,7 @@ namespace StkGenCode.Code.Template
             _code += GenContentHeadEnd();
 
             _code += GenContentBodyBegin();
-
+            //_code += GenSectionHeader();
             _code += GenSearch();
 
             _code += GenBeginResult();
