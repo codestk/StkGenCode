@@ -83,8 +83,8 @@
             code += " " + _NewLine;
             code += "        _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
             //code += "        string wherefilter = _" + _TableName + "Db.GenSql(); " + _NewLine;
-            code += "      string filterCommnad = SearchUtility.SqlContain(txtSearch.Text);";
-            code += "        var result = _" + _TableName + "Db.GetPageWise(pageIndex, PageSize, filterCommnad); " + _NewLine;
+            //code += "      string filterCommnad = SearchUtility.SqlContain(txtSearch.Text);";
+            code += "        var result = _" + _TableName + "Db.GetPageWise(pageIndex, PageSize, txtSearch.Text); " + _NewLine;
             code += " " + _NewLine;
             code += " " + _NewLine;
             code += "  " + _NewLine;
@@ -338,6 +338,7 @@
             _code += GenConstance();
 
             _code += GenPageLoad();
+
             _code += GenSearchEvent();
             //_code += GenPageChange();
             _code += GenBind();

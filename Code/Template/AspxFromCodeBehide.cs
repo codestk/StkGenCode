@@ -120,21 +120,21 @@ namespace StkGenCode.Code.Template
                 {
                     code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt32(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
                 }
-                else if (_DataColumn.DataType.ToString() == "System.Int16")
-                {
-                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt16(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-                }
+                //else if (_DataColumn.DataType.ToString() == "System.Int16")
+                //{
+                //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt16(txt" + _DataColumn.ColumnName + ".Checked);" + _NewLine;
+                //}
                 else if (_DataColumn.DataType.ToString() == "System.Decimal")
                 {
                     code += "_" + _TableName + "." + _DataColumn.ColumnName + " =  Convert.ToDecimal (txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
                 }
                 else if (_DataColumn.DataType.ToString() == "System.DateTime")
                 {
-                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToDateTime(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
+                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =StkGlobalDate.TextEnToDate(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
                 }
-                else if (_DataColumn.DataType.ToString() == "System.Boolean")
+                else if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
                 {
-                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToBoolean(txt" + _DataColumn.ColumnName + ".Checked);" + _NewLine;
+                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToInt16(txt" + _DataColumn.ColumnName + ".Checked);" + _NewLine;
                 }
                 else
                 {
@@ -147,7 +147,7 @@ namespace StkGenCode.Code.Template
 
         private string GenBindForm()
         {
-            string code = "  ";
+            string code = "";
             code += " private void BindForm() " + _NewLine;
             code += " { " + _NewLine;
             code += " if (Request.QueryString[\"Q\"] == null)" + _NewLine;
@@ -156,25 +156,33 @@ namespace StkGenCode.Code.Template
             code += " // " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db();" + _NewLine;
             code += "  " + _TableName + "Db  _" + _TableName + "Db = new " + _TableName + "Db();" + _NewLine;
 
-             
             code += "  " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += " _" + _TableName + " = _" + _TableName + "Db.Select(Q); " + _NewLine;
             code += "  " + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
+                string propertieName = string.Format("_{0}.{1}", _TableName, _DataColumn.ColumnName);
+                string controlName = string.Format("txt{0}" , _DataColumn.ColumnName);
+
                 if ((_DataColumn.DataType.ToString() == "System.Guid"))
                 { continue; }
 
                 if (_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ColumnName)
                 {
-                    code += "txt" + _DataColumn.ColumnName + ".Enabled = false;" + _NewLine;
+                    code += controlName + ".Enabled = false;" + _NewLine;
                 }
-              
-                if ((_DataColumn.DataType.ToString() == "System.Boolean"))
-                { code += "txt" + _DataColumn.ColumnName + ".Checked = Convert.ToBoolean( _" + _TableName + "." + _DataColumn.ColumnName + ");" + _NewLine; }
+
+                if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
+                { code += controlName + ".Checked = Convert.ToBoolean(" + propertieName + ");" + _NewLine; }
+                else if ((_DataColumn.DataType.ToString() == "System.DateTime") || (_DataColumn.DataType.ToString() == "System.Decimal") || (_DataColumn.DataType.ToString() == "System.Int32"))
+                {
+                    code += " if (" + propertieName + ".HasValue)" + _NewLine;
+                    code += "{" + _NewLine;
+                    code += controlName + ".Text = StkGlobalDate.DateToTextEngFormat(" + propertieName + "); " + _NewLine;
+                    code += "}" + _NewLine;
+                }
                 else
-                { code += "txt" + _DataColumn.ColumnName + ".Text = Stk_TextNull.StringTotext(_" + _TableName + "." + _DataColumn.ColumnName + "); " + _NewLine; }
-                //{ code += "txt" + _DataColumn.ColumnName + ".Text = Stk_TextNull.StringTotext(_" + _TableName + "." + _DataColumn.ColumnName + ".ToString()); " + _NewLine; } Vwersion 1
+                { code += controlName + ".Text = Stk_TextNull.StringTotext(" + propertieName + ".ToString()); " + _NewLine; }
             }
             code += " } " + _NewLine;
             code += "  " + _NewLine;

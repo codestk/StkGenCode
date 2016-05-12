@@ -15,10 +15,10 @@ namespace StkGenCode.Code.Template
         {
             string _code = "";
             _code += "using System;" + _NewLine;
-            _code += "using System.Collections.Generic;" + _NewLine;
-            _code += "using System.Data;" + _NewLine;
-            _code += "using System.Linq;" + _NewLine;
-            _code += "using System.Web;" + _NewLine;
+            //_code += "using System.Collections.Generic;" + _NewLine;
+            //_code += "using System.Data;" + _NewLine;
+            //_code += "using System.Linq;" + _NewLine;
+            //_code += "using System.Web;" + _NewLine;
        
 
             return _code;

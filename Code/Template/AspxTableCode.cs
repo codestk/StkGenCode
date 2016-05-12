@@ -72,7 +72,7 @@ namespace StkGenCode.Code.Template
 
 
 
-                if (_DataColumn.DataType.ToString() == "System.Boolean")
+                if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
                 {
                     code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
                     code += "                                    <p>" + _NewLine;
@@ -528,7 +528,7 @@ namespace StkGenCode.Code.Template
             code += "Materialize.toast('Please specify the filter.', 3000, 'toastCss'); " + _NewLine;
             code += "return false; " + _NewLine;
             code += "} " + _NewLine;
-            code += "            $('#modal1').openModal(); " + _NewLine;
+            code += " $('#modal1').openModal(); " + _NewLine;
             code += " " + _NewLine;
             code += "            return true; " + _NewLine;
             code += "        } " + _NewLine;
@@ -544,15 +544,7 @@ namespace StkGenCode.Code.Template
             code += "        $(document).ready(function () { " + _NewLine;
             code += "            ForceNumberTextBox(); " + _NewLine;
             code += "            //For Change Lange " + _NewLine;
-            //code += "            $('.dropdown-button').dropdown({ " + _NewLine;
-            //code += "                inDuration: 300, " + _NewLine;
-            //code += "                outDuration: 225, " + _NewLine;
-            //code += "                constrain_width: true, // Does not change width of dropdown to that of the activator " + _NewLine;
-            //code += "                hover: false, // Activate on hover " + _NewLine;
-            //code += "                gutter: 0, // Spacing from edge " + _NewLine;
-            //code += "                belowOrigin: true, // Displays dropdown below the button " + _NewLine;
-            //code += "                alignment: 'left' // Displays dropdown with edge aligned to the left of button " + _NewLine;
-            //code += "            }); " + _NewLine;
+          
 
             code += "            $('.datepicker').pickadate({ " + _NewLine;
             code += "                selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
@@ -650,7 +642,7 @@ namespace StkGenCode.Code.Template
             {
                 //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
                 //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
-                if (_DataColumn.DataType.ToString() == "System.Boolean")
+                if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
                 {
                     code += string.Format(".chekBox{0},", _DataColumn.ColumnName);
                     //code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
@@ -690,7 +682,7 @@ namespace StkGenCode.Code.Template
                 }
                 //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
                 //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
-                if (_DataColumn.DataType.ToString() != "System.Boolean")
+                if ((_DataColumn.DataType.ToString() != "System.Boolean") || (_DataColumn.DataType.ToString() != "System.Int16"))
                 {
                     code += string.Format(".td{0},", _DataColumn.ColumnName);
                     //code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
@@ -750,7 +742,9 @@ namespace StkGenCode.Code.Template
         {
             innitProperties();
             string _code = "";
+
             _code += GenHeadeFile();
+
             _code += GenContentHeadBegin();
 
             _code += GenReferJavaScript();
@@ -767,6 +761,7 @@ namespace StkGenCode.Code.Template
             _code += GenBeginResult();
 
             _code += GenTableRepeater();
+
             _code += GenPagger();
 
             _code += GenEndResult();
@@ -774,6 +769,7 @@ namespace StkGenCode.Code.Template
             _code += GenNoResult();
 
             _code += GenModalProgress();
+
             _code += GenContentBodyEnd();
 
             _FileCode.writeFile(_FileName.AspxTableCodeName(), _code);

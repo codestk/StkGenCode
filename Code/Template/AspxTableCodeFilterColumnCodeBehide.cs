@@ -79,7 +79,7 @@ namespace StkGenCode.Code.Template
                     code += string.Format("_{0}.{1} = Convert.ToDecimal(txt{1}.Text);", _TableName, _DataColumn.ColumnName) + _NewLine;
                     code += "}" + _NewLine;
                 }
-                else if (_DataColumn.DataType.ToString() == "System.Boolean")
+                else if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
                 {
                     //code += string.Format("  if (txt{0} != \"\")", _DataColumn.ColumnName) + _NewLine;
                     //code += " {" + _NewLine;
@@ -195,7 +195,7 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "        _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
             code += "         string wherefilter = _STK_USERDb.GenWhereformProperties();" + _NewLine;
-            code += "        var result = _" + _TableName + "Db.GetPageWise(pageIndex, PageSize, wherefilter); " + _NewLine;
+            code += "        var result = _" + _TableName + "Db.GetPageWise(pageIndex, PageSize); " + _NewLine;
             code += " " + _NewLine;
             code += " " + _NewLine;
             code += "  " + _NewLine;

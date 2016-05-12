@@ -124,7 +124,7 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
             string columnSql = ColumnString.GenLineString(_ds, "{0},");
-            code += "  public List< " + _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter = \"NonUseForFirebird\") " + _NewLine;
+            code += "  public List< " + _TableName + "> GetPageWise(int pageIndex, int PageSize, string wordFullText = \"\") " + _NewLine;
             code += "    { " + _NewLine;
             code += "        string sql = \"\"; " + _NewLine;
             code += " " + _NewLine;
@@ -140,6 +140,8 @@ namespace StkGenCode.Code.Template
             code += "        } " + _NewLine;
             code += "        string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
             code += " " + _NewLine;
+
+            code += "// Non implemnet full text Search" + _NewLine;
             code += "        string whereCommnad = GenWhereformProperties(); " + _NewLine;
             code += " " + _NewLine;
             code += "        int startRow = ((pageIndex - 1) * PageSize) + 1; " + _NewLine;
@@ -226,7 +228,7 @@ namespace StkGenCode.Code.Template
 
                 insercolumn += _DataColumn.ColumnName + ",";
                 inservalue += "@" + _DataColumn.ColumnName + ",";
-                insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
+                insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));" + _NewLine;
             }
 
             insercolumn = insercolumn.TrimEnd(',');
@@ -237,7 +239,7 @@ namespace StkGenCode.Code.Template
             _code += "public object Insert() {";
             _code += _NewLine + "var prset = new List<IDataParameter>();";
             _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
-            _code += " VALUES (" + inservalue + ") " + ReturnPrimary + "\";";
+            _code += " VALUES (" + inservalue + ") " + ReturnPrimary + "\";" + _NewLine;
             //textBox4.Text +=_NewLine + "var prset = new List<FbParameter> { " + insertparameter + "};";
             _code += _NewLine + insertparameter;
             _code += _NewLine;
@@ -371,21 +373,16 @@ namespace StkGenCode.Code.Template
             _code += "RecordCount = temp.Field<Int32>(\"RecordCount\"),";
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
+                string NullType = "";
+                if ((_DataColumn.DataType.ToString() == "System.String"))
+                { NullType = ""; }
+                else
+                { NullType = "?"; }
+
                 if ((_DataColumn.DataType.ToString() == "System.Guid"))
                 { continue; }
 
-                if (_DataColumn.DataType.ToString() == "System.Decimal")
-                {
-                    _code += _DataColumn.ColumnName + "= Convert.ToDecimal (temp.Field<Object>(\"" + _DataColumn.ColumnName + "\")), \r\n ";
-                }
-                else
-                {
-                    _code += _DataColumn.ColumnName + "= temp.Field<" + _DataColumn.DataType.Name + ">(\"" + _DataColumn.ColumnName + "\"), \r\n ";
-                }
-                // Convert.ToDecimal (temp.Field<Object>("mod_id")),
-
-                // _code += "_obj." + _DataColumn.ColumnName + "= " + _DataColumn.ColumnName + "; \r\n ";
-                //  _code += "" + _DataColumn.ColumnName + "= _obj." + _DataColumn.ColumnName + "; \r\n ";
+                _code += _DataColumn.ColumnName + "= temp.Field<" + _DataColumn.DataType.Name + NullType + ">(\"" + _DataColumn.ColumnName + "\"), \r\n ";
             }
 
             _code += " });\r\n";
@@ -525,7 +522,14 @@ namespace StkGenCode.Code.Template
             {
                 code += "            if ( _" + _TableName + "." + _DataColumn.ColumnName + "!= null) " + _NewLine;
                 code += "            { " + _NewLine;
-                code += "                sql += string.Format(\" AND ((''='{0}') or (" + _DataColumn.ColumnName + "='{0}') )\", _" + _TableName + "." + _DataColumn.ColumnName + "); " + _NewLine;
+                if (_DataColumn.DataType.ToString() == "System.DateTime")
+                {
+                    code += "                sql += string.Format(\" AND ((''='{0}') or (" + _DataColumn.ColumnName + "='{0}') )\", StkDate.ConvertDateEnForDb(Convert.ToDateTime( _" + _TableName + "." + _DataColumn.ColumnName + "))); " + _NewLine;
+                }
+                else
+                {
+                    code += "                sql += string.Format(\" AND ((''='{0}') or (" + _DataColumn.ColumnName + "='{0}') )\", _" + _TableName + "." + _DataColumn.ColumnName + "); " + _NewLine;
+                }
                 code += "            } " + _NewLine;
             }
 
@@ -561,7 +565,6 @@ namespace StkGenCode.Code.Template
         }
 
         private string GenProperties()
-
         {
             string code = "";
             code += " public SortDirection _SortDirection { get; set; }" + _NewLine;
@@ -614,7 +617,6 @@ namespace StkGenCode.Code.Template
             name._TableName = _TableName;
             name._ds = _ds;
             _FileCode.writeFile(FileName(_TableName), _code);
-            //_FileCode.writeFile(_TableName + "Db", _code, _fileType);
         }
     }
 }

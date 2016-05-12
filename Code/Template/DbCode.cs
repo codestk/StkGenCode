@@ -113,17 +113,9 @@ namespace StkGenCode.Code.Template
         private string GenGetPageWise()
         {
             string code = "";
-            //command += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize)" + _NewLine;
-            //command += "{" + _NewLine;
-            //command += " string _sql1 = \"Sp_Get" + _TableName + "PageWise\";" + _NewLine;
-            //command += "  var prset = new List<IDataParameter>();" + _NewLine;
-            //command += " prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex));" + _NewLine;
-            //command += " prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize));" + _NewLine;
-            //command += " DataSet ds = Db.GetDataSet(_sql1, prset, CommandType.StoredProcedure);" + _NewLine;
-            //command += "  return DataSetToList(ds);" + _NewLine;
-            //command += "}" + _NewLine;
+          
 
-            code += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize, string Wordfilter) " + _NewLine;
+            code += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize, string  wordFullText=\"\") " + _NewLine;
             code += "{ " + _NewLine;
             code += "string store = \"Sp_Get" + _TableName + "PageWise\"; " + _NewLine;
 
@@ -141,7 +133,20 @@ namespace StkGenCode.Code.Template
             code += "            } " + _NewLine;
             code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
             code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
-            code += " sql += Wordfilter; " + _NewLine;
+            //code += " sql += Wordfilter; " + _NewLine;
+            code += "string whereCommnad = \"\"; " + _NewLine;
+            code += "        if (wordFullText !=\"\") " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            whereCommnad = SearchUtility.SqlContain(wordFullText); " + _NewLine;
+            code += "        } " + _NewLine;
+            code += "        else " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "             " + _NewLine;
+            code += "            whereCommnad = GenWhereformProperties();  " + _NewLine;
+            code += "        }  " + _NewLine;
+
+            code += " sql += whereCommnad;" + _NewLine;
+
 
             code += " " + _NewLine;
 
@@ -281,18 +286,7 @@ namespace StkGenCode.Code.Template
             return _code;
         }
 
-        //void Delete()
-        //{
-        //    var prset = new List<IDataParameter>();
-        //    prset.Add(Db.CreateParameterDb("@AmpBangkokIndex", _AmpBangkok.AmpBangkokIndex)); prset.Add(Db.CreateParameterDb("@AmpText", _AmpBangkok.AmpText)); prset.Add(Db.CreateParameterDb("@ENGAmpText", _AmpBangkok.ENGAmpText)); prset.Add(Db.CreateParameterDb("@ZoneID", _AmpBangkok.ZoneID)); prset.Add(Db.CreateParameterDb("@rowguid", _AmpBangkok.rowguid)); prset.Add(Db.CreateParameterDb("@msrepl_tran_version", _AmpBangkok.msrepl_tran_version));
-        //    var sql = @"DELETE FROM AmpBangkok where ";
-
-        //    int output = Db.FbExecuteNonQuery(sql, prset);
-        //    if (output != 1)
-        //    {
-        //        throw new System.Exception("Save" + this.ToString());
-        //    }
-        //}
+        
         private string GenDelete()
         {
             string insercolumn = "";
@@ -474,6 +468,31 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        private string GenGetKeyWordsOneColumn()
+        {
+            string code = "";
+            code += "  public List<string> GetKeyWordsOneColumn(string column, string keyword) " + _NewLine;
+            code += "  { " + _NewLine;
+            code += "          " + _NewLine;
+            code += " " + _NewLine;
+            code += "  string sql = \"SELECT  \" + column + \" FROM " + _TableName + " where lower(\" + column + \") like '\" + keyword.ToLower() + \"%'   group by \" + column + \" order by count(*) desc;\"; " + _NewLine;
+
+            code += "         " + _NewLine;
+            code += "         " + _NewLine;
+            code += "  List<string> dataArray = new List<string>(); " + _NewLine;
+            code += " " + _NewLine;
+            code += " " + _NewLine;
+            code += "  DataSet ds = Db.GetDataSet(sql); " + _NewLine;
+            code += "  foreach (DataRow row in ds.Tables[0].Rows) " + _NewLine;
+            code += "        { " + _NewLine;
+            code += "            dataArray.Add(row[0].ToString()); " + _NewLine;
+            code += "        } " + _NewLine;
+            code += " " + _NewLine;
+            code += "        return dataArray; " + _NewLine;
+            code += "    } " + _NewLine;
+            return code;
+        }
+
         private string GenWhereformProperties()
         {
             string code = "";
@@ -564,6 +583,7 @@ namespace StkGenCode.Code.Template
             _code += GenUpdateColumn();
 
             _code += GenAutoCompleteMethod();
+            _code += GenGetKeyWordsOneColumn();
             _code += GenSql();
             _code += GenWhereformProperties();
 

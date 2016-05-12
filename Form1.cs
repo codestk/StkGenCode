@@ -189,7 +189,7 @@ namespace StkGenCode
             _constr = txtConstring.Text;
             _path = textBox1.Text;
 
-            SetDb();
+            //SetDb();
             // string _TableName = "";
 
             //foreach (var item in checkedListBox1.CheckedItems)
@@ -200,13 +200,15 @@ namespace StkGenCode
             //Gen("fxrates_family");
             //Db.GetData();
             //Gen("STK_USER");
-
-            DataSet _ds = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "STK_USER");
+            //txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
+            //DataSet _ds = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "STK_USER");
+            txtConstring.Text = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            DataSet _ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
             Gen(_ds, "STK_USER");
 
             //MessageBox.Show("Ok");
 
-           System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
+            System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
 
             this.Close();
         }
@@ -219,22 +221,22 @@ namespace StkGenCode
 
             var connecStionstring = txtConstring.Text;
 
-            if (rsSqlServer.Checked)
-            {
-                connecStionstring = "Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
-                Db = new DataBaseSql(connecStionstring);
-                ds = Db.GetDataSet(sqlServer);
-            }
-            else if (rdFireBird.Checked)
-            {
-                connecStionstring = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
-                Db = new DataBaseFireBird(connecStionstring);
-                ds = Db.GetDataSet(sqlFireBird);
-            }
-            else
-            {
-                throw new Exception("Fails");
-            }
+            //if (rsSqlServer.Checked)
+            //{
+            //    connecStionstring = "Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
+            //    Db = new DataBaseSql(connecStionstring);
+            //    ds = Db.GetDataSet(sqlServer);
+            //}
+            //else if (rdFireBird.Checked)
+            //{
+            //    connecStionstring = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            //    Db = new DataBaseFireBird(connecStionstring);
+            //    ds = Db.GetDataSet(sqlFireBird);
+            //}
+            //else
+            //{
+            //    throw new Exception("Fails");
+            //}
         }
     }
 }
