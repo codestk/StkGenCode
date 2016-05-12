@@ -162,7 +162,7 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
                 string propertieName = string.Format("_{0}.{1}", _TableName, _DataColumn.ColumnName);
-                string controlName = string.Format("txt{0}" , _DataColumn.ColumnName);
+                string controlName = string.Format("txt{0}", _DataColumn.ColumnName);
 
                 if ((_DataColumn.DataType.ToString() == "System.Guid"))
                 { continue; }
