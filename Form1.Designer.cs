@@ -101,7 +101,7 @@
             this.checkedListBox1.Location = new System.Drawing.Point(61, 119);
             this.checkedListBox1.MultiColumn = true;
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(592, 319);
+            this.checkedListBox1.Size = new System.Drawing.Size(592, 139);
             this.checkedListBox1.Sorted = true;
             this.checkedListBox1.TabIndex = 7;
             // 

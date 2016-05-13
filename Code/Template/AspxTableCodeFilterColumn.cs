@@ -15,16 +15,11 @@
         {
             string code = "";
             code += " <div class=\"container\"> " + _NewLine;
-            code += "        <div class=\" col s12\"> " + _NewLine;
-            // code += "            <div class=\"row\"> " + _NewLine;
-            //code += "                <div class=\"input-field col s3\"> " + _NewLine;
-            //code += "                    <input placeholder=\"Placeholder\" id=\"first_name\" type=\"text\" class=\"validate\"> " + _NewLine;
-            //code += "                    <label for=\"first_name\">First Name</label> " + _NewLine;
-            //code += "                </div> " + _NewLine;
-            //code += "              " + _NewLine;
+            //code += "        <div class=\" col s12\"> " + _NewLine;
+
             //Usign Gen Text Box
             code += "        <div class=\"row\"> " + _NewLine;
-            string txtBoxSet = _AspxFromCodeaspx.GenTextBox(6);
+            string txtBoxSet = _AspxFromCodeaspx.GenControls(6);
             //txtBoxSet = txtBoxSet.Replace("s12", "s3");
             code += txtBoxSet;
             code += "                <div class=\"input-field col s12\"> " + _NewLine;
@@ -36,7 +31,7 @@
             code += "            </div> " + _NewLine;
             code += "        " + _NewLine;
             code += "        </div> " + _NewLine;
-            code += "        </div> " + _NewLine;
+            //code += "        </div> " + _NewLine;
 
             return code;
         }
@@ -44,16 +39,15 @@
         //javascript Method
         private string GenDocumentReady()
         {
-            //Using JavaScript
-            //AspxFromCode _AspxFromCodeaspx = new AspxFromCode();
-            //_AspxFromCodeaspx._ds = _ds;
-            //_AspxFromCodeaspx._TableName = _TableName;
-
             string code = " <script> " + _NewLine;
             code += "     var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.'; " + _NewLine;
             code += " " + _NewLine;
             code += "        $(document).ready(function () { " + _NewLine;
             code += "            ForceNumberTextBox(); " + _NewLine;
+
+            code += "//For dropdown" + _NewLine;
+            code += "$('select').material_select(); " + _NewLine;
+
             code += "            //For Change Lange " + _NewLine;
             //code += "            $('.dropdown-button').dropdown({ " + _NewLine;
             //code += "                inDuration: 300, " + _NewLine;
@@ -90,7 +84,7 @@
             //code += SearchJavaScript();
             //code += _AspxFromCodeaspx.Validate();
             //code += SearchJavaScript();
-            code += "        $('select').material_select(); " + _NewLine;
+
             code += " " + _NewLine;
 
             code += ForceNumberTextBoxJavaScript();

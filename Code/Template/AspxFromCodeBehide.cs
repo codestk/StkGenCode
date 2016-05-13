@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StkGenCode.Code.Column;
+using System;
 using System.Data;
 
 namespace StkGenCode.Code.Template
@@ -96,6 +97,10 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
+                string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
+                string controlTextBoxName = string.Format(_formatTextBoxName, _DataColumn.ColumnName);
+                string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
+
                 if (CommentKey)
                 {
                     bool primary = false;
@@ -113,32 +118,76 @@ namespace StkGenCode.Code.Template
                     }
                 }
 
+                //For Drop Down List
+                if (_MappingColumn != null)
+                {
+                    string codedrp = GenBindDropDown(_DataColumn.ColumnName);
+                    code += codedrp;
+                    if (codedrp != "")
+                    {
+                        continue;
+                    }
+                }
+
                 if ((_DataColumn.DataType.ToString() == "System.Guid"))
                 { continue; }
 
                 if ((_DataColumn.DataType.ToString() == "System.Int32"))
                 {
-                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt32(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
+                    code += propertieName + " = Convert.ToInt32(" + controlTextBoxName + ".Text);" + _NewLine;
                 }
-                //else if (_DataColumn.DataType.ToString() == "System.Int16")
-                //{
-                //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt16(txt" + _DataColumn.ColumnName + ".Checked);" + _NewLine;
-                //}
                 else if (_DataColumn.DataType.ToString() == "System.Decimal")
                 {
-                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =  Convert.ToDecimal (txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
+                    code += propertieName + " =  Convert.ToDecimal (" + controlTextBoxName + ".Text);" + _NewLine;
                 }
                 else if (_DataColumn.DataType.ToString() == "System.DateTime")
                 {
-                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =StkGlobalDate.TextEnToDate(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
+                    code += propertieName + " =StkGlobalDate.TextEnToDate(" + controlTextBoxName + ".Text);" + _NewLine;
                 }
                 else if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
                 {
-                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToInt16(txt" + _DataColumn.ColumnName + ".Checked);" + _NewLine;
+                    // code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToInt16(" + controlChekBoxName  + ".Checked);" + _NewLine;
+                    code += propertieName + " =Convert.ToInt16(" + controlChekBoxName + ".Checked);" + _NewLine;
                 }
                 else
                 {
-                    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = txt" + _DataColumn.ColumnName + ".Text;" + _NewLine;
+                    code += propertieName + " =  " + controlTextBoxName + ".Text;" + _NewLine;
+                }
+            }
+
+            return code;
+        }
+
+        private string GenDropDown(string columnName)
+        {
+            string code = "";
+            foreach (MappingColumn _Map in _MappingColumn)
+            {
+                if (_Map.ColumnName == columnName)
+                {
+                    string controlDropDownName = string.Format(_formatDropDownName, columnName);
+                    string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
+                    code = string.Format("{0}.Items.FindByValue({1}).Selected = true; ", controlDropDownName, propertieName);
+                    break;
+                }
+            }
+
+            return code;
+        }
+
+        private string GenBindDropDown(string columnName)
+        {
+            string code = "";
+            foreach (MappingColumn _Map in _MappingColumn)
+            {
+                if (_Map.ColumnName == columnName)
+                {
+                    string controlDropDownName = string.Format(_formatDropDownName, columnName);
+                    string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
+                    //mpoOrder.CUS_ID = drpCustomer.SelectedValue;
+                    code = string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;
+                        
+                    break;
                 }
             }
 
@@ -161,28 +210,40 @@ namespace StkGenCode.Code.Template
             code += "  " + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                string propertieName = string.Format("_{0}.{1}", _TableName, _DataColumn.ColumnName);
-                string controlName = string.Format("txt{0}", _DataColumn.ColumnName);
+                string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
+                string controlTextBoxName = string.Format(_formatTextBoxName, _DataColumn.ColumnName);
+                string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
+                //string controlDropDownName = string.Format(formatDropDownName , _DataColumn.ColumnName);
+                //For Drop Down List
+                if (_MappingColumn != null)
+                {
+                    string codedrp = GenDropDown(_DataColumn.ColumnName);
+                    code += codedrp;
+                    if (codedrp != "")
+                    {
+                        continue;
+                    }
+                }
 
                 if ((_DataColumn.DataType.ToString() == "System.Guid"))
                 { continue; }
 
                 if (_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ColumnName)
                 {
-                    code += controlName + ".Enabled = false;" + _NewLine;
+                    code += controlTextBoxName + ".Enabled = false;" + _NewLine;
                 }
 
                 if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
-                { code += controlName + ".Checked = Convert.ToBoolean(" + propertieName + ");" + _NewLine; }
+                { code += controlChekBoxName + ".Checked = Convert.ToBoolean(" + propertieName + ");" + _NewLine; }
                 else if ((_DataColumn.DataType.ToString() == "System.DateTime") || (_DataColumn.DataType.ToString() == "System.Decimal") || (_DataColumn.DataType.ToString() == "System.Int32"))
                 {
                     code += " if (" + propertieName + ".HasValue)" + _NewLine;
                     code += "{" + _NewLine;
-                    code += controlName + ".Text = StkGlobalDate.DateToTextEngFormat(" + propertieName + "); " + _NewLine;
+                    code += controlTextBoxName + ".Text = StkGlobalDate.DateToTextEngFormat(" + propertieName + "); " + _NewLine;
                     code += "}" + _NewLine;
                 }
                 else
-                { code += controlName + ".Text = Stk_TextNull.StringTotext(" + propertieName + ".ToString()); " + _NewLine; }
+                { code += controlTextBoxName + ".Text = Stk_TextNull.StringTotext(" + propertieName + ".ToString()); " + _NewLine; }
             }
             code += " } " + _NewLine;
             code += "  " + _NewLine;

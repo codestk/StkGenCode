@@ -1,7 +1,9 @@
 ﻿using CoreDb;
 using StkGenCode.Code;
+using StkGenCode.Code.Column;
 using StkGenCode.Code.Template;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
@@ -22,11 +24,16 @@ namespace StkGenCode
 
         private string _path;
 
+
+
         private void Gen(DataSet _ds, string _TableName)
         {
             FileCode F = new FileCode();
             F.path = _path;
             F.ClearAllFile();
+
+            string MappingColumnTable= "STK_TYPE_ID:STK_TYPE";
+            List<MappingColumn> _MappingColumn=  MappingColumn.ExtractMappingColumn(MappingColumnTable);
 
             //Db _db = new Db();
             //var _ds = Db.GetData(_constr, _TableName);
@@ -35,12 +42,14 @@ namespace StkGenCode
             _AspxFromCodeaspx._FileCode = F;
             _AspxFromCodeaspx._ds = _ds;
             _AspxFromCodeaspx._TableName = _TableName;
+            _AspxFromCodeaspx._MappingColumn = _MappingColumn;
             _AspxFromCodeaspx.Gen();
 
             AspxFromCodeBehide _AspxCodeBehide = new AspxFromCodeBehide();
             _AspxCodeBehide._FileCode = F;
             _AspxCodeBehide._ds = _ds;
             _AspxCodeBehide._TableName = _TableName;
+            _AspxCodeBehide._MappingColumn = _MappingColumn;
             _AspxCodeBehide.Gen();
 
             AspxTableCode _AspxTableCode = new AspxTableCode();

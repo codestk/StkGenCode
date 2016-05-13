@@ -44,7 +44,7 @@ namespace StkGenCode.Code.Template
             string code = "  ";
             code += "  <asp:Repeater ID = \"rpt" + _TableName + "Data\" runat= \"server\"  OnItemCommand=\"Sort_Click\"  OnItemCreated=\"rptSTK_USERData_ItemCreated\"    > " + _NewLine;
 
-            code += "    <HeaderTemplate>  <table class=\"striped\"> " + _NewLine;
+            code += "    <HeaderTemplate>  <table class=\"  bordered  striped \"> " + _NewLine;
             code += "  <thead> " + _NewLine;
             code += "  <tr> " + _NewLine;
             //code += " <th>Currency</th>  " + _NewLine;
@@ -62,7 +62,7 @@ namespace StkGenCode.Code.Template
             code += "   </thead>" + _NewLine;
             code += "   <tbody> " + _NewLine;
             code += "  </HeaderTemplate> " + _NewLine;
-             
+
             code += "   <ItemTemplate>" + _NewLine;
             code += " <tr> " + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
@@ -83,14 +83,14 @@ namespace StkGenCode.Code.Template
                 else
                 {
                     code += " <td class=\"td" + _DataColumn.ColumnName + "\"> " + _NewLine;
-                    if (_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString()) 
+                    if (_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString())
                     {
                         code += "     <a id=\"btnShowPopup0\" target=\"_blank\" href=\"" + _TableName+"Web.aspx?Q=<%# Stk_QueryString.EncryptQuery( (Eval(\"" + _DataColumn.ColumnName + "\")))%>\"" + _NewLine;
                         code += "                        title=\"\"> " + _NewLine;
                         code += "                        <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span>  " + _NewLine;
                         code += "                    </a>" + _NewLine;
                     }
-                    else 
+                    else
                     if ((_DataColumn.DataType.ToString() == "System.DateTime"))
                     {
                         code += "       <span><%# StkGlobalDate.DateToTextEngFormat(Eval(\"" + _DataColumn.ColumnName + "\")) %> </span> " + _NewLine;
@@ -189,7 +189,7 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
             return code = " <link href=\"Module/Search/SearchControl.css\" rel=\"stylesheet\" />" + _NewLine;
-            
+
         }
 
         private string GenSearch()
@@ -376,7 +376,7 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "                //  var id = $(this).parent().parent().parent().find(\"td:first\")[0].outerText; //Get first Td (ID1) " + _NewLine;
             code += "                var id = chk.attributes['data-column-key'].value; " + _NewLine;
-           
+
             code += "                var column = chk.attributes['data-column-id'].value; " + _NewLine;
             code += "                var Data = \"\"; " + _NewLine;
             code += " " + _NewLine;
@@ -474,7 +474,7 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "                source: function (request, response) { " + _NewLine;
             code += " " + _NewLine;
-           
+
             code += "                    var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
             code += " " + _NewLine;
             code += "                    var data = " + _TableName + "Service.GetKeyWordsOneColumn(column, request.term); " + _NewLine;
@@ -512,7 +512,7 @@ namespace StkGenCode.Code.Template
             code += "$(\".ForceNumber2Digit\").ForceNumericOnly2Digit(); " + _NewLine;
             code += "        } " + _NewLine;
 
-        
+
 
             return code;
         }
@@ -544,7 +544,7 @@ namespace StkGenCode.Code.Template
             code += "        $(document).ready(function () { " + _NewLine;
             code += "            ForceNumberTextBox(); " + _NewLine;
             code += "            //For Change Lange " + _NewLine;
-          
+
 
             code += "            $('.datepicker').pickadate({ " + _NewLine;
             code += "                selectMonths: true, // Creates a dropdown to control month  " + _NewLine;

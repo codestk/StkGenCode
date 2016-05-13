@@ -1,13 +1,10 @@
-﻿using System;
+﻿using StkGenCode.Code.Column;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StkGenCode.Code.Template
 {
-   public  abstract class  CodeBase
+    public abstract class CodeBase
     {
         public FileCode _FileCode;
         public DataSet _ds;
@@ -18,11 +15,25 @@ namespace StkGenCode.Code.Template
 
         public string _NotImplement = "throw new Exception(\"Not implement\");";
 
+        #region Constant
+
+        protected string _formatpropertieName = "_{0}.{1}";
+        protected string _formatTextBoxName = "txt{0}";
+        protected string _formatChekBoxName = "chk{0}";
+        protected string _formatDropDownName = "drp{0}";
+
+        #endregion Constant
+
+        /// <summary>
+        /// ใช้ สำหรับ Gen Code Dropdown list
+        /// ColumnName:Table
+        /// </summary>
+
+        public List<MappingColumn> _MappingColumn { get; set; }
+
         public abstract void Gen();
 
-
-        
-        protected void  innitProperties()
+        protected void innitProperties()
         {
             _FileName = new FileName();
             _FileName._TableName = _TableName;
