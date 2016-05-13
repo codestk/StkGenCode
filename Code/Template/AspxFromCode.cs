@@ -77,17 +77,20 @@ namespace StkGenCode.Code.Template
             string code = "";
             foreach (MappingColumn _Map in _MappingColumn)
             {
-                if (_Map.ColumnName == columnname)
+                if ((_Map.ColumnName == columnname) && (_Map.TableName != _TableName))
                 {
-                    // $("#NumberSelector").prop('selectedIndex')
-                    //code += "if ( ($(\"#<%=" + controlDropDownName + ".ClientID %>\").prop('selectedIndex')==0)|| ($(\"#<%=" + controlDropDownName + ".ClientID %>\").prop('selectedIndex')==-1)) output = false;" + _NewLine;
-                    code += "if(($(\"#<%="+ controlDropDownName + ".ClientID%>\").prop('selectedIndex')==0)||($(\"#<%="+ controlDropDownName + ".ClientID%>\").prop('selectedIndex')==-1)){" + _NewLine;
+                    code += "if(($(\"#<%=" + controlDropDownName + ".ClientID%>\").prop('selectedIndex')==0)||($(\"#<%=" + controlDropDownName + ".ClientID%>\").prop('selectedIndex')==-1)){" + _NewLine;
                     code += "output=false;" + _NewLine;
                     code += "" + _NewLine;
-                    code += "$(\"#<%="+ controlDropDownName + ".ClientID%>\").prev().prev().addClass('CustomInvalid');" + _NewLine;
+                    code += "$(\"#<%=" + controlDropDownName + ".ClientID%>\").prev().prev().addClass('CustomInvalid');" + _NewLine;
                     code += "" + _NewLine;
                     code += "}" + _NewLine;
-
+                    code += "else { " + _NewLine;
+                    code += "$(\"#<%=" + controlDropDownName + ".ClientID%>\").prev().prev().removeClass('CustomInvalid');" + _NewLine;
+                    code += "$(\"#<%=" + controlDropDownName + ".ClientID%>\").prev().prev().addClass('CustomValid');" + _NewLine;
+                    code += " " + _NewLine;
+                    code += " " + _NewLine;
+                    code += "}" + _NewLine;
                     break;
                 }
             }
@@ -146,8 +149,8 @@ namespace StkGenCode.Code.Template
             string code = "";
 
             code += "function Delete() { " + _NewLine;
-            code += "    $('#modalConfirm').openModal(); " + _NewLine;
-            code += "    return false; " + _NewLine;
+            code += "$('#modalConfirm').openModal(); " + _NewLine;
+            code += "return false; " + _NewLine;
             code += "}" + _NewLine;
 
             return code;
@@ -157,7 +160,7 @@ namespace StkGenCode.Code.Template
         {
             string code = "<script type=\"text/javascript\"> " + _NewLine;
             code += " $(document).ready(function () " + _NewLine;
-            code += "{ " + _NewLine;
+            code += "{" + _NewLine;
             code += "$('.modal-trigger').leanModal();" + _NewLine;
 
             code += "  ForceNumberTextBox(); " + _NewLine;
@@ -220,7 +223,7 @@ namespace StkGenCode.Code.Template
             string code = "";
             foreach (MappingColumn _Map in _MappingColumn)
             {
-                if (_Map.ColumnName == columnname)
+                if ((_Map.ColumnName == columnname) && (_Map.TableName != _TableName))
                 {
                     code += "<div class=\"input-field col s" + columnSize.ToString() + "\"> " + _NewLine;
                     code += "<asp:DropDownList ID =\"" + controlDropDownName + "\" runat=\"server\"> " + _NewLine;
@@ -228,6 +231,7 @@ namespace StkGenCode.Code.Template
                     code += "</asp:DropDownList>" + _NewLine;
                     code += "<label for=\"<%=" + controlDropDownName + ".ClientID %>\">txtEEEE</label>" + _NewLine;
                     code += "</div>" + _NewLine;
+
                     break;
                 }
             }
@@ -251,11 +255,11 @@ namespace StkGenCode.Code.Template
                 string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
                 string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
 
-
                 string CurrentControl = "";
                 if (_MappingColumn != null)
                 {
                     string codedrp = GenDropDown(_DataColumn.ColumnName, columnSize);
+
                     code += codedrp;
                     if (codedrp != "")
                     {
@@ -293,7 +297,6 @@ namespace StkGenCode.Code.Template
                     CurrentControl = controlChekBoxName;
                     code += "<asp:CheckBox " + disabled + " ID=\"" + controlChekBoxName + "\"    runat=\"server\"></asp:CheckBox>" + _NewLine;
                     //code += "<label for=\"<%=" + controlChekBoxName + ".ClientID %>\">" + _DataColumn.ColumnName + " </label> " + _NewLine;
-
                 }
                 else if ((_DataColumn.DataType.ToString() == "System.String"))
                 {

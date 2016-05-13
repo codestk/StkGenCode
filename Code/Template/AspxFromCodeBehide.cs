@@ -6,23 +6,22 @@ namespace StkGenCode.Code.Template
 {
     public class AspxFromCodeBehide : CodeBase
     {
-        //public FileCode _FileCode;
-        //public DataSet _ds;
-        //public string _TableName;
-
-        //private string _NewLine = " \r\n";
-
-        //private string _NotImplement = "throw new Exception(\"Not implement\");";
-
         private string GenPageLoad()
         {
             string code = "  ";
-            code += "  protected void Page_Load(object sender, EventArgs e)" + _NewLine;
-            code += " { " + _NewLine;
-            code += " if (!Page.IsPostBack) " + _NewLine;
-            code += " {  " + _NewLine;
-            code += " BindForm(); " + _NewLine;
-            code += " } " + _NewLine;
+            code += "protected void Page_Load(object sender, EventArgs e)" + _NewLine;
+            code += "{ " + _NewLine;
+            code += "if (!Page.IsPostBack) " + _NewLine;
+            code += "{  " + _NewLine;
+
+            if (HaveDropDown())
+            {
+                code += "BindDropDown();" + _NewLine;
+            }
+
+            code += "BindForm(); " + _NewLine;
+
+            code += "} " + _NewLine;
             code += "}  " + _NewLine;
 
             return code;
@@ -30,6 +29,8 @@ namespace StkGenCode.Code.Template
 
         private string GenBtnSave()
         {
+            string controlTextBoxName = string.Format(_formatTextBoxName, _ds.Tables[0].PrimaryKey[0]);
+
             string code = "  ";
             code += "protected void btnSave_Click(object sender, EventArgs e)" + _NewLine;
             code += " { " + _NewLine;
@@ -42,7 +43,9 @@ namespace StkGenCode.Code.Template
             //code += "  _" + _TableName + "Db.Insert(); " + _NewLine;
 
             //  txtid.Text = _modulesDb.Insert().ToString();
-            code += "txt" + _ds.Tables[0].PrimaryKey[0] + ".Text= _" + _TableName + "Db.Insert().ToString();; " + _NewLine;
+
+            //code += "txt" + _ds.Tables[0].PrimaryKey[0] + ".Text= _" + _TableName + "Db.Insert().ToString();; " + _NewLine;
+            code += controlTextBoxName + ".Text= _" + _TableName + "Db.Insert().ToString(); " + _NewLine;
 
             code += "  MsgBox.Alert(\"Saved!!!\"); " + _NewLine;
 
@@ -56,9 +59,9 @@ namespace StkGenCode.Code.Template
         {
             string code = "  ";
             code += "protected void btnUpdate_Click(object sender, EventArgs e)" + _NewLine;
-            code += " { " + _NewLine;
-            code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
-            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            code += "{ " + _NewLine;
+            code += "" + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
+            code += "" + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
             code += MapControlToProPerties(_ds, false);
 
             code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
@@ -158,12 +161,30 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        private Boolean HaveDropDown()
+        {
+            bool _HaveDropDown = false;
+            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            {
+                foreach (MappingColumn _Map in _MappingColumn)
+                {
+                    if ((_Map.ColumnName == _DataColumn.ColumnName) && (_Map.TableName != _TableName))
+                    {
+                        _HaveDropDown = true;
+                        break;
+                    }
+                }
+            }
+
+            return _HaveDropDown;
+        }
+
         private string GenDropDown(string columnName)
         {
             string code = "";
             foreach (MappingColumn _Map in _MappingColumn)
             {
-                if (_Map.ColumnName == columnName)
+                if ((_Map.ColumnName == columnName) && (_Map.TableName != _TableName))
                 {
                     string controlDropDownName = string.Format(_formatDropDownName, columnName);
                     string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
@@ -180,19 +201,69 @@ namespace StkGenCode.Code.Template
             string code = "";
             foreach (MappingColumn _Map in _MappingColumn)
             {
-                if (_Map.ColumnName == columnName)
+                if ((_Map.ColumnName == columnName) && (_Map.TableName != _TableName))
                 {
                     string controlDropDownName = string.Format(_formatDropDownName, columnName);
                     string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
                     //mpoOrder.CUS_ID = drpCustomer.SelectedValue;
                     code = string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;
-                        
+
                     break;
                 }
             }
 
             return code;
         }
+
+        private string GenInnitDropDown()
+        {
+            string code = "";
+         
+            if (HaveDropDown())
+            {
+                code += "private void BindDropDown() " + _NewLine;
+                code += "{ " + _NewLine;
+
+                foreach(DataColumn _DataColumn in _ds.Tables[0].Columns)
+                {
+                  //  string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
+                  //  string controlTextBoxName = string.Format(_formatTextBoxName, _DataColumn.ColumnName);
+                  //  string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
+                  //string controlDropDownName = string.Format(_formatDropDownName , _DataColumn.ColumnName);
+                    foreach (MappingColumn _Map in _MappingColumn)
+                    {
+                        if ((_Map.ColumnName == _DataColumn.ColumnName) && (_Map.TableName != _TableName))
+                        {
+                            string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
+                            code += string.Format("{0}Db _{0}Db = new {0}Db(); ",_TableName ) + _NewLine;
+                            code += string.Format("{0}.DataSource =  _{1}Db.Select(); ", controlDropDownName,_TableName) + _NewLine;
+                            code += string.Format("{0}.DataTextField = {1}Db.DataText;", controlDropDownName, _TableName) + _NewLine;
+                            code += string.Format("{0}.DataValueField = {1}Db.DataValue;", controlDropDownName, _TableName) + _NewLine;
+
+                            code += string.Format("{0}.DataBind();", controlDropDownName) + _NewLine;
+
+                            code += string.Format("var {0}lt = new ListItem(\"please select\", \"0\"); ", controlDropDownName) + _NewLine;
+                            code += string.Format("{0}.Items.Insert(0, {0}lt);", controlDropDownName) + _NewLine;
+
+                            code += " " + _NewLine;
+                        }
+                    }
+                    //code += "    STK_TYPEDb _STK_TYPEDb = new STK_TYPEDb(); " + _NewLine;
+                    //code += "    drpSTK_TYPE_ID.DataSource =  _STK_TYPEDb.Select(); " + _NewLine;
+                    //code += "    drpSTK_TYPE_ID.DataTextField = STK_TYPEDb.DataText; " + _NewLine;
+                    //code += "    drpSTK_TYPE_ID.DataValueField = STK_TYPEDb.DataKey; " + _NewLine;
+
+
+                    code += "}" + _NewLine;
+
+                }
+
+            }
+              
+
+            return code;
+        }
+
 
         private string GenBindForm()
         {
@@ -251,18 +322,6 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string T()
-        {
-            string code = "  ";
-            code += "  " + _NewLine;
-            code += "  " + _NewLine; code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            return code;
-        }
-
         private string GenUsing()
         {
             string code = "  ";
@@ -295,7 +354,14 @@ namespace StkGenCode.Code.Template
             _code += GenUsing();
             _code += BeginClass();
             _code += GenPageLoad();
+
+
+
+            _code += GenInnitDropDown();
             _code += GenBindForm();
+
+
+
             _code += GenBtnSave();
             _code += GenBtnUpdate();
 

@@ -214,6 +214,8 @@ namespace StkGenCode
             txtConstring.Text = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
             DataSet _ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
             Gen(_ds, "STK_USER");
+            DataSet _ds_ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_TYPE");
+            Gen(_ds_ds, "STK_TYPE");
 
             //MessageBox.Show("Ok");
 

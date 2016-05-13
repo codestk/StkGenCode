@@ -51,21 +51,28 @@ namespace StkGenCode.Code.Template
         private string GenGetAll()
         {
             string _code = "";
+            string sqlColumnList = GenListColumn();  //"A,B,C,D,E"
             _code += "public List<" + _TableName + "> Select()\r\n {";
-            _code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
-            _code += " DataSet ds = Db.GetDataSet(_sql1);  \r\n ";
+            //_code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
+            _code += " string sql = \"SELECT " + sqlColumnList + "0 AS RecordCount FROM " + _TableName + "\";"+_NewLine;
+            _code += " DataSet ds = Db.GetDataSet(sql);  \r\n ";
             _code += " return DataSetToList(ds);   \r\n";
             _code += "} \r\n";
             return _code;
         }
 
+        string GenListColumn()
+        {
+            return ColumnString.GenLineString(_ds, "{0},");
+        }
+
         private string GenSelectOne()
         {
             string _code = "";
-            string sqlColumnList = ""; //"A,B,C,D,E"
+            string sqlColumnList = GenListColumn(); //"A,B,C,D,E"
 
             string column = _ds.Tables[0].PrimaryKey[0].ToString();
-            sqlColumnList = ColumnString.GenLineString(_ds, "{0},");
+            //sqlColumnList = ColumnString.GenLineString(_ds, "{0},");
             _code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
             _code += "{ " + _NewLine;
 

@@ -194,7 +194,7 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += " " + _NewLine;
             code += "        _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
-            code += "         string wherefilter = _STK_USERDb.GenWhereformProperties();" + _NewLine;
+            code += "//         string wherefilter = _STK_USERDb.GenWhereformProperties();" + _NewLine;
             code += "        var result = _" + _TableName + "Db.GetPageWise(pageIndex, PageSize); " + _NewLine;
             code += " " + _NewLine;
             code += " " + _NewLine;
