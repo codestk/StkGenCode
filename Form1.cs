@@ -30,7 +30,7 @@ namespace StkGenCode
         {
             FileCode F = new FileCode();
             F.path = _path;
-            F.ClearAllFile();
+            //F.ClearAllFile();
 
             string MappingColumnTable= "STK_TYPE_ID:STK_TYPE";
             List<MappingColumn> _MappingColumn=  MappingColumn.ExtractMappingColumn(MappingColumnTable);
@@ -216,6 +216,8 @@ namespace StkGenCode
             //txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
             //DataSet _ds = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "STK_USER");
             txtConstring.Text = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+
+            ClearFile();
             DataSet _ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
             Gen(_ds, "STK_USER");
             DataSet _ds_ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_TYPE");
@@ -226,6 +228,14 @@ namespace StkGenCode
             System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
 
             this.Close();
+        }
+
+
+        private void ClearFile()
+        {
+            FileCode F = new FileCode();
+            F.path = _path;
+            F.ClearAllFile();
         }
 
         private void SetDb()

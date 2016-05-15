@@ -54,14 +54,14 @@ namespace StkGenCode.Code.Template
             string sqlColumnList = GenListColumn();  //"A,B,C,D,E"
             _code += "public List<" + _TableName + "> Select()\r\n {";
             //_code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
-            _code += " string sql = \"SELECT " + sqlColumnList + "0 AS RecordCount FROM " + _TableName + "\";"+_NewLine;
+            _code += " string sql = \"SELECT " + sqlColumnList + "0 AS RecordCount FROM " + _TableName + "\";" + _NewLine;
             _code += " DataSet ds = Db.GetDataSet(sql);  \r\n ";
             _code += " return DataSetToList(ds);   \r\n";
             _code += "} \r\n";
             return _code;
         }
 
-        string GenListColumn()
+        private string GenListColumn()
         {
             return ColumnString.GenLineString(_ds, "{0},");
         }
@@ -406,8 +406,8 @@ namespace StkGenCode.Code.Template
             _code += "  public " + _TableName + " _" + _TableName + ";" + _NewLine;
 
             _code += "public const string DataKey = \"" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\";" + _NewLine;
-            _code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
-            _code += "public const string DataValue = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
+            _code += "public const string DataText = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
+            _code += "public const string DataValue = \"" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\";" + _NewLine;
             return _code;
         }
 

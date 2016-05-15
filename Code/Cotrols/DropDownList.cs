@@ -1,49 +1,18 @@
 ﻿using StkGenCode.Code.Column;
+using StkGenCode.Code.Template;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace StkGenCode.Code.Template
+namespace StkGenCode.Code.Cotrols
 {
-    public abstract class CodeBase
+    public class DropDownList  
     {
-        public FileCode _FileCode;
-        public DataSet _ds;
-        public string _TableName;
-        protected FileName _FileName;
-
-        public string _NewLine = " \r\n";
-
-        public string _NotImplement = "throw new Exception(\"Not implement\");";
-
-        #region Constant
-
-        public string _formatpropertieName = "_{0}.{1}";
-        public string _formatTextBoxName = "txt{0}";
-        public string _formatChekBoxName = "chk{0}";
-        public string _formatDropDownName = "drp{0}";
-
-        #endregion Constant
-
-        /// <summary>
-        /// ใช้ สำหรับ Gen Code Dropdown list
-        /// ColumnName:Table
-        /// </summary>
-
-        public List<MappingColumn> _MappingColumn { get; set; }
-
-        public abstract void Gen();
-
-        protected void innitProperties()
-        {
-            _FileName = new FileName();
-            _FileName._TableName = _TableName;
-            _FileName._ds = _ds;
-        }
-
-        #region DropDown
-
-        protected String MapControlToProPerties(DataSet _ds, bool CommentKey = false)
+ 
+        private String MapControlToProPerties(DataSet _ds, bool CommentKey = false)
         {
             string code = "";
 
@@ -73,7 +42,7 @@ namespace StkGenCode.Code.Template
                 //For Drop Down List
                 if (_MappingColumn != null)
                 {
-                    string codedrp = GenMapDropDownToProPerties(_DataColumn.ColumnName);
+                    string codedrp = GenMapDropDownToProPerties (_DataColumn.ColumnName);
                     code += codedrp;
                     if (codedrp != "")
                     {
@@ -133,7 +102,7 @@ namespace StkGenCode.Code.Template
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected string GenProtiesToDropDown(string columnName)
+        private string GenProtiesToDropDown(string columnName)
         {
             string code = "";
             foreach (MappingColumn _Map in _MappingColumn)
@@ -149,7 +118,7 @@ namespace StkGenCode.Code.Template
                     code += "{" + _NewLine;
                     code += string.Format("{0}ListItem.Selected = true; ", controlDropDownName) + _NewLine;
                     code += "};" + _NewLine;
-                    code += " " + _NewLine;
+                    code +=  " "  + _NewLine;
                     break;
                 }
             }
@@ -157,7 +126,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        public string GenMapDropDownToProPerties(string columnName)
+        public  string GenMapDropDownToProPerties(string columnName)
         {
             string code = "";
             foreach (MappingColumn _Map in _MappingColumn)
@@ -167,13 +136,7 @@ namespace StkGenCode.Code.Template
                     string controlDropDownName = string.Format(_formatDropDownName, columnName);
                     string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
                     //mpoOrder.CUS_ID = drpCustomer.SelectedValue;
-                    code += string.Format("if ({0}.SelectedIndex > 0)", controlDropDownName) + _NewLine;
-
-                    code += "{" + _NewLine;
-                    code += string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;
-                    code += "}" + _NewLine;
-
-                    //code = string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;
+                    code = string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;
 
                     break;
                 }
@@ -182,7 +145,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        protected string GenInnitDropDown()
+        private string GenInnitDropDown()
         {
             string code = "";
 
@@ -191,19 +154,18 @@ namespace StkGenCode.Code.Template
                 code += "private void BindDropDown() " + _NewLine;
                 code += "{ " + _NewLine;
 
-                foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+                foreach(DataColumn _DataColumn in _ds.Tables[0].Columns)
                 {
+
                     foreach (MappingColumn _Map in _MappingColumn)
                     {
                         if ((_Map.ColumnName == _DataColumn.ColumnName) && (_Map.TableName != _TableName))
                         {
-                            //Table MAster Of Drop DownList
-                            string _DropDownTableName = _Map.TableName;
                             string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
-                            code += string.Format("{0}Db _{0}Db = new {0}Db(); ", _DropDownTableName) + _NewLine;
-                            code += string.Format("{0}.DataSource =  _{1}Db.Select(); ", controlDropDownName, _DropDownTableName) + _NewLine;
-                            code += string.Format("{0}.DataTextField = {1}Db.DataText;", controlDropDownName, _DropDownTableName) + _NewLine;
-                            code += string.Format("{0}.DataValueField = {1}Db.DataValue;", controlDropDownName, _DropDownTableName) + _NewLine;
+                            code += string.Format("{0}Db _{0}Db = new {0}Db(); ",_TableName ) + _NewLine;
+                            code += string.Format("{0}.DataSource =  _{1}Db.Select(); ", controlDropDownName,_TableName) + _NewLine;
+                            code += string.Format("{0}.DataTextField = {1}Db.DataText;", controlDropDownName, _TableName) + _NewLine;
+                            code += string.Format("{0}.DataValueField = {1}Db.DataValue;", controlDropDownName, _TableName) + _NewLine;
 
                             code += string.Format("{0}.DataBind();", controlDropDownName) + _NewLine;
 
@@ -213,13 +175,19 @@ namespace StkGenCode.Code.Template
                             code += " " + _NewLine;
                         }
                     }
+
+
+
+
+
                 }
                 code += "}" + _NewLine;
             }
 
+
             return code;
         }
 
-        #endregion DropDown
+
     }
 }

@@ -200,6 +200,27 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        private string GenPageLoad()
+        {
+            string code = "  ";
+            code += "protected void Page_Load(object sender, EventArgs e)" + _NewLine;
+            code += "{ " + _NewLine;
+            code += "if (!Page.IsPostBack) " + _NewLine;
+            code += "{  " + _NewLine;
+
+            if (_AspxFromCodeBehide.HaveDropDown())
+            {
+                code += "BindDropDown();" + _NewLine;
+            }
+
+            
+
+            code += "} " + _NewLine;
+            code += "}  " + _NewLine;
+
+            return code;
+        }
+
         public override void Gen()
         {
             string _code = "";
@@ -209,7 +230,11 @@ namespace StkGenCode.Code.Template
             _code += GenConstance();
 
             _code += GenPageLoad();
-            _code += GenSearchEvent();
+            if (_AspxFromCodeBehide.HaveDropDown())
+            {
+                _code += GenInnitDropDown();
+            }
+                _code += GenSearchEvent();
             _code += GenBind();
             // _code += GenGetPageWise();
             //_code += GenPageChange();
