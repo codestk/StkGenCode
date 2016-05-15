@@ -75,61 +75,61 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        protected new string GenGetPageWise()
-        {
-            string code = "  ";
+        //protected new string GenGetPageWise()
+        //{
+        //    string code = "  ";
 
-            code += "     protected void GetPageWise(int pageIndex,string wherefilter)  " + _NewLine;
-            code += "{ " + _NewLine;
-            code += "\\ " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
+        //    code += "     protected void GetPageWise(int pageIndex,string wherefilter)  " + _NewLine;
+        //    code += "{ " + _NewLine;
+        //    code += "\\ " + _TableName + "Db _" + _TableName + " = new " + _TableName + "Db();" + _NewLine;
 
-            code += "\\ " + DbCodeFireBird.ClassName(_TableName) + "D _" + _TableName + " = new " + DbCodeFireBird.ClassName(_TableName) + "();" + _NewLine;
-            //code += " string wherefilter = SearchUtility.SqlContain(txtSearch.Text);" + _NewLine;
-            code += "var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize, wherefilter); " + _NewLine;
-            //code += "string services = GetSelectedService(); " + _NewLine;
-            //code += "var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize, txtSearch.Text); " + _NewLine;
-            code += "           // var result = _" + _TableName + ".GetWithFilter(false, \"\"); " + _NewLine;
+        //    code += "\\ " + DbCodeFireBird.ClassName(_TableName) + "D _" + _TableName + " = new " + DbCodeFireBird.ClassName(_TableName) + "();" + _NewLine;
+        //    //code += " string wherefilter = SearchUtility.SqlContain(txtSearch.Text);" + _NewLine;
+        //    code += "var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize, wherefilter); " + _NewLine;
+        //    //code += "string services = GetSelectedService(); " + _NewLine;
+        //    //code += "var result = _" + _TableName + ".GetPageWise(pageIndex, PageSize, txtSearch.Text); " + _NewLine;
+        //    code += "           // var result = _" + _TableName + ".GetWithFilter(false, \"\"); " + _NewLine;
 
-            code += "if (result.Count == 0) " + _NewLine;
-            code += "{ " + _NewLine;
-            code += "//No data " + _NewLine;
-            code += "hideTool(); " + _NewLine;
-            //rptauth_dtData
-            code += "rpt" + _TableName + "Data.DataBind(); " + _NewLine;
-            code += "DivNoresults.Visible = true; " + _NewLine;
-            code += "   return; " + _NewLine;
-            code += "} " + _NewLine;
-            code += "//Hide MEssage " + _NewLine;
-            code += "DivNoresults.Visible = false; " + _NewLine;
-            //code += "ShowTool(); " + _NewLine;
-            code += "int recordCount = result[0].RecordCount; " + _NewLine;
-            code += "ViewState[\"recordCount\"] = recordCount; " + _NewLine;
+        //    code += "if (result.Count == 0) " + _NewLine;
+        //    code += "{ " + _NewLine;
+        //    code += "//No data " + _NewLine;
+        //    code += "hideTool(); " + _NewLine;
+        //    //rptauth_dtData
+        //    code += "rpt" + _TableName + "Data.DataBind(); " + _NewLine;
+        //    code += "DivNoresults.Visible = true; " + _NewLine;
+        //    code += "   return; " + _NewLine;
+        //    code += "} " + _NewLine;
+        //    code += "//Hide MEssage " + _NewLine;
+        //    code += "DivNoresults.Visible = false; " + _NewLine;
+        //    //code += "ShowTool(); " + _NewLine;
+        //    code += "int recordCount = result[0].RecordCount; " + _NewLine;
+        //    code += "ViewState[\"recordCount\"] = recordCount; " + _NewLine;
 
-            //code += "divfilter.Visible = true; " + _NewLine;
-            code += "divResult.Visible = true; " + _NewLine;
-            code += "this.PopulatePager(recordCount, pageIndex); " + _NewLine;
-            code += "rpt" + _TableName + "Data.DataSource = result; " + _NewLine;
-            code += "rpt" + _TableName + "Data.DataBind(); " + _NewLine;
-            code += "        } " + _NewLine;
+        //    //code += "divfilter.Visible = true; " + _NewLine;
+        //    code += "divResult.Visible = true; " + _NewLine;
+        //    code += "this.PopulatePager(recordCount, pageIndex); " + _NewLine;
+        //    code += "rpt" + _TableName + "Data.DataSource = result; " + _NewLine;
+        //    code += "rpt" + _TableName + "Data.DataBind(); " + _NewLine;
+        //    code += "        } " + _NewLine;
 
-            return code;
-        }
+        //    return code;
+        //}
 
-        private string GenPageChange()
-        {
-            string code = "  ";
-            code += " protected void Page_Changed(object sender, EventArgs e) " + _NewLine;
-            code += " { " + _NewLine;
-            code += " int pageIndex = int.Parse((sender as LinkButton).CommandArgument);" + _NewLine;
+        //private string GenPageChange()
+        //{
+        //    string code = "  ";
+        //    code += " protected void Page_Changed(object sender, EventArgs e) " + _NewLine;
+        //    code += " { " + _NewLine;
+        //    code += " int pageIndex = int.Parse((sender as LinkButton).CommandArgument);" + _NewLine;
 
-            code += " ViewState[\"CurrentPage\"] = pageIndex;" + _NewLine;
-            code += " Bind();" + _NewLine;
+        //    code += " ViewState[\"CurrentPage\"] = pageIndex;" + _NewLine;
+        //    code += " Bind();" + _NewLine;
 
-            code += " }" + _NewLine;
-            code += "  " + _NewLine;
+        //    code += " }" + _NewLine;
+        //    code += "  " + _NewLine;
 
-            return code;
-        }
+        //    return code;
+        //}
 
         private string GenSearchEvent()
         {

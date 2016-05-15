@@ -38,13 +38,7 @@
         protected string GenPageLoad()
         {
             string code = "  ";
-            //code += " protected void Page_Load(object sender, EventArgs e) " + _NewLine;
-            //code += "{" + _NewLine;
-            //code += "if (!IsPostBack) " + _NewLine;
-            //code += "{ " + _NewLine;
-            //code += "this.GetPageWise(1); " + _NewLine;
-            //code += "} " + _NewLine;
-            //code += "} " + _NewLine;
+
             code += "  protected void Page_Load(object sender, EventArgs e) " + _NewLine;
             code += "        { " + _NewLine;
             code += "            if (!IsPostBack) " + _NewLine;
