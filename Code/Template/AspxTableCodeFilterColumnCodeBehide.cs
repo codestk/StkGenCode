@@ -1,10 +1,12 @@
-﻿using System;
+﻿using StkGenCode.Code.Column;
+using System;
 using System.Data;
 
 namespace StkGenCode.Code.Template
 {
     public class AspxTableCodeFilterColumnCodeBehide : AspxTableCodeBehine
     {
+        public AspxFromCodeBehide _AspxFromCodeBehide;
         private string BeginClass()
         {
             string code = "  ";
@@ -12,6 +14,7 @@ namespace StkGenCode.Code.Template
             code += "{" + _NewLine;
             return code;
         }
+        
 
         private String MapControlToProPerties(DataSet _ds, bool CommentKey = false)
         {
@@ -20,50 +23,18 @@ namespace StkGenCode.Code.Template
             //code += string.Format("var _{0} = new {0}();", _TableName) + _NewLine;
             foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
             {
-                //if (CommentKey)
-                //{
-                //    bool primary = false;
 
-                //    //ต้อง เป็น Auto ถึงจะ Comment
-                //    if ((_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
-                //    {
-                //        primary = true;
-                //    }
+                if (_MappingColumn != null)
+                {
+                    string codedrp = _AspxFromCodeBehide.GenMapDropDownToProPerties(_DataColumn.ColumnName);
+                    code += codedrp;
+                    if (codedrp != "")
+                    {
+                        continue;
+                    }
+                }
 
-                //    if (primary)
-                //    {
-                //        // continue;
-                //        code += "// ";
-                //    }
-                //}
 
-                //if ((_DataColumn.DataType.ToString() == "System.Guid"))
-                //{ continue; }
-
-                //if ((_DataColumn.DataType.ToString() == "System.Int32"))
-                //{
-                //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt32(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-                //}
-                //else if (_DataColumn.DataType.ToString() == "System.Int16")
-                //{
-                //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = Convert.ToInt16(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-                //}
-                //else if (_DataColumn.DataType.ToString() == "System.Decimal")
-                //{
-                //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =  Convert.ToDecimal (txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-                //}
-                //else if (_DataColumn.DataType.ToString() == "System.DateTime")
-                //{
-                //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToDateTime(txt" + _DataColumn.ColumnName + ".Text);" + _NewLine;
-                //}
-                //else if (_DataColumn.DataType.ToString() == "System.Boolean")
-                //{
-                //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToBoolean(txt" + _DataColumn.ColumnName + ".Checked);" + _NewLine;
-                //}
-                //else
-                //{
-                //    code += "_" + _TableName + "." + _DataColumn.ColumnName + " = txt" + _DataColumn.ColumnName + ".Text;" + _NewLine;
-                //}
 
                 if ((_DataColumn.DataType.ToString() == "System.Int32"))
                 {

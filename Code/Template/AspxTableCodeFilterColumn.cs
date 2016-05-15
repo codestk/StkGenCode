@@ -2,7 +2,7 @@
 {
     public class AspxTableCodeFilterColumn : AspxTableCode
     {
-        private AspxFromCode _AspxFromCodeaspx;
+        public  AspxFromCode _AspxFromCodeaspx;
 
         private string GenHeadeFile()
         {
@@ -21,6 +21,7 @@
             code += "        <div class=\"row\"> " + _NewLine;
             string txtBoxSet = _AspxFromCodeaspx.GenControls(6);
             //txtBoxSet = txtBoxSet.Replace("s12", "s3");
+            //txtBoxSet = "";
             code += txtBoxSet;
             code += "                <div class=\"input-field col s12\"> " + _NewLine;
             code += " " + _NewLine;
@@ -96,9 +97,9 @@
         {
             innitProperties();
 
-            _AspxFromCodeaspx = new AspxFromCode();
-            _AspxFromCodeaspx._ds = _ds;
-            _AspxFromCodeaspx._TableName = _TableName;
+            //_AspxFromCodeaspx = new AspxFromCode();
+            //_AspxFromCodeaspx._ds = _ds;
+            //_AspxFromCodeaspx._TableName = _TableName;
 
             string _code = "";
 

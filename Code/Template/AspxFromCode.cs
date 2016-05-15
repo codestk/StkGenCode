@@ -229,7 +229,7 @@ namespace StkGenCode.Code.Template
                     code += "<asp:DropDownList ID =\"" + controlDropDownName + "\" runat=\"server\"> " + _NewLine;
                     code += " " + _NewLine;
                     code += "</asp:DropDownList>" + _NewLine;
-                    code += "<label for=\"<%=" + controlDropDownName + ".ClientID %>\">txtEEEE</label>" + _NewLine;
+                    code += "<label for=\"<%=" + controlDropDownName + ".ClientID %>\">drp</label>" + _NewLine;
                     code += "</div>" + _NewLine;
 
                     break;
@@ -403,13 +403,14 @@ namespace StkGenCode.Code.Template
 
             _code += GenContentBodyEnd();
 
-            FileName name = new FileName();
+            //FileName name = new FileName();
 
-            name._TableName = _TableName;
+            //name._TableName = _TableName;
 
-            name._ds = _ds;
+            //name._ds = _ds;
+            innitProperties();
 
-            _FileCode.writeFile(name.AspxFromCodeName(), _code);
+            _FileCode.writeFile(_FileName.AspxFromCodeName(), _code);
         }
     }
 }

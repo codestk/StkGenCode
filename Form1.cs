@@ -35,9 +35,7 @@ namespace StkGenCode
             string MappingColumnTable= "STK_TYPE_ID:STK_TYPE";
             List<MappingColumn> _MappingColumn=  MappingColumn.ExtractMappingColumn(MappingColumnTable);
 
-            //Db _db = new Db();
-            //var _ds = Db.GetData(_constr, _TableName);
-            //var _ds = Db.GetData(_constr, _TableName);
+           
             AspxFromCode _AspxFromCodeaspx = new AspxFromCode();
             _AspxFromCodeaspx._FileCode = F;
             _AspxFromCodeaspx._ds = _ds;
@@ -45,35 +43,41 @@ namespace StkGenCode
             _AspxFromCodeaspx._MappingColumn = _MappingColumn;
             _AspxFromCodeaspx.Gen();
 
-            AspxFromCodeBehide _AspxCodeBehide = new AspxFromCodeBehide();
-            _AspxCodeBehide._FileCode = F;
-            _AspxCodeBehide._ds = _ds;
-            _AspxCodeBehide._TableName = _TableName;
-            _AspxCodeBehide._MappingColumn = _MappingColumn;
-            _AspxCodeBehide.Gen();
+            AspxFromCodeBehide _AspxFromCodeBehide = new AspxFromCodeBehide();
+            _AspxFromCodeBehide._FileCode = F;
+            _AspxFromCodeBehide._ds = _ds;
+            _AspxFromCodeBehide._TableName = _TableName;
+            _AspxFromCodeBehide._MappingColumn = _MappingColumn;
+            _AspxFromCodeBehide.Gen();
 
             AspxTableCode _AspxTableCode = new AspxTableCode();
             _AspxTableCode._FileCode = F;
             _AspxTableCode._ds = _ds;
             _AspxTableCode._TableName = _TableName;
+            _AspxTableCode._MappingColumn = _MappingColumn;
             _AspxTableCode.Gen();
 
             AspxTableCodeBehine _AspxTableCodeBehine = new AspxTableCodeBehine();
             _AspxTableCodeBehine._FileCode = F;
             _AspxTableCodeBehine._ds = _ds;
             _AspxTableCodeBehine._TableName = _TableName;
+            _AspxTableCodeBehine._MappingColumn = _MappingColumn;
             _AspxTableCodeBehine.Gen();
 
             AspxTableCodeFilterColumn _AspxTableCodeFilterColumn = new AspxTableCodeFilterColumn();
             _AspxTableCodeFilterColumn._FileCode = F;
             _AspxTableCodeFilterColumn._ds = _ds;
             _AspxTableCodeFilterColumn._TableName = _TableName;
+            _AspxTableCodeFilterColumn._MappingColumn = _MappingColumn;
+            _AspxTableCodeFilterColumn._AspxFromCodeaspx = _AspxFromCodeaspx;
             _AspxTableCodeFilterColumn.Gen();
 
             AspxTableCodeFilterColumnCodeBehide _AspxTableCodeFilterColumnCodeBehide = new AspxTableCodeFilterColumnCodeBehide();
             _AspxTableCodeFilterColumnCodeBehide._FileCode = F;
             _AspxTableCodeFilterColumnCodeBehide._ds = _ds;
             _AspxTableCodeFilterColumnCodeBehide._TableName = _TableName;
+            _AspxTableCodeFilterColumnCodeBehide._MappingColumn = _MappingColumn;
+            _AspxTableCodeFilterColumnCodeBehide._AspxFromCodeBehide = _AspxFromCodeBehide;
             _AspxTableCodeFilterColumnCodeBehide.Gen();
 
             PageService _PageService = new PageService();
@@ -154,7 +158,7 @@ namespace StkGenCode
             btnGen_Click(sender, e);
         }
 
-        private DataAccessLayer Db = null;
+        
         private DataSet ds = null;
 
         private void btnConnect_Click(object sender, EventArgs e)

@@ -124,7 +124,7 @@ namespace StkGenCode.Code.Template
                 //For Drop Down List
                 if (_MappingColumn != null)
                 {
-                    string codedrp = GenBindDropDown(_DataColumn.ColumnName);
+                    string codedrp = GenMapDropDownToProPerties (_DataColumn.ColumnName);
                     code += codedrp;
                     if (codedrp != "")
                     {
@@ -179,7 +179,12 @@ namespace StkGenCode.Code.Template
             return _HaveDropDown;
         }
 
-        private string GenDropDown(string columnName)
+        /// <summary>
+        /// For Bind Data
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
+        private string GenProtiesToDropDown(string columnName)
         {
             string code = "";
             foreach (MappingColumn _Map in _MappingColumn)
@@ -188,7 +193,14 @@ namespace StkGenCode.Code.Template
                 {
                     string controlDropDownName = string.Format(_formatDropDownName, columnName);
                     string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
-                    code = string.Format("{0}.Items.FindByValue({1}).Selected = true; ", controlDropDownName, propertieName);
+                    //code = string.Format("{0}.Items.FindByValue({1}).Selected = true; ", controlDropDownName, propertieName);
+                    code += string.Format("ListItem {0}ListItem = {0}.Items.FindByValue({1}); ", controlDropDownName, propertieName) + _NewLine;
+                    code += " " + _NewLine;
+                    code += string.Format("if ({0}ListItem != null) ", controlDropDownName) + _NewLine;
+                    code += "{" + _NewLine;
+                    code += string.Format("{0}ListItem.Selected = true; ", controlDropDownName) + _NewLine;
+                    code += "};" + _NewLine;
+                    code +=  " "  + _NewLine;
                     break;
                 }
             }
@@ -196,7 +208,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenBindDropDown(string columnName)
+        public  string GenMapDropDownToProPerties(string columnName)
         {
             string code = "";
             foreach (MappingColumn _Map in _MappingColumn)
@@ -218,7 +230,7 @@ namespace StkGenCode.Code.Template
         private string GenInnitDropDown()
         {
             string code = "";
-         
+
             if (HaveDropDown())
             {
                 code += "private void BindDropDown() " + _NewLine;
@@ -226,10 +238,7 @@ namespace StkGenCode.Code.Template
 
                 foreach(DataColumn _DataColumn in _ds.Tables[0].Columns)
                 {
-                  //  string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-                  //  string controlTextBoxName = string.Format(_formatTextBoxName, _DataColumn.ColumnName);
-                  //  string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
-                  //string controlDropDownName = string.Format(_formatDropDownName , _DataColumn.ColumnName);
+
                     foreach (MappingColumn _Map in _MappingColumn)
                     {
                         if ((_Map.ColumnName == _DataColumn.ColumnName) && (_Map.TableName != _TableName))
@@ -248,18 +257,15 @@ namespace StkGenCode.Code.Template
                             code += " " + _NewLine;
                         }
                     }
-                    //code += "    STK_TYPEDb _STK_TYPEDb = new STK_TYPEDb(); " + _NewLine;
-                    //code += "    drpSTK_TYPE_ID.DataSource =  _STK_TYPEDb.Select(); " + _NewLine;
-                    //code += "    drpSTK_TYPE_ID.DataTextField = STK_TYPEDb.DataText; " + _NewLine;
-                    //code += "    drpSTK_TYPE_ID.DataValueField = STK_TYPEDb.DataKey; " + _NewLine;
 
 
-                    code += "}" + _NewLine;
+
+
 
                 }
-
+                code += "}" + _NewLine;
             }
-              
+
 
             return code;
         }
@@ -288,7 +294,7 @@ namespace StkGenCode.Code.Template
                 //For Drop Down List
                 if (_MappingColumn != null)
                 {
-                    string codedrp = GenDropDown(_DataColumn.ColumnName);
+                    string codedrp = GenProtiesToDropDown (_DataColumn.ColumnName);
                     code += codedrp;
                     if (codedrp != "")
                     {
