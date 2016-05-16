@@ -615,7 +615,7 @@ namespace StkGenCode.Code.Template
             //name._TableName = _TableName;
             //name._ds = _ds;
 
-            _FileCode.writeFile(FileName(_TableName), code);
+            _FileCode.WriteFile(FileName(_TableName), code);
         }
     }
 }

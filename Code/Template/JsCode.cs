@@ -62,7 +62,7 @@
 
             string code = "";
             code += GenJquerySaveData();
-            _FileCode.writeFile(_FileName.JsCodeName(), code);
+            _FileCode.WriteFile(_FileName.JsCodeName(), code);
             //_FileCode.writeFile(FileName, _code, _fileType);
         }
     }

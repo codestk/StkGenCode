@@ -333,7 +333,7 @@
             code += EndClass();
 
             InnitProperties();
-            _FileCode.writeFile(_FileName.AspxTableCodeBehineName(), code);
+            _FileCode.WriteFile(_FileName.AspxTableCodeBehineName(), code);
             // _FileCode.writeFile(_TableName + "List", _code);
         }
     }

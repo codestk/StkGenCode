@@ -68,7 +68,7 @@ namespace StkGenCode.Code.Template
             //name._TableName = _TableName;
             //name._ds = _ds;
             InnitProperties();
-            _FileCode.writeFile(_FileName.PropertiesCodeName(), code);
+            _FileCode.WriteFile(_FileName.PropertiesCodeName(), code);
             // _FileCode.writeFile(_TableName, _code, _fileType);
         }
     }

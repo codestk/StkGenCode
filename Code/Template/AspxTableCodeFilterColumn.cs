@@ -135,7 +135,7 @@
 
             code += GenContentBodyEnd();
 
-            _FileCode.writeFile(_FileName.AspxTableCodeFilterColumnName(), code);
+            _FileCode.WriteFile(_FileName.AspxTableCodeFilterColumnName(), code);
         }
     }
 }

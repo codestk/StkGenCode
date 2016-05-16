@@ -11,7 +11,7 @@
 
             //code = "<%@ WebService Language=\"C#\" CodeBehind=\""+ _FileName.PageServiceCodeBehideName()+ "\" Class=\""+_TableName+"Service\" %>";
             var code = "<%@ WebService Language=\"C#\" CodeBehind=\"~/App_Code/" + _FileName.PageServiceCodeBehideName() + "\" Class=\"" + _TableName + "Service\" %>";
-            _FileCode.writeFile(_FileName.PageServiceName(), code);
+            _FileCode.WriteFile(_FileName.PageServiceName(), code);
         }
     }
 }

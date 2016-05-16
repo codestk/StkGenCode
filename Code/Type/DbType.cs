@@ -3,44 +3,44 @@
     public class DbTypeConversion
     {
         /// <summary>
-        /// Convert To Store Type
+        ///     Convert To Store Type
         /// </summary>
-        /// <param name="DotNetType"></param>
+        /// <param name="dotNetType"></param>
         /// <returns></returns>
-        public static string CTypeNetToTypeDB(string DotNetType)
+        public static string CTypeNetToTypeDb(string dotNetType)
         {
-            string Type = "";
-            if ((DotNetType == "System.Guid"))
+            string type;
+            if (dotNetType == "System.Guid")
             {
-                Type = " [nvarchar](255)";
+                type = " [nvarchar](255)";
             }
             else if
-            ((DotNetType == "System.Int32"))
+                (dotNetType == "System.Int32")
             {
-                Type = " [int] ";
+                type = " [int] ";
             }
-            else if (DotNetType == "System.Int16")
+            else if (dotNetType == "System.Int16")
             {
-                Type = " [int] ";
+                type = " [int] ";
             }
-            else if (DotNetType == "System.Decimal")
+            else if (dotNetType == "System.Decimal")
             {
-                Type = " [float] ";
+                type = " [float] ";
             }
-            else if (DotNetType == "System.DateTime")
+            else if (dotNetType == "System.DateTime")
             {
-                Type = " [datetime] ";
+                type = " [datetime] ";
             }
-            else if (DotNetType == "System.Boolean")
+            else if (dotNetType == "System.Boolean")
             {
-                Type = " [bit] ";
+                type = " [bit] ";
             }
             else
             {
-                Type = " [nvarchar](255) ";
+                type = " [nvarchar](255) ";
             }
 
-            return Type;
+            return type;
         }
     }
 }

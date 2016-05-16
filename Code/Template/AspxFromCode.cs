@@ -409,7 +409,7 @@ namespace StkGenCode.Code.Template
             //name._ds = _ds;
             InnitProperties();
 
-            _FileCode.writeFile(_FileName.AspxFromCodeName(), code);
+            _FileCode.WriteFile(_FileName.AspxFromCodeName(), code);
         }
     }
 }

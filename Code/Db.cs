@@ -1,22 +1,19 @@
-﻿using System.Data;
+﻿using FirebirdSql.Data.FirebirdClient;
+using System.Data;
+
 using System.Data.SqlClient;
-using FirebirdSql.Data.FirebirdClient;
-using System.Data.Common;
 
 namespace StkGenCode.Code
 {
     public class Db
     {
-        public static DataSet GetSchemaSqlServer(string connectstring, string TableName)
+        public static DataSet GetSchemaSqlServer(string connectstring, string tableName)
         {
-            string sql;
-
-            sql = "select * from " + TableName + " where 1=0;";
-            SqlConnection _FbConnection = new SqlConnection();
-            _FbConnection.ConnectionString = connectstring;
+            var sql = "select * from " + tableName + " where 1=0;";
+            SqlConnection fbConnection = new SqlConnection { ConnectionString = connectstring };
             DataSet ds = new DataSet();
 
-            SqlDataAdapter adapter = new SqlDataAdapter(sql, _FbConnection);
+            SqlDataAdapter adapter = new SqlDataAdapter(sql, fbConnection);
             adapter.Fill(ds);
 
             //For Get Lenght
@@ -27,21 +24,15 @@ namespace StkGenCode.Code
             return ds;
         }
 
-
-
-
-        public static DataSet GetSchemaFireBird(string connectstring, string TableName)
+        public static DataSet GetSchemaFireBird(string connectstring, string tableName)
         {
-            string sql;
+            var sql = "select * from " + tableName + " where 1=0;";
+            FbConnection fbConnection = new FbConnection { ConnectionString = connectstring };
 
-            sql = "select * from " + TableName + " where 1=0;";
-            FbConnection _FbConnection = new FbConnection();
-            _FbConnection.ConnectionString = connectstring;
-
-            _FbConnection.Open();
+            fbConnection.Open();
             DataSet ds = new DataSet();
 
-            FbDataAdapter adapter = new FbDataAdapter(sql, _FbConnection);
+            FbDataAdapter adapter = new FbDataAdapter(sql, fbConnection);
             adapter.Fill(ds);
 
             //For Get Lenght
@@ -51,6 +42,5 @@ namespace StkGenCode.Code
 
             return ds;
         }
-
     }
 }

@@ -4,9 +4,9 @@ namespace StkGenCode.Code
 {
     public class FileCode
     {
-        public string path;
+        public string Path;
 
-        public void writeFile(string name, string content)
+        public void WriteFile(string name, string content)
         {
             // string path = textBox1.Text;
             // check if directory exists
@@ -14,19 +14,18 @@ namespace StkGenCode.Code
             //{
             //    Directory.CreateDirectory(path);
             //}
-            string _pathFull;
             // _pathFull = path + Table + "_" + DateTime.Today.ToString("dd-MM-yy") + FileType;
-            _pathFull = path + name;
+            var pathFull = Path + name;
 
             // check if file exist
             //File.Delete(path);
-            if (!Directory.Exists(path))
+            if (!Directory.Exists(Path))
             {
-                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(Path);
             }
 
             // log the error now
-            using (StreamWriter writer = File.AppendText(_pathFull))
+            using (StreamWriter writer = File.AppendText(pathFull))
             {
                 string error = content;
                 writer.WriteLine(error);
@@ -39,7 +38,7 @@ namespace StkGenCode.Code
 
         public void ClearAllFile()
         {
-            System.IO.DirectoryInfo di = new DirectoryInfo(path);
+            var di = new DirectoryInfo(Path);
 
             if (di.Exists)
             {
@@ -47,8 +46,8 @@ namespace StkGenCode.Code
                 //{
                 //    file.Delete();
                 //}
-                foreach (System.IO.FileInfo file in di.GetFiles()) file.Delete();
-                foreach (System.IO.DirectoryInfo subDirectory in di.GetDirectories()) subDirectory.Delete(true);
+                foreach (var file in di.GetFiles()) file.Delete();
+                foreach (var subDirectory in di.GetDirectories()) subDirectory.Delete(true);
             }
             // File.Delete(path);
         }

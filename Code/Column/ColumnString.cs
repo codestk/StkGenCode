@@ -7,7 +7,7 @@ namespace StkGenCode.Code.Column
         /// <summary>
         ///  $('.chekBoxAtm,.chekBoxBranch,.chekBoxSubBranch,.chekBoxMicroBranch,.chekBoxInternationalBranch,.chekBoxBusinessCenter,.chekBoxFXBooth,.chekBoxBualuangExclusive,.chekBoxFCDService,.chekBoxRemittanceService ,.chekBoxWesternUnionService').dblclick(function () { " + _NewLine;
         /// </summary>
-        /// <param name="ds"></param>
+        /// <param name="_ds"></param>
         /// <param name="format">  ".chekBox{0},"</param>
         /// <returns></returns>
         public static string GenLineString(DataSet _ds, string format)

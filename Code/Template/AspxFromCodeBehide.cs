@@ -1,5 +1,4 @@
-﻿using StkGenCode.Code.Name;
-using System.Data;
+﻿using System.Data;
 
 namespace StkGenCode.Code.Template
 {
@@ -277,16 +276,16 @@ namespace StkGenCode.Code.Template
             code += "  " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += " _" + _TableName + " = _" + _TableName + "Db.Select(Q); " + _NewLine;
             code += "  " + _NewLine;
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-                string controlTextBoxName = string.Format(_formatTextBoxName, _DataColumn.ColumnName);
-                string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
+                string propertieName = string.Format(_formatpropertieName, _TableName, dataColumn.ColumnName);
+                string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
+                string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
                 //string controlDropDownName = string.Format(formatDropDownName , _DataColumn.ColumnName);
                 //For Drop Down List
                 if (_MappingColumn != null)
                 {
-                    string codedrp = GenProtiesToDropDown(_DataColumn.ColumnName);
+                    string codedrp = GenProtiesToDropDown(dataColumn.ColumnName);
                     code += codedrp;
                     if (codedrp != "")
                     {
@@ -294,17 +293,17 @@ namespace StkGenCode.Code.Template
                     }
                 }
 
-                if ((_DataColumn.DataType.ToString() == "System.Guid"))
+                if ((dataColumn.DataType.ToString() == "System.Guid"))
                 { continue; }
 
-                if (_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ColumnName)
+                if (dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ColumnName)
                 {
                     code += controlTextBoxName + ".Enabled = false;" + _NewLine;
                 }
 
-                if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
+                if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
                 { code += controlChekBoxName + ".Checked = Convert.ToBoolean(" + propertieName + ");" + _NewLine; }
-                else if ((_DataColumn.DataType.ToString() == "System.DateTime") || (_DataColumn.DataType.ToString() == "System.Decimal") || (_DataColumn.DataType.ToString() == "System.Int32"))
+                else if ((dataColumn.DataType.ToString() == "System.DateTime") || (dataColumn.DataType.ToString() == "System.Decimal") || (dataColumn.DataType.ToString() == "System.Int32"))
                 {
                     code += " if (" + propertieName + ".HasValue)" + _NewLine;
                     code += "{" + _NewLine;
@@ -352,26 +351,28 @@ namespace StkGenCode.Code.Template
 
         public override void Gen()
         {
-            string _code = "";
-            _code += GenUsing();
-            _code += BeginClass();
-            _code += GenPageLoad();
+            string code = "";
+            code += GenUsing();
+            code += BeginClass();
+            code += GenPageLoad();
 
-            _code += GenInnitDropDown();
-            _code += GenBindForm();
+            code += GenInnitDropDown();
+            code += GenBindForm();
 
-            _code += GenBtnSave();
-            _code += GenBtnUpdate();
+            code += GenBtnSave();
+            code += GenBtnUpdate();
 
-            _code += GenBtnDelete();
+            code += GenBtnDelete();
 
-            _code += EndClass();
+            code += EndClass();
             //_FileCode.writeFile(FileName, _code, _fileType);
-            string FileName = _TableName + "Web";
-            FileName name = new FileName();
-            name._TableName = _TableName;
-            name._ds = _ds;
-            _FileCode.writeFile(name.AspxFromCodeBehideName(), _code);
+            //string FileName = _TableName + "Web";
+            //FileName name = new FileName();
+            //name._TableName = _TableName;
+            //name._ds = _ds;
+            InnitProperties();
+
+            _FileCode.WriteFile(_FileName.AspxFromCodeBehideName(), code);
             //  _FileCode.writeFile(FileName, _code, _fileType);
         }
     }

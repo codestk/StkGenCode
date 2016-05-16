@@ -752,7 +752,7 @@ namespace StkGenCode.Code.Template
 
             code += GenContentBodyEnd();
 
-            _FileCode.writeFile(_FileName.AspxTableCodeName(), code);
+            _FileCode.WriteFile(_FileName.AspxTableCodeName(), code);
         }
     }
 }

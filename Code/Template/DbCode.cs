@@ -581,7 +581,7 @@ namespace StkGenCode.Code.Template
             //name._ds = _ds;
             InnitProperties();
 
-            _FileCode.writeFile(_FileName.DbCodeName(), code);
+            _FileCode.WriteFile(_FileName.DbCodeName(), code);
             //_FileCode.writeFile(_TableName + "Db", _code, _fileType);
         }
     }

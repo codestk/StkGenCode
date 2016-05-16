@@ -127,7 +127,7 @@
 
             code += GenEndClass();
 
-            _FileCode.writeFile(_FileName.PageServiceCodeBehideName(), code);
+            _FileCode.WriteFile(_FileName.PageServiceCodeBehideName(), code);
         }
     }
 }

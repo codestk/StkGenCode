@@ -27,7 +27,7 @@ namespace StkGenCode
         private void Gen(DataSet _ds, string _TableName)
         {
             FileCode F = new FileCode();
-            F.path = _path;
+            F.Path = _path;
             //F.ClearAllFile();
 
             string MappingColumnTable = "STK_TYPE_ID:STK_TYPE";
@@ -84,7 +84,7 @@ namespace StkGenCode
             _PageService.Gen();
 
             string pathPageServiceCodeBehide = _path + @"App_Code\Services\";
-            F.path = pathPageServiceCodeBehide;
+            F.Path = pathPageServiceCodeBehide;
             PageServiceCodeBehide _PageServiceCodeBehide = new PageServiceCodeBehide();
             _PageServiceCodeBehide._FileCode = F;
             _PageServiceCodeBehide._ds = _ds;
@@ -102,7 +102,7 @@ namespace StkGenCode
             //Gen Javascript
 
             string pathJs_U = _path + @"Js_U\";
-            F.path = pathJs_U;
+            F.Path = pathJs_U;
             JsCode _JsCode = new JsCode();
             _JsCode._FileCode = F;
             _JsCode._ds = _ds;
@@ -112,7 +112,7 @@ namespace StkGenCode
             //========Folder Code
 
             string pathBuCode = _path + @"App_Code\Business\";
-            F.path = pathBuCode;
+            F.Path = pathBuCode;
             PropertiesCode Pcode = new PropertiesCode();
             Pcode._FileCode = F;
             Pcode._ds = _ds;
@@ -229,7 +229,7 @@ namespace StkGenCode
         private void ClearFile()
         {
             FileCode F = new FileCode();
-            F.path = _path;
+            F.Path = _path;
             F.ClearAllFile();
         }
 

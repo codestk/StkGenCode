@@ -34,7 +34,7 @@ namespace StkGenCode.Code.Template
             code += "[RowNumber] [int],";
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                code += "[" + dataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDB(dataColumn.DataType.ToString()) + "," + _NewLine;
+                code += "[" + dataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "," + _NewLine;
             }
 
             code += ") " + _NewLine;
@@ -152,7 +152,7 @@ namespace StkGenCode.Code.Template
             code += GenSp_GetAutocomplete();
 
             InnitProperties();
-            _FileCode.writeFile(_FileName.StoreProCodeName(), code);
+            _FileCode.WriteFile(_FileName.StoreProCodeName(), code);
             //_FileCode.writeFile("Sp_" + _TableName + "Store", _code, _fileType);
         }
     }

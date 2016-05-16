@@ -15,7 +15,8 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private new String MapControlToProPerties(DataSet _ds, bool commentKey = false)
+        //    private new String MapControlToProPerties(DataSet _ds, bool commentKey = false)
+        private String MapControlToProPerties()
         {
             string code = "";
             //code += "bool sortAscending = SortDirection == SortDirection.Ascending;" + _NewLine;
@@ -150,7 +151,8 @@ namespace StkGenCode.Code.Template
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  //" + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
             code += " " + DbCodeFireBird.ClassName(_TableName) + " _" + _TableName + "Db = new " + DbCodeFireBird.ClassName(_TableName) + "(); " + _NewLine;
-            code += MapControlToProPerties(_ds);
+            //code += MapControlToProPerties(_ds);
+            code += MapControlToProPerties();
 
             code += "    _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
             code += " " + _NewLine;
@@ -250,7 +252,7 @@ namespace StkGenCode.Code.Template
             //name._ds = _ds;
             InnitProperties();
 
-            _FileCode.writeFile(_FileName.AspxTableCodeFilterColumnBehineName(), code);
+            _FileCode.WriteFile(_FileName.AspxTableCodeFilterColumnBehineName(), code);
             // _FileCode.writeFile(_TableName + "List", _code);
         }
     }
