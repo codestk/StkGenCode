@@ -63,7 +63,7 @@
             code += "            $('.datepicker').pickadate({ " + _NewLine;
             code += "                selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
             code += "                selectYears: 15,// Creates a dropdown of 15 years to control year,  " + _NewLine;
-            code += "                format: 'd mmmm yyyy', " + _NewLine;
+            code += "                format: 'd mmmm yyyy' " + _NewLine;
             code += "            });" + _NewLine;
 
             code += " " + _NewLine;

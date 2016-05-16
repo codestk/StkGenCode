@@ -254,7 +254,9 @@ namespace StkGenCode.Code.Template
             //code += "                currentPage: '<%=  ViewState[\"CurrentPage\"].ToString()%>', " + _NewLine;
             code += " currentPage: '<%=   CurrentPage.ToString()%>',";
             code += "                //cssStyle: 'light-theme', " + _NewLine;
-            code += "                onPageClick: function (event, page) { " + _NewLine;
+            //code += "                onPageClick: function (event, page) { " + _NewLine;
+            code += "                onPageClick: function (event) { " + _NewLine;
+
             code += "                    var pagenum = ''; " + _NewLine;
             code += "                    if (event < 10) { " + _NewLine;
             code += "                        pagenum = '0' + event; " + _NewLine;
