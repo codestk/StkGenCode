@@ -14,18 +14,18 @@ namespace StkGenCode.Code.Column
         {
             string code = "";
 
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
                 //if ((_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
                 //{
                 //    primary = true;
                 //}
-                if ((_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+                if ((dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
                 {
                     continue;
                 }
 
-                code += string.Format(format, _DataColumn);
+                code += string.Format(format, dataColumn);
             }
 
             return code;

@@ -24,18 +24,15 @@ namespace StkGenCode
 
         private string _path;
 
-
-
         private void Gen(DataSet _ds, string _TableName)
         {
             FileCode F = new FileCode();
             F.path = _path;
             //F.ClearAllFile();
 
-            string MappingColumnTable= "STK_TYPE_ID:STK_TYPE";
-            List<MappingColumn> _MappingColumn=  MappingColumn.ExtractMappingColumn(MappingColumnTable);
+            string MappingColumnTable = "STK_TYPE_ID:STK_TYPE";
+            List<MappingColumn> _MappingColumn = MappingColumn.ExtractMappingColumn(MappingColumnTable);
 
-           
             AspxFromCode _AspxFromCodeaspx = new AspxFromCode();
             _AspxFromCodeaspx._FileCode = F;
             _AspxFromCodeaspx._ds = _ds;
@@ -69,7 +66,7 @@ namespace StkGenCode
             _AspxTableCodeFilterColumn._ds = _ds;
             _AspxTableCodeFilterColumn._TableName = _TableName;
             _AspxTableCodeFilterColumn._MappingColumn = _MappingColumn;
-            _AspxTableCodeFilterColumn._AspxFromCodeaspx = _AspxFromCodeaspx;
+            _AspxTableCodeFilterColumn.AspxFromCodeaspx = _AspxFromCodeaspx;
             _AspxTableCodeFilterColumn.Gen();
 
             AspxTableCodeFilterColumnCodeBehide _AspxTableCodeFilterColumnCodeBehide = new AspxTableCodeFilterColumnCodeBehide();
@@ -77,7 +74,7 @@ namespace StkGenCode
             _AspxTableCodeFilterColumnCodeBehide._ds = _ds;
             _AspxTableCodeFilterColumnCodeBehide._TableName = _TableName;
             _AspxTableCodeFilterColumnCodeBehide._MappingColumn = _MappingColumn;
-            _AspxTableCodeFilterColumnCodeBehide._AspxFromCodeBehide = _AspxFromCodeBehide;
+            _AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
             _AspxTableCodeFilterColumnCodeBehide.Gen();
 
             PageService _PageService = new PageService();
@@ -158,7 +155,6 @@ namespace StkGenCode
             btnGen_Click(sender, e);
         }
 
-        
         private DataSet ds = null;
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -229,7 +225,6 @@ namespace StkGenCode
 
             this.Close();
         }
-
 
         private void ClearFile()
         {

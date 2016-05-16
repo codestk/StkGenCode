@@ -1,6 +1,10 @@
-﻿using System.Data;
+﻿#region
 
-namespace StkGenCode.Code
+using System.Data;
+
+#endregion
+
+namespace StkGenCode.Code.Name
 {
     public class FileName
     {
@@ -11,110 +15,89 @@ namespace StkGenCode.Code
         //auth_dtWeb --------------------------------------------------------------------------------------
         public string AspxFromCodeName()
         {
-            string name = "";
-            name = string.Format("{0}Web.aspx", _TableName);
+            string name = $"{_TableName}Web.aspx";
             return name;
         }
 
         public string AspxFromCodeBehideName()
         {
-            string name = "";
-            name = string.Format("{0}Web.aspx.cs", _TableName);
+            string name = $"{_TableName}Web.aspx.cs";
             return name;
         }
 
         //=================================================================================================
 
-      
         public string AspxTableCodeName()
         {
-            string name = "";
-            name = string.Format("{0}List.aspx", _TableName);
+            string name = $"{_TableName}List.aspx";
             return name;
         }
 
         //auth_dtList.aspx.cs
         public string AspxTableCodeBehineName()
         {
-            string name = "";
-            name = string.Format("{0}List.aspx.cs", _TableName);
+            string name = $"{_TableName}List.aspx.cs";
             return name;
         }
+
         //===================================================================================================
         public string AspxTableCodeFilterColumnName()
         {
-            string name = "";
-            name = string.Format("{0}ListFilter.aspx", _TableName);
+            string name = $"{_TableName}ListFilter.aspx";
             return name;
         }
 
         //auth_dtList.aspx.cs
         public string AspxTableCodeFilterColumnBehineName()
         {
-            string name = "";
-            name = string.Format("{0}ListFilter.aspx.cs", _TableName);
+            string name = $"{_TableName}ListFilter.aspx.cs";
             return name;
         }
+
         //
 
         //Service NAme
         public string PageServiceName()
         {
             //AutoCompleteService.asmx
-            string name = "";
-            name = string.Format("{0}Service.asmx", _TableName);
+            var name = $"{_TableName}Service.asmx";
             return name;
         }
 
         public string PageServiceCodeBehideName()
         {
             //AutoCompleteService.asmx
-            string name = "";
-            name = string.Format("{0}Service.cs", _TableName);
+            string name = $"{_TableName}Service.cs";
             return name;
         }
-
-
-
 
         //Sp_auth_dtStore
         public string DbCodeName()
         {
-            string name = "";
-            name = string.Format("{0}Db.cs", _TableName);
+            string name = $"{_TableName}Db.cs";
             return name;
         }
 
         public string PropertiesCodeName()
         {
-            string name = "";
-            name = string.Format("{0}.cs", _TableName);
+            string name = $"{_TableName}.cs";
             return name;
         }
-
-     
-
-
 
         //=================================================================================================
         //DataBase
         //Sp_auth_dtStore
         public string StoreProCodeName()
         {
-            string name = "";
-            name = string.Format("Store_{0}.sql", _TableName);
+            string name = $"Store_{_TableName}.sql";
             return name;
         }
-
 
         //Js File
         public string JsCodeName()
         {
-            string name = "";
-            name = string.Format("{0}.js", _TableName);
+            string name = $"{_TableName}.js";
             return name;
         }
-
-
     }
 }

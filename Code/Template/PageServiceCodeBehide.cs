@@ -10,7 +10,6 @@
             code += "using System.Linq; " + _NewLine;
             code += "using System.Web; " + _NewLine;
             code += "using System.Web.Services; " + _NewLine;
-      
 
             return code;
         }
@@ -77,13 +76,13 @@
             return code;
         }
 
-        string GenGetKeyWordsAllColumn()
+        private string GenGetKeyWordsAllColumn()
         {
             string code = "";
             code += "[WebMethod] " + _NewLine;
             code += "       public List<string> GetKeyWordsAllColumn(string keyword) " + _NewLine;
             code += "       { " + _NewLine;
-            code += "           "+_TableName+"Db _"+ _TableName + "Db = new "+ _TableName + "Db(); " + _NewLine;
+            code += "           " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
 
             code += "           List<string> keywords = _" + _TableName + "Db.GetKeyWordsAllColumn(keyword); " + _NewLine;
             code += "           return keywords; " + _NewLine;
@@ -92,7 +91,8 @@
 
             return code;
         }
-        string GenGetKeyWordsOneColumn()
+
+        private string GenGetKeyWordsOneColumn()
         {
             string code = "";
             code += "[WebMethod] " + _NewLine;
@@ -105,31 +105,29 @@
             code += "       }" + _NewLine;
             code += "" + _NewLine;
 
-
             return code;
         }
 
-        
-
         public override void Gen()
         {
-            _FileName = new FileName();
-            _FileName._TableName = _TableName;
-            _FileName._ds = _ds;
+            //_FileName = new FileName();
+            //_FileName._TableName = _TableName;
+            //_FileName._ds = _ds;
+            InnitProperties();
 
-            string _code = "";
-            _code += GenUsign();
-            _code += GenHeadFile();
-            _code += GenBeginClass();
-            _code += GenVersionMethod();
+            string code = "";
+            code += GenUsign();
+            code += GenHeadFile();
+            code += GenBeginClass();
+            code += GenVersionMethod();
 
-            _code += GenSaveColumn();
-            _code += GenGetKeyWordsAllColumn();
-            _code += GenGetKeyWordsOneColumn();
+            code += GenSaveColumn();
+            code += GenGetKeyWordsAllColumn();
+            code += GenGetKeyWordsOneColumn();
 
-            _code += GenEndClass();
+            code += GenEndClass();
 
-            _FileCode.writeFile(_FileName.PageServiceCodeBehideName(), _code);
+            _FileCode.writeFile(_FileName.PageServiceCodeBehideName(), code);
         }
     }
 }

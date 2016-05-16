@@ -5,7 +5,6 @@
         private string GenJquerySaveData()
         {
             string code = "";
-            FileName name = new FileName();
 
             code += "var " + _TableName + "Service = {}; " + _NewLine;
             code += "(function () { " + _NewLine;
@@ -41,7 +40,7 @@
             code += "        var result; " + _NewLine;
             code += "        ////data \"{ssss:1,ddddd:1}\"   " + _NewLine;
 
-            code +=    " var tag = '{column:\"' + column + '\",keyword:\"' + keyword + '\"}';" + _NewLine;
+            code += " var tag = '{column:\"' + column + '\",keyword:\"' + keyword + '\"}';" + _NewLine;
             code += "        var F = CallServices(url + \"GetKeyWordsOneColumn\", tag, false, function (msg) { " + _NewLine;
             code += "            result = msg.d; " + _NewLine;
             code += "        }); " + _NewLine;
@@ -56,13 +55,14 @@
 
         public override void Gen()
         {
-            _FileName = new FileName();
-            _FileName._TableName = _TableName;
-            _FileName._ds = _ds;
+            //_FileName = new FileName();
+            //_FileName._TableName = _TableName;
+            //_FileName._ds = _ds;
+            InnitProperties();
 
-            string _code = "";
-            _code += GenJquerySaveData();
-            _FileCode.writeFile(_FileName.JsCodeName(), _code);
+            string code = "";
+            code += GenJquerySaveData();
+            _FileCode.writeFile(_FileName.JsCodeName(), code);
             //_FileCode.writeFile(FileName, _code, _fileType);
         }
     }

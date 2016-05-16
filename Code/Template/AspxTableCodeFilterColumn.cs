@@ -2,7 +2,7 @@
 {
     public class AspxTableCodeFilterColumn : AspxTableCode
     {
-        public  AspxFromCode _AspxFromCodeaspx;
+        public AspxFromCode AspxFromCodeaspx;
 
         private string GenHeadeFile()
         {
@@ -19,7 +19,7 @@
 
             //Usign Gen Text Box
             code += "        <div class=\"row\"> " + _NewLine;
-            string txtBoxSet = _AspxFromCodeaspx.GenControls(6);
+            string txtBoxSet = AspxFromCodeaspx.GenControls(6);
             //txtBoxSet = txtBoxSet.Replace("s12", "s3");
             //txtBoxSet = "";
             code += txtBoxSet;
@@ -70,11 +70,11 @@
 
             code += " " + _NewLine;
 
-            code += paginationJavaScript();
+            code += PaginationJavaScript();
 
             code += " " + _NewLine;
 
-            code += leanModalJavaScript();
+            code += LeanModalJavaScript();
 
             code += EditTableJavaScript();
 
@@ -95,47 +95,47 @@
 
         public override void Gen()
         {
-            innitProperties();
+            InnitProperties();
 
             //_AspxFromCodeaspx = new AspxFromCode();
             //_AspxFromCodeaspx._ds = _ds;
             //_AspxFromCodeaspx._TableName = _TableName;
 
-            string _code = "";
+            string code = "";
 
-            _code += GenHeadeFile();
+            code += GenHeadeFile();
 
-            _code += GenContentHeadBegin();
+            code += GenContentHeadBegin();
 
-            _code += GenReferJavaScript();
+            code += GenReferJavaScript();
 
-            _code += GenDocumentReady();
+            code += GenDocumentReady();
 
-            _code += GenReferCSS();
+            code += GenReferCss();
 
-            _code += GenContentHeadEnd();
+            code += GenContentHeadEnd();
 
-            _code += GenContentBodyBegin();
+            code += GenContentBodyBegin();
 
             //_code += GenSectionHeader();
 
-            _code += GenSearch();
+            code += GenSearch();
 
-            _code += GenBeginResult();
+            code += GenBeginResult();
 
-            _code += GenTableRepeater();
+            code += GenTableRepeater();
 
-            _code += GenPagger();
+            code += GenPagger();
 
-            _code += GenEndResult();
+            code += GenEndResult();
 
-            _code += GenNoResult();
+            code += GenNoResult();
 
-            _code += GenModalProgress();
+            code += GenModalProgress();
 
-            _code += GenContentBodyEnd();
+            code += GenContentBodyEnd();
 
-            _FileCode.writeFile(_FileName.AspxTableCodeFilterColumnName(), _code);
+            _FileCode.writeFile(_FileName.AspxTableCodeFilterColumnName(), code);
         }
     }
 }

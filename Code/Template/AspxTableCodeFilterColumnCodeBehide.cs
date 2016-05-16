@@ -1,12 +1,12 @@
-﻿using StkGenCode.Code.Column;
-using System;
+﻿using System;
 using System.Data;
 
 namespace StkGenCode.Code.Template
 {
     public class AspxTableCodeFilterColumnCodeBehide : AspxTableCodeBehine
     {
-        public AspxFromCodeBehide _AspxFromCodeBehide;
+        public AspxFromCodeBehide AspxFromCodeBehide;
+
         private string BeginClass()
         {
             string code = "  ";
@@ -14,19 +14,17 @@ namespace StkGenCode.Code.Template
             code += "{" + _NewLine;
             return code;
         }
-        
 
-        private String MapControlToProPerties(DataSet _ds, bool CommentKey = false)
+        private new String MapControlToProPerties(DataSet _ds, bool commentKey = false)
         {
             string code = "";
             //code += "bool sortAscending = SortDirection == SortDirection.Ascending;" + _NewLine;
             //code += string.Format("var _{0} = new {0}();", _TableName) + _NewLine;
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-
                 if (_MappingColumn != null)
                 {
-                    string codedrp = _AspxFromCodeBehide.GenMapDropDownToProPerties(_DataColumn.ColumnName);
+                    string codedrp = AspxFromCodeBehide.GenMapDropDownToProPerties(dataColumn.ColumnName);
                     code += codedrp;
                     if (codedrp != "")
                     {
@@ -34,40 +32,39 @@ namespace StkGenCode.Code.Template
                     }
                 }
 
-
-
-                if ((_DataColumn.DataType.ToString() == "System.Int32"))
+                if (dataColumn.DataType.ToString() == "System.Int32")
                 {
-                    code += string.Format("if (txt{0}.Text != \"\") ", _DataColumn.ColumnName) + _NewLine;
+                    code += $"if (txt{dataColumn.ColumnName}.Text != \"\") " + _NewLine;
                     code += " {" + _NewLine;
-                    code += string.Format("_{0}.{1} = Convert.ToInt32(txt{1}.Text);", _TableName, _DataColumn.ColumnName) + _NewLine;
+                    code +=
+                        $"_{_TableName}.{dataColumn.ColumnName} = Convert.ToInt32(txt{dataColumn.ColumnName}.Text);" + _NewLine;
                     code += "}" + _NewLine;
                 }
-                else if (_DataColumn.DataType.ToString() == "System.Decimal")
+                else if (dataColumn.DataType.ToString() == "System.Decimal")
                 {
-                    code += string.Format("  if (txt{0}.Text != \"\")", _DataColumn.ColumnName) + _NewLine;
+                    code += $"  if (txt{dataColumn.ColumnName}.Text != \"\")" + _NewLine;
                     code += " {" + _NewLine;
-                    code += string.Format("_{0}.{1} = Convert.ToDecimal(txt{1}.Text);", _TableName, _DataColumn.ColumnName) + _NewLine;
+                    code += string.Format("_{0}.{1} = Convert.ToDecimal(txt{1}.Text);", _TableName, dataColumn.ColumnName) + _NewLine;
                     code += "}" + _NewLine;
                 }
-                else if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
+                else if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
                 {
                     //code += string.Format("  if (txt{0} != \"\")", _DataColumn.ColumnName) + _NewLine;
                     //code += " {" + _NewLine;
                     //code += string.Format("_{0}.{1} = Convert.ToDecimal(txt{1}.Text;)", _TableName, _DataColumn.ColumnName) + _NewLine;
                 }
-                else if (_DataColumn.DataType.ToString() == "System.DateTime")
+                else if (dataColumn.DataType.ToString() == "System.DateTime")
                 {
-                    code += string.Format("  if (txt{0}.Text != \"\")", _DataColumn.ColumnName) + _NewLine;
+                    code += $"  if (txt{dataColumn.ColumnName}.Text != \"\")" + _NewLine;
                     code += " {" + _NewLine;
-                    code += string.Format("_{0}.{1} = Convert.ToDateTime(txt{1}.Text);", _TableName, _DataColumn.ColumnName) + _NewLine;
+                    code += string.Format("_{0}.{1} = Convert.ToDateTime(txt{1}.Text);", _TableName, dataColumn.ColumnName) + _NewLine;
                     code += "}" + _NewLine;
                 }
                 else
                 {
-                    code += string.Format("  if (txt{0}.Text != \"\")", _DataColumn.ColumnName) + _NewLine;
+                    code += $"  if (txt{dataColumn.ColumnName}.Text != \"\")" + _NewLine;
                     code += " {" + _NewLine;
-                    code += string.Format("_{0}.{1} = txt{1}.Text;", _TableName, _DataColumn.ColumnName) + _NewLine;
+                    code += string.Format("_{0}.{1} = txt{1}.Text;", _TableName, dataColumn.ColumnName) + _NewLine;
                     code += "}" + _NewLine;
                 }
             }
@@ -153,7 +150,7 @@ namespace StkGenCode.Code.Template
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  //" + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
             code += " " + DbCodeFireBird.ClassName(_TableName) + " _" + _TableName + "Db = new " + DbCodeFireBird.ClassName(_TableName) + "(); " + _NewLine;
-            code += MapControlToProPerties(_ds, false);
+            code += MapControlToProPerties(_ds);
 
             code += "    _" + _TableName + "Db._" + _TableName + " = _" + _TableName + "; " + _NewLine;
             code += " " + _NewLine;
@@ -200,7 +197,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenPageLoad()
+        private new string GenPageLoad()
         {
             string code = "  ";
             code += "protected void Page_Load(object sender, EventArgs e)" + _NewLine;
@@ -208,12 +205,10 @@ namespace StkGenCode.Code.Template
             code += "if (!Page.IsPostBack) " + _NewLine;
             code += "{  " + _NewLine;
 
-            if (_AspxFromCodeBehide.HaveDropDown())
+            if (AspxFromCodeBehide.HaveDropDown())
             {
                 code += "BindDropDown();" + _NewLine;
             }
-
-            
 
             code += "} " + _NewLine;
             code += "}  " + _NewLine;
@@ -223,19 +218,19 @@ namespace StkGenCode.Code.Template
 
         public override void Gen()
         {
-            string _code = "";
+            string code = "";
 
-            _code += GenUsign();
-            _code += BeginClass();
-            _code += GenConstance();
+            code += GenUsign();
+            code += BeginClass();
+            code += GenConstance();
 
-            _code += GenPageLoad();
-            if (_AspxFromCodeBehide.HaveDropDown())
+            code += GenPageLoad();
+            if (AspxFromCodeBehide.HaveDropDown())
             {
-                _code += GenInnitDropDown();
+                code += GenInnitDropDown();
             }
-                _code += GenSearchEvent();
-            _code += GenBind();
+            code += GenSearchEvent();
+            code += GenBind();
             // _code += GenGetPageWise();
             //_code += GenPageChange();
             //_code += GenGetPageWise();
@@ -243,17 +238,19 @@ namespace StkGenCode.Code.Template
 
             // _code += GenPaggerClass();
 
-            _code += GenHideResult();
-            _code += GenShowResult();
+            code += GenHideResult();
+            code += GenShowResult();
             // _code += GedTagCheck();
             //_code += GenSaveColumn();
 
-            _code += EndClass();
+            code += EndClass();
 
-            FileName name = new FileName();
-            name._TableName = _TableName;
-            name._ds = _ds;
-            _FileCode.writeFile(name.AspxTableCodeFilterColumnBehineName(), _code);
+            //FileName name = new FileName();
+            //name._TableName = _TableName;
+            //name._ds = _ds;
+            InnitProperties();
+
+            _FileCode.writeFile(_FileName.AspxTableCodeFilterColumnBehineName(), code);
             // _FileCode.writeFile(_TableName + "List", _code);
         }
     }

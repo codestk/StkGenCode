@@ -57,7 +57,7 @@
     <Compile Include="Code\Column\MappingColumnToTable.cs" />
     <Compile Include="Code\Db.cs" />
     <Compile Include="Code\File.cs" />
-    <Compile Include="Code\Name\NameMing.cs" />
+    <Compile Include="Code\Name\FileName.cs" />
     <Compile Include="Code\Template\AspxFromCodeBehide.cs" />
     <Compile Include="Code\Template\AspxFromCode.cs" />
     <Compile Include="Code\Template\AspxTableCode.cs" />

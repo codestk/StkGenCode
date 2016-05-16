@@ -1,4 +1,5 @@
 ﻿using StkGenCode.Code.Column;
+using StkGenCode.Code.Name;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,7 +35,7 @@ namespace StkGenCode.Code.Template
 
         public abstract void Gen();
 
-        protected void innitProperties()
+        protected void InnitProperties()
         {
             _FileName = new FileName();
             _FileName._TableName = _TableName;
@@ -43,25 +44,19 @@ namespace StkGenCode.Code.Template
 
         #region DropDown
 
-        protected String MapControlToProPerties(DataSet _ds, bool CommentKey = false)
+        protected string MapControlToProPerties(DataSet _ds, bool CommentKey = false)
         {
             string code = "";
 
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-                string controlTextBoxName = string.Format(_formatTextBoxName, _DataColumn.ColumnName);
-                string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
+                string propertieName = string.Format(_formatpropertieName, _TableName, dataColumn.ColumnName);
+                string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
+                string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
 
                 if (CommentKey)
                 {
-                    bool primary = false;
-
-                    //ต้อง เป็น Auto ถึงจะ Comment
-                    if ((_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
-                    {
-                        primary = true;
-                    }
+                    bool primary = (dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && _ds.Tables[0].PrimaryKey[0].AutoIncrement;
 
                     if (primary)
                     {
@@ -73,7 +68,7 @@ namespace StkGenCode.Code.Template
                 //For Drop Down List
                 if (_MappingColumn != null)
                 {
-                    string codedrp = GenMapDropDownToProPerties(_DataColumn.ColumnName);
+                    string codedrp = GenMapDropDownToProPerties(dataColumn.ColumnName);
                     code += codedrp;
                     if (codedrp != "")
                     {
@@ -81,22 +76,22 @@ namespace StkGenCode.Code.Template
                     }
                 }
 
-                if ((_DataColumn.DataType.ToString() == "System.Guid"))
+                if (dataColumn.DataType.ToString() == "System.Guid")
                 { continue; }
 
-                if ((_DataColumn.DataType.ToString() == "System.Int32"))
+                if (dataColumn.DataType.ToString() == "System.Int32")
                 {
                     code += propertieName + " = Convert.ToInt32(" + controlTextBoxName + ".Text);" + _NewLine;
                 }
-                else if (_DataColumn.DataType.ToString() == "System.Decimal")
+                else if (dataColumn.DataType.ToString() == "System.Decimal")
                 {
                     code += propertieName + " =  Convert.ToDecimal (" + controlTextBoxName + ".Text);" + _NewLine;
                 }
-                else if (_DataColumn.DataType.ToString() == "System.DateTime")
+                else if (dataColumn.DataType.ToString() == "System.DateTime")
                 {
                     code += propertieName + " =StkGlobalDate.TextEnToDate(" + controlTextBoxName + ".Text);" + _NewLine;
                 }
-                else if ((_DataColumn.DataType.ToString() == "System.Boolean") || (_DataColumn.DataType.ToString() == "System.Int16"))
+                else if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
                 {
                     // code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToInt16(" + controlChekBoxName  + ".Checked);" + _NewLine;
                     code += propertieName + " =Convert.ToInt16(" + controlChekBoxName + ".Checked);" + _NewLine;
@@ -112,20 +107,20 @@ namespace StkGenCode.Code.Template
 
         public Boolean HaveDropDown()
         {
-            bool _HaveDropDown = false;
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            bool haveDropDown = false;
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                foreach (MappingColumn _Map in _MappingColumn)
+                foreach (MappingColumn map in _MappingColumn)
                 {
-                    if ((_Map.ColumnName == _DataColumn.ColumnName) && (_Map.TableName != _TableName))
+                    if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
                     {
-                        _HaveDropDown = true;
+                        haveDropDown = true;
                         break;
                     }
                 }
             }
 
-            return _HaveDropDown;
+            return haveDropDown;
         }
 
         /// <summary>
@@ -136,18 +131,18 @@ namespace StkGenCode.Code.Template
         protected string GenProtiesToDropDown(string columnName)
         {
             string code = "";
-            foreach (MappingColumn _Map in _MappingColumn)
+            foreach (MappingColumn map in _MappingColumn)
             {
-                if ((_Map.ColumnName == columnName) && (_Map.TableName != _TableName))
+                if ((map.ColumnName == columnName) && (map.TableName != _TableName))
                 {
                     string controlDropDownName = string.Format(_formatDropDownName, columnName);
                     string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
                     //code = string.Format("{0}.Items.FindByValue({1}).Selected = true; ", controlDropDownName, propertieName);
                     code += string.Format("ListItem {0}ListItem = {0}.Items.FindByValue({1}); ", controlDropDownName, propertieName) + _NewLine;
                     code += " " + _NewLine;
-                    code += string.Format("if ({0}ListItem != null) ", controlDropDownName) + _NewLine;
+                    code += $"if ({controlDropDownName}ListItem != null) " + _NewLine;
                     code += "{" + _NewLine;
-                    code += string.Format("{0}ListItem.Selected = true; ", controlDropDownName) + _NewLine;
+                    code += $"{controlDropDownName}ListItem.Selected = true; " + _NewLine;
                     code += "};" + _NewLine;
                     code += " " + _NewLine;
                     break;
@@ -160,17 +155,17 @@ namespace StkGenCode.Code.Template
         public string GenMapDropDownToProPerties(string columnName)
         {
             string code = "";
-            foreach (MappingColumn _Map in _MappingColumn)
+            foreach (MappingColumn map in _MappingColumn)
             {
-                if ((_Map.ColumnName == columnName) && (_Map.TableName != _TableName))
+                if ((map.ColumnName == columnName) && (map.TableName != _TableName))
                 {
                     string controlDropDownName = string.Format(_formatDropDownName, columnName);
                     string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
                     //mpoOrder.CUS_ID = drpCustomer.SelectedValue;
-                    code += string.Format("if ({0}.SelectedIndex > 0)", controlDropDownName) + _NewLine;
+                    code += $"if ({controlDropDownName}.SelectedIndex > 0)" + _NewLine;
 
                     code += "{" + _NewLine;
-                    code += string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;
+                    code += $"{propertieName} = {controlDropDownName}.SelectedValue; " + _NewLine;
                     code += "}" + _NewLine;
 
                     //code = string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;
@@ -191,23 +186,23 @@ namespace StkGenCode.Code.Template
                 code += "private void BindDropDown() " + _NewLine;
                 code += "{ " + _NewLine;
 
-                foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+                foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
                 {
-                    foreach (MappingColumn _Map in _MappingColumn)
+                    foreach (MappingColumn map in _MappingColumn)
                     {
-                        if ((_Map.ColumnName == _DataColumn.ColumnName) && (_Map.TableName != _TableName))
+                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
                         {
                             //Table MAster Of Drop DownList
-                            string _DropDownTableName = _Map.TableName;
-                            string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
-                            code += string.Format("{0}Db _{0}Db = new {0}Db(); ", _DropDownTableName) + _NewLine;
-                            code += string.Format("{0}.DataSource =  _{1}Db.Select(); ", controlDropDownName, _DropDownTableName) + _NewLine;
-                            code += string.Format("{0}.DataTextField = {1}Db.DataText;", controlDropDownName, _DropDownTableName) + _NewLine;
-                            code += string.Format("{0}.DataValueField = {1}Db.DataValue;", controlDropDownName, _DropDownTableName) + _NewLine;
+                            string dropDownTableName = map.TableName;
+                            string controlDropDownName = string.Format(_formatDropDownName, dataColumn.ColumnName);
+                            code += string.Format("{0}Db _{0}Db = new {0}Db(); ", dropDownTableName) + _NewLine;
+                            code += $"{controlDropDownName}.DataSource =  _{dropDownTableName}Db.Select(); " + _NewLine;
+                            code += $"{controlDropDownName}.DataTextField = {dropDownTableName}Db.DataText;" + _NewLine;
+                            code += $"{controlDropDownName}.DataValueField = {dropDownTableName}Db.DataValue;" + _NewLine;
 
-                            code += string.Format("{0}.DataBind();", controlDropDownName) + _NewLine;
+                            code += $"{controlDropDownName}.DataBind();" + _NewLine;
 
-                            code += string.Format("var {0}lt = new ListItem(\"please select\", \"0\"); ", controlDropDownName) + _NewLine;
+                            code += $"var {controlDropDownName}lt = new ListItem(\"please select\", \"0\"); " + _NewLine;
                             code += string.Format("{0}.Items.Insert(0, {0}lt);", controlDropDownName) + _NewLine;
 
                             code += " " + _NewLine;

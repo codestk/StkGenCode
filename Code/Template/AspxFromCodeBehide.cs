@@ -1,5 +1,4 @@
-﻿using StkGenCode.Code.Column;
-using System;
+﻿using StkGenCode.Code.Name;
 using System.Data;
 
 namespace StkGenCode.Code.Template
@@ -62,7 +61,7 @@ namespace StkGenCode.Code.Template
             code += "{ " + _NewLine;
             code += "" + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "" + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
-            code += MapControlToProPerties(_ds, false);
+            code += MapControlToProPerties(_ds);
 
             code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
             code += "  _" + _TableName + "Db.Update(); " + _NewLine;
@@ -82,7 +81,7 @@ namespace StkGenCode.Code.Template
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += " " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
 
-            code += MapControlToProPerties(_ds, false);
+            code += MapControlToProPerties(_ds);
 
             code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
             code += "  _" + _TableName + "Db.Delete(); " + _NewLine;
@@ -238,7 +237,6 @@ namespace StkGenCode.Code.Template
 
         //        foreach(DataColumn _DataColumn in _ds.Tables[0].Columns)
         //        {
-
         //            foreach (MappingColumn _Map in _MappingColumn)
         //            {
         //                if ((_Map.ColumnName == _DataColumn.ColumnName) && (_Map.TableName != _TableName))
@@ -258,18 +256,12 @@ namespace StkGenCode.Code.Template
         //                }
         //            }
 
-
-
-
-
         //        }
         //        code += "}" + _NewLine;
         //    }
 
-
         //    return code;
         //}
-
 
         private string GenBindForm()
         {
@@ -294,7 +286,7 @@ namespace StkGenCode.Code.Template
                 //For Drop Down List
                 if (_MappingColumn != null)
                 {
-                    string codedrp = GenProtiesToDropDown (_DataColumn.ColumnName);
+                    string codedrp = GenProtiesToDropDown(_DataColumn.ColumnName);
                     code += codedrp;
                     if (codedrp != "")
                     {
@@ -322,6 +314,10 @@ namespace StkGenCode.Code.Template
                 else
                 { code += controlTextBoxName + ".Text = Stk_TextNull.StringTotext(" + propertieName + ".ToString()); " + _NewLine; }
             }
+
+            //ซ่อนปุ่ม Save ตอนรับ Parameter มาจากหน้าอื่นๆ
+            code += " btnSave.Visible = false;" + _NewLine;
+
             code += " } " + _NewLine;
             code += "  " + _NewLine;
             code += "  " + _NewLine;
@@ -361,12 +357,8 @@ namespace StkGenCode.Code.Template
             _code += BeginClass();
             _code += GenPageLoad();
 
-
-
             _code += GenInnitDropDown();
             _code += GenBindForm();
-
-
 
             _code += GenBtnSave();
             _code += GenBtnUpdate();

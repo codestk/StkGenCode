@@ -4,68 +4,63 @@ namespace StkGenCode.Code.Template
 {
     public class DbCode : CodeBase
     {
-        
-
         private string GenUsign()
         {
-            string _code = "";
-            _code += "using System;" + _NewLine;
-            _code += "using System.Collections.Generic;" + _NewLine;
-            _code += "using System.Data;" + _NewLine;
-            _code += "using System.Linq;" + _NewLine;
-            _code += "using System.Web;" + _NewLine;
-            _code += "using System.Web.UI.WebControls;" + _NewLine;
+            string code = "";
+            code += "using System;" + _NewLine;
+            code += "using System.Collections.Generic;" + _NewLine;
+            code += "using System.Data;" + _NewLine;
+            code += "using System.Linq;" + _NewLine;
+            code += "using System.Web;" + _NewLine;
+            code += "using System.Web.UI.WebControls;" + _NewLine;
 
-       
-
-            return _code;
+            return code;
         }
 
         private string GenBeginNameSpaceAndClass()
         {
-            string _code = "";
+            string code = "";
             //_code = "namespace XXXXX.Code.Bu" + _NewLine;
             //_code += "{" + _NewLine;
-            _code += "public class  " + _TableName + "Db: DataAccess" + _NewLine;
-            _code += "{" + _NewLine;
+            code += "public class  " + _TableName + "Db: DataAccess" + _NewLine;
+            code += "{" + _NewLine;
 
-            return _code;
+            return code;
         }
 
         private string GenEndNameSpaceAndClass()
         {
-            string _code = "" + _NewLine;
-            _code = "}" + _NewLine;
+            var code = "}" + _NewLine;
             //_code += " }"; Close Name
 
-            return _code;
+            return code;
         }
 
         private string GenGetAll()
         {
-            string _code = "";
-            _code += "public List<" + _TableName + "> Select()\r\n {";
-            _code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
-            _code += " DataSet ds = Db.GetDataSet(_sql1);  \r\n ";
-            _code += " return DataSetToList(ds);   \r\n";
-            _code += "} \r\n";
-            return _code;
+            string code = "";
+            code += "public List<" + _TableName + "> Select()\r\n {";
+            code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
+            code += " DataSet ds = Db.GetDataSet(_sql1);  \r\n ";
+            code += " return DataSetToList(ds);   \r\n";
+            code += "} \r\n";
+            return code;
         }
 
         private string GenSelectOne()
         {
-            string _code = "";
+            string code = "";
             string column = _ds.Tables[0].PrimaryKey[0].ToString();
 
-            _code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
-            _code += "{ " + _NewLine;
-            _code += " string _sql1 = \"SELECT *,0 AS RecordCount FROM " + _TableName + " where " + column + " = @" + column + "; \"; " + _NewLine;
-            _code += "   var prset = new List<IDataParameter>();" + _NewLine;
-            _code += "  prset.Add(Db.CreateParameterDb(\"@" + column + "\", " + column + "));" + _NewLine;
-            _code += "  DataSet ds = Db.GetDataSet(_sql1,prset);" + _NewLine;
-            _code += "return DataSetToList(ds).FirstOrDefault(); " + _NewLine;
-            _code += "}";
-            return _code;
+            code += "public " + _TableName + " Select(string " + column + ") " + _NewLine;
+            code += "{ " + _NewLine;
+            code += " string _sql1 = \"SELECT *,0 AS RecordCount FROM " + _TableName + " where " + column + " = @" + column + "; \"; " + _NewLine;
+            code += "   var prset = new List<IDataParameter>();" + _NewLine;
+            code += "  prset.Add(Db.CreateParameterDb(\"@" + column + "\", " + column + "));" + _NewLine;
+            code += "  DataSet ds = Db.GetDataSet(_sql1,prset);" + _NewLine;
+            code += "return DataSetToList(ds).FirstOrDefault(); " + _NewLine;
+            code += "}";
+            return code;
         }
 
         private string GetWithFilter()
@@ -79,17 +74,17 @@ namespace StkGenCode.Code.Template
 
             bool isfirst = true;
 
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                if (isfirst == true)
+                if (isfirst)
                 {
-                    sql += "sql += string.Format(\"  where ((''='{0}')or(" + _DataColumn.ColumnName + "='{0}'))\", _" + _TableName + "." + _DataColumn.ColumnName + ");";
+                    sql += "sql += string.Format(\"  where ((''='{0}')or(" + dataColumn.ColumnName + "='{0}'))\", _" + _TableName + "." + dataColumn.ColumnName + ");";
                     sql += _NewLine;
                     isfirst = false;
                 }
                 else
                 {
-                    sql += "sql += string.Format(\"  and ((''='{0}')or(" + _DataColumn.ColumnName + "='{0}'))\", _" + _TableName + "." + _DataColumn.ColumnName + ");";
+                    sql += "sql += string.Format(\"  and ((''='{0}')or(" + dataColumn.ColumnName + "='{0}'))\", _" + _TableName + "." + dataColumn.ColumnName + ");";
                     sql += _NewLine;
                 }
             }
@@ -113,7 +108,6 @@ namespace StkGenCode.Code.Template
         private string GenGetPageWise()
         {
             string code = "";
-          
 
             code += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize, string  wordFullText=\"\") " + _NewLine;
             code += "{ " + _NewLine;
@@ -147,7 +141,6 @@ namespace StkGenCode.Code.Template
 
             code += " sql += whereCommnad;" + _NewLine;
 
-
             code += " " + _NewLine;
 
             code += "var prset = new List<IDataParameter>(); " + _NewLine;
@@ -171,9 +164,9 @@ namespace StkGenCode.Code.Template
             string inservalue = "";
             string insertparameter = "";
 
-            string ReturnPrimary = "SELECT SCOPE_IDENTITY();";
+            string returnPrimary = "SELECT SCOPE_IDENTITY();";
             // string updateCommand = "";
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
                 //              insercolumn += _DataColumn.ColumnName + "," ;
                 //              inservalue += "?,";
@@ -184,51 +177,48 @@ namespace StkGenCode.Code.Template
 
                 //ถ้า PRimary ไม่ auto ให้เลือกตัวมันเอง
                 //SELECT @[name];
-                if ((_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString()))
+                if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
                 {
-                    if ((_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+                    if (_ds.Tables[0].PrimaryKey[0].AutoIncrement)
                     {
                         continue;
                     }
-                    else
-                    {
-                        //ถ้าไม่เป็น Auto ให้เลือกตัวมันเอง Return
-                        ReturnPrimary = "Select @" + _DataColumn.Table.PrimaryKey[0];
-                    }
+                    //ถ้าไม่เป็น Auto ให้เลือกตัวมันเอง Return
+                    returnPrimary = "Select @" + dataColumn.Table.PrimaryKey[0];
                 }
 
-                if ((_DataColumn.DataType.ToString() == "System.Guid"))
+                if (dataColumn.DataType.ToString() == "System.Guid")
                 { continue; }
 
-                insercolumn += _DataColumn.ColumnName + ",";
-                inservalue += "@" + _DataColumn.ColumnName + ",";
-                insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
+                insercolumn += dataColumn.ColumnName + ",";
+                inservalue += "@" + dataColumn.ColumnName + ",";
+                insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + dataColumn.ColumnName + "\",_" + _TableName + "." + dataColumn.ColumnName + "));";
             }
 
             insercolumn = insercolumn.TrimEnd(',');
             inservalue = inservalue.TrimEnd(',');
             insertparameter = insertparameter.TrimEnd(',');
 
-            string _code = "";
-            _code += "public object Insert() {";
-            _code += _NewLine + "var prset = new List<IDataParameter>();";
-            _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
-            _code += " VALUES (" + inservalue + ") ;" + ReturnPrimary + "\";";
+            string code = "";
+            code += "public object Insert() {";
+            code += _NewLine + "var prset = new List<IDataParameter>();";
+            code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
+            code += " VALUES (" + inservalue + ") ;" + returnPrimary + "\";";
             //textBox4.Text +=_NewLine + "var prset = new List<FbParameter> { " + insertparameter + "};";
-            _code += _NewLine + insertparameter;
-            _code += _NewLine;
-            _code += _NewLine;
+            code += _NewLine + insertparameter;
+            code += _NewLine;
+            code += _NewLine;
 
             //_code += "int output = Db.FbExecuteNonQuery(sql, prset);" + _NewLine;
             //_code += "if (output != 1){" + _NewLine;
             //_code += " throw new System.Exception(\"Insert\" + this.ToString());}   }" + _NewLine;
 
-            _code += "object output = Db.FbExecuteScalar(sql, prset);";
-            _code += "return output;";
+            code += "object output = Db.FbExecuteScalar(sql, prset);";
+            code += "return output;";
 
-            _code += "  }" + _NewLine;
-            _code += _NewLine;
-            return _code;
+            code += "  }" + _NewLine;
+            code += _NewLine;
+            return code;
         }
 
         private string GenUpdate()
@@ -239,15 +229,15 @@ namespace StkGenCode.Code.Template
 
             string updateCommand = "";
 
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
-                if (_DataColumn.Table.PrimaryKey[0].ToString() == _DataColumn.ColumnName.ToString())
+                insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + dataColumn.ColumnName + "\",_" + _TableName + "." + dataColumn.ColumnName + "));";
+                if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
                 {
                     continue;
                 }
 
-                updateCommand += _DataColumn.ColumnName + "=@" + _DataColumn.ColumnName + ",";
+                updateCommand += dataColumn.ColumnName + "=@" + dataColumn.ColumnName + ",";
 
                 //=====================================================================
                 // New Version
@@ -258,19 +248,19 @@ namespace StkGenCode.Code.Template
             }
             //Key
 
-            string _code = "";
-            _code += "public void Update() {";
-            _code += _NewLine + "var prset = new List<IDataParameter>();";
+            string code = "";
+            code += "public void Update() {";
+            code += _NewLine + "var prset = new List<IDataParameter>();";
             // _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
             //_code += " VALUES (" + inservalue + ")returning  " + _ds.Tables[0].Columns[0].ColumnName + ";\";";
             //textBox4.Text +=_NewLine + "var prset = new List<FbParameter> { " + insertparameter + "};";
-            _code += _NewLine + insertparameter;
+            code += _NewLine + insertparameter;
 
-            _code += _NewLine;
+            code += _NewLine;
 
-            _code += "var sql = @\"UPDATE   " + _TableName + " SET  " + updateCommand.Trim(',') + " where " + _ds.Tables[0].PrimaryKey[0].ToString() + " = @" + _ds.Tables[0].PrimaryKey[0].ToString() + "\";" + _NewLine; ;
+            code += "var sql = @\"UPDATE   " + _TableName + " SET  " + updateCommand.Trim(',') + " where " + _ds.Tables[0].PrimaryKey[0] + " = @" + _ds.Tables[0].PrimaryKey[0] + "\";" + _NewLine;
             //_code += "var prset = new List<FbParameter> { new FbParameter(\":" + _TableName + "_ID\", " + _TableName + "_ID.ToString().Trim()) };";
-            _code += _NewLine;
+            code += _NewLine;
 
             //   Db.CreateParameterDb(":V1_GOOD_INOUT_ID", _obj.V1_GOOD_INOUT_ID.ToString().Trim())
             //int output = DB_R2.FbExecuteNonQuery(sql, prset);
@@ -278,59 +268,55 @@ namespace StkGenCode.Code.Template
             //{
             //    throw new System.Exception("Save " + this.ToString());
             //}
-            _code += "int output = Db.FbExecuteNonQuery(sql, prset);" + _NewLine;
-            _code += "if (output != 1){" + _NewLine;
-            _code += " throw new System.Exception(\"Update\" + this.ToString());}   }" + _NewLine;
+            code += "int output = Db.FbExecuteNonQuery(sql, prset);" + _NewLine;
+            code += "if (output != 1){" + _NewLine;
+            code += " throw new System.Exception(\"Update\" + this.ToString());}   }" + _NewLine;
 
-            _code += _NewLine;
-            return _code;
+            code += _NewLine;
+            return code;
         }
 
-        
         private string GenDelete()
         {
-            string insercolumn = "";
-            string inservalue = "";
-            string insertparameter = "";
+            //string insercolumn = "";
+            //string inservalue = "";
 
-            insertparameter = " prset.Add(Db.CreateParameterDb(\"@" + _ds.Tables[0].PrimaryKey[0].ToString() + "\",_" + _TableName + "." + _ds.Tables[0].PrimaryKey[0].ToString() + "));";
+            var insertparameter = " prset.Add(Db.CreateParameterDb(\"@" + _ds.Tables[0].PrimaryKey[0] + "\",_" + _TableName + "." + _ds.Tables[0].PrimaryKey[0] + "));";
 
-            insercolumn = insercolumn.TrimEnd(',');
-            inservalue = inservalue.TrimEnd(',');
+            //insercolumn = insercolumn.TrimEnd(',');
+            //inservalue = inservalue.TrimEnd(',');
             insertparameter = insertparameter.TrimEnd(',');
 
-            string _code = "";
-            _code += "public void Delete() {";
-            _code += _NewLine + "var prset = new List<IDataParameter>();";
+            string code = "";
+            code += "public void Delete() {";
+            code += _NewLine + "var prset = new List<IDataParameter>();";
             // _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
             //_code += " VALUES (" + inservalue + ")returning  " + _ds.Tables[0].Columns[0].ColumnName + ";\";";
             //textBox4.Text +=_NewLine + "var prset = new List<FbParameter> { " + insertparameter + "};";
-            _code += _NewLine + insertparameter;
+            code += _NewLine + insertparameter;
 
-            _code += _NewLine;
-
-            string DeleteCondition = "";
+            code += _NewLine;
 
             //pyID=@pyID
-            DeleteCondition = _ds.Tables[0].PrimaryKey[0].ToString() + "=@" + _ds.Tables[0].PrimaryKey[0].ToString();
+            var deleteCondition = _ds.Tables[0].PrimaryKey[0] + "=@" + _ds.Tables[0].PrimaryKey[0];
 
             // DeleteCondition = DeleteCondition.Remove(DeleteCondition.Length - 3);
 
-            _code += "var sql =@\"DELETE FROM " + _TableName + " where " + DeleteCondition + "\";" + _NewLine; ;
+            code += "var sql =@\"DELETE FROM " + _TableName + " where " + deleteCondition + "\";" + _NewLine;
             //_code += "var prset = new List<FbParameter> { new FbParameter(\":" + _TableName + "_ID\", " + _TableName + "_ID.ToString().Trim()) };";
-            _code += _NewLine;
+            code += _NewLine;
 
-            _code += "int output = Db.FbExecuteNonQuery(sql, prset);" + _NewLine;
-            _code += "if (output != 1){" + _NewLine;
-            _code += " throw new System.Exception(\"Delete\" + this.ToString());}   }" + _NewLine;
+            code += "int output = Db.FbExecuteNonQuery(sql, prset);" + _NewLine;
+            code += "if (output != 1){" + _NewLine;
+            code += " throw new System.Exception(\"Delete\" + this.ToString());}   }" + _NewLine;
 
-            _code += _NewLine;
-            return _code;
+            code += _NewLine;
+            return code;
         }
 
         private string GenConvertDataList()
         {
-            string _code = "";
+            string code = "";
             //_code += "private List<MPO_CUSTOMER_R2> DataSetToList(DataSet ds)" + _NewLine;
             //_code += "{" + _NewLine;
 
@@ -338,26 +324,26 @@ namespace StkGenCode.Code.Template
             //_code += "select new MPO_CUSTOMER_R2" + _NewLine;
             //_code += "{" + _NewLine;
 
-            _code += "private List<" + _TableName + "> DataSetToList(DataSet ds) \r\n";
-            _code += "{\r\n";
-            _code += " EnumerableRowCollection<" + _TableName + "> q = (from temp in ds.Tables[0].AsEnumerable()\r\n";
-            _code += " select new " + _TableName + "\r\n";
-            _code += "{\r\n";
+            code += "private List<" + _TableName + "> DataSetToList(DataSet ds) \r\n";
+            code += "{\r\n";
+            code += " EnumerableRowCollection<" + _TableName + "> q = (from temp in ds.Tables[0].AsEnumerable()\r\n";
+            code += " select new " + _TableName + "\r\n";
+            code += "{\r\n";
 
             //Inherrit
-            _code += "RecordCount = temp.Field<Int32>(\"RecordCount\"),";
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            code += "RecordCount = temp.Field<Int32>(\"RecordCount\"),";
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                if ((_DataColumn.DataType.ToString() == "System.Guid"))
+                if ((dataColumn.DataType.ToString() == "System.Guid"))
                 { continue; }
 
-                if (_DataColumn.DataType.ToString() == "System.Decimal")
+                if (dataColumn.DataType.ToString() == "System.Decimal")
                 {
-                    _code += _DataColumn.ColumnName + "= Convert.ToDecimal (temp.Field<Object>(\"" + _DataColumn.ColumnName + "\")), \r\n ";
+                    code += dataColumn.ColumnName + "= Convert.ToDecimal (temp.Field<Object>(\"" + dataColumn.ColumnName + "\")), \r\n ";
                 }
                 else
                 {
-                    _code += _DataColumn.ColumnName + "= temp.Field<" + _DataColumn.DataType.Name + ">(\"" + _DataColumn.ColumnName + "\"), \r\n ";
+                    code += dataColumn.ColumnName + "= temp.Field<" + dataColumn.DataType.Name + ">(\"" + dataColumn.ColumnName + "\"), \r\n ";
                 }
                 // Convert.ToDecimal (temp.Field<Object>("mod_id")),
 
@@ -365,12 +351,12 @@ namespace StkGenCode.Code.Template
                 //  _code += "" + _DataColumn.ColumnName + "= _obj." + _DataColumn.ColumnName + "; \r\n ";
             }
 
-            _code += " });\r\n";
+            code += " });\r\n";
 
-            _code += "  return q.ToList();\r\n";
-            _code += "}\r\n";
+            code += "  return q.ToList();\r\n";
+            code += "}\r\n";
 
-            return _code;
+            return code;
         }
 
         //public const string DataText = "COMPANY";
@@ -378,45 +364,45 @@ namespace StkGenCode.Code.Template
 
         private string GenConStance()
         {
-            string _code = "";
-            _code += "  public " + _TableName + " _" + _TableName + ";" + _NewLine;
+            string code = "";
+            code += "  public " + _TableName + " _" + _TableName + ";" + _NewLine;
 
-            _code += "public const string DataKey = \"" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\";" + _NewLine;
-            _code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
-            _code += "public const string DataValue = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
-            return _code;
+            code += "public const string DataKey = \"" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\";" + _NewLine;
+            code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
+            code += "public const string DataValue = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
+            return code;
         }
 
         private string Comment()
         {
-            string _code = _NewLine + "//Trasaction User" + _NewLine;
-            _code += "//bool output = false;" + _NewLine;
-            _code += "//    try" + _NewLine;
-            _code += "//    {" + _NewLine;
-            _code += "//        Db.OpenFbData();" + _NewLine;
-            _code += "//        Db.BeginTransaction();" + _NewLine;
+            string code = _NewLine + "//Trasaction User" + _NewLine;
+            code += "//bool output = false;" + _NewLine;
+            code += "//    try" + _NewLine;
+            code += "//    {" + _NewLine;
+            code += "//        Db.OpenFbData();" + _NewLine;
+            code += "//        Db.BeginTransaction();" + _NewLine;
 
-            _code += "//        MPO_ORDERS o1 = new MPO_ORDERS();" + _NewLine;
-            _code += "//o1 = _MPO_ORDERS;" + _NewLine;
-            _code += "//        int orid = o1.Save();" + _NewLine;
+            code += "//        MPO_ORDERS o1 = new MPO_ORDERS();" + _NewLine;
+            code += "//o1 = _MPO_ORDERS;" + _NewLine;
+            code += "//        int orid = o1.Save();" + _NewLine;
 
-            _code += "//MPO_ODERDETAILS o2 = new MPO_ODERDETAILS();" + _NewLine;
-            _code += "//o2.Save(orid, ODERDETAILS);" + _NewLine;
+            code += "//MPO_ODERDETAILS o2 = new MPO_ODERDETAILS();" + _NewLine;
+            code += "//o2.Save(orid, ODERDETAILS);" + _NewLine;
 
-            _code += "//        Db.CommitTransaction();" + _NewLine;
-            _code += "//        OR_ID = orid;" + _NewLine;
-            _code += "//        output = true;" + _NewLine;
-            _code += "//    }" + _NewLine;
-            _code += "//    catch (System.Exception ex)" + _NewLine;
-            _code += "//    {" + _NewLine;
-            _code += "//        Db.RollBackTransaction();" + _NewLine;
-            _code += "//        ErrorLogging.LogErrorToLogFile(ex, \"\");" + _NewLine;
-            _code += "//        throw ex;" + _NewLine;
-            _code += "//    }" + _NewLine;
+            code += "//        Db.CommitTransaction();" + _NewLine;
+            code += "//        OR_ID = orid;" + _NewLine;
+            code += "//        output = true;" + _NewLine;
+            code += "//    }" + _NewLine;
+            code += "//    catch (System.Exception ex)" + _NewLine;
+            code += "//    {" + _NewLine;
+            code += "//        Db.RollBackTransaction();" + _NewLine;
+            code += "//        ErrorLogging.LogErrorToLogFile(ex, \"\");" + _NewLine;
+            code += "//        throw ex;" + _NewLine;
+            code += "//    }" + _NewLine;
 
-            _code += "//    return output;" + _NewLine;
+            code += "//    return output;" + _NewLine;
 
-            return _code;
+            return code;
         }
 
         private string GenUpdateColumn()
@@ -501,7 +487,7 @@ namespace StkGenCode.Code.Template
             code += "{" + _NewLine;
             code += "  String sql=\"\";" + _NewLine;
             code += "   sql += \"WHERE (1=1) \"; " + _NewLine;
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
                 //if (isfirst == true)
                 //{
@@ -515,9 +501,9 @@ namespace StkGenCode.Code.Template
                 //    code += _NewLine;
                 //}
 
-                code += "            if ( _" + _TableName + "." + _DataColumn.ColumnName + "!= null) " + _NewLine;
+                code += "            if ( _" + _TableName + "." + dataColumn.ColumnName + "!= null) " + _NewLine;
                 code += "            { " + _NewLine;
-                code += "                sql += string.Format(\" AND ((''='{0}') or (" + _DataColumn.ColumnName + "='{0}') )\", _" + _TableName + "." + _DataColumn.ColumnName + "); " + _NewLine;
+                code += "                sql += string.Format(\" AND ((''='{0}') or (" + dataColumn.ColumnName + "='{0}') )\", _" + _TableName + "." + dataColumn.ColumnName + "); " + _NewLine;
                 code += "            } " + _NewLine;
             }
 
@@ -564,37 +550,38 @@ namespace StkGenCode.Code.Template
         public override void Gen()
 
         {
-            string _code = "";
-            _code = GenUsign();
+            var code = GenUsign();
 
-            _code += GenBeginNameSpaceAndClass();
-            _code += GenProperties();
-            _code += GenConStance();
+            code += GenBeginNameSpaceAndClass();
+            code += GenProperties();
+            code += GenConStance();
 
-            _code += GenGetAll();
-            _code += GenSelectOne();
-            _code += GetWithFilter();
+            code += GenGetAll();
+            code += GenSelectOne();
+            code += GetWithFilter();
 
-            _code += GenGetPageWise();
-            _code += GenInsert();
-            _code += GenUpdate();
-            _code += GenDelete();
-            _code += GenConvertDataList();
-            _code += GenUpdateColumn();
+            code += GenGetPageWise();
+            code += GenInsert();
+            code += GenUpdate();
+            code += GenDelete();
+            code += GenConvertDataList();
+            code += GenUpdateColumn();
 
-            _code += GenAutoCompleteMethod();
-            _code += GenGetKeyWordsOneColumn();
-            _code += GenSql();
-            _code += GenWhereformProperties();
+            code += GenAutoCompleteMethod();
+            code += GenGetKeyWordsOneColumn();
+            code += GenSql();
+            code += GenWhereformProperties();
 
-            _code += GenEndNameSpaceAndClass();
+            code += GenEndNameSpaceAndClass();
 
-            _code += Comment();
+            code += Comment();
 
-            FileName name = new FileName();
-            name._TableName = _TableName;
-            name._ds = _ds;
-            _FileCode.writeFile(name.DbCodeName(), _code);
+            //FileName name = new FileName();
+            //name._TableName = _TableName;
+            //name._ds = _ds;
+            InnitProperties();
+
+            _FileCode.writeFile(_FileName.DbCodeName(), code);
             //_FileCode.writeFile(_TableName + "Db", _code, _fileType);
         }
     }

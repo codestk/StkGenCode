@@ -32,9 +32,9 @@ namespace StkGenCode.Code.Template
             code += " create table #Results " + _NewLine;
             code += "( " + _NewLine;
             code += "[RowNumber] [int],";
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                code += "[" + _DataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDB(_DataColumn.DataType.ToString()) + "," + _NewLine;
+                code += "[" + dataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDB(dataColumn.DataType.ToString()) + "," + _NewLine;
             }
 
             code += ") " + _NewLine;
@@ -97,17 +97,17 @@ namespace StkGenCode.Code.Template
             code += "( " + _NewLine;
 
             string UnionAll = "union all";
-            foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
                 // Do Something
 
                 //  code += "[" + _DataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDB(_DataColumn.DataType.ToString()) + "," + _NewLine;
-                if (_DataColumn.DataType.ToString() == "System.String")
+                if (dataColumn.DataType.ToString() == "System.String")
                 {
                     code += "SELECT  " + _NewLine;
-                    code += "      [" + _DataColumn.ColumnName + "] As KetText " + _NewLine;
+                    code += "      [" + dataColumn.ColumnName + "] As KetText " + _NewLine;
                     code += "        " + _NewLine;
-                    code += "  FROM [" + _TableName + "] where [" + _DataColumn.ColumnName + "] like ''+@Key_word+'%' " + _NewLine;
+                    code += "  FROM [" + _TableName + "] where [" + dataColumn.ColumnName + "] like ''+@Key_word+'%' " + _NewLine;
 
                     code += UnionAll + _NewLine;
                 }
@@ -146,15 +146,13 @@ namespace StkGenCode.Code.Template
 
         public override void Gen()
         {
-            string _code = "";
-            _code += GenSp_GetPageWise();
-            _code += GenGoSplitBatch();
-            _code += GenSp_GetAutocomplete();
+            string code = "";
+            code += GenSp_GetPageWise();
+            code += GenGoSplitBatch();
+            code += GenSp_GetAutocomplete();
 
-            FileName name = new FileName();
-            name._TableName = _TableName;
-            name._ds = _ds;
-            _FileCode.writeFile(name.StoreProCodeName(), _code);
+            InnitProperties();
+            _FileCode.writeFile(_FileName.StoreProCodeName(), code);
             //_FileCode.writeFile("Sp_" + _TableName + "Store", _code, _fileType);
         }
     }

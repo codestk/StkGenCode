@@ -13,18 +13,18 @@
 
         protected string GenUsign()
         {
-            string _code = "";
-            _code += "using System;" + _NewLine;
-            _code += "using System.Collections.Generic;" + _NewLine;
-            _code += "using System.Data;" + _NewLine;
-            _code += "using System.Linq;" + _NewLine;
-            _code += "using System.Web;" + _NewLine;
-            _code += "using System.Web.UI.WebControls;" + _NewLine;
-            _code += "using System.Web.Services;" + _NewLine;
+            string code = "";
+            code += "using System;" + _NewLine;
+            code += "using System.Collections.Generic;" + _NewLine;
+            code += "using System.Data;" + _NewLine;
+            code += "using System.Linq;" + _NewLine;
+            code += "using System.Web;" + _NewLine;
+            code += "using System.Web.UI.WebControls;" + _NewLine;
+            code += "using System.Web.Services;" + _NewLine;
 
             //_code += "using ExchangeService.Code;" + _NewLine;
 
-            return _code;
+            return code;
         }
 
         protected string GenConstance()
@@ -150,21 +150,6 @@
             code += "            rpt" + _TableName + "Pagger.DataSource = pages; " + _NewLine;
             code += "            rpt" + _TableName + "Pagger.DataBind(); " + _NewLine;
             code += "        }" + _NewLine;
-
-            return code;
-        }
-
-        private string GenPageChange()
-        {
-            string code = "  ";
-            code += " protected void Page_Changed(object sender, EventArgs e) " + _NewLine;
-            code += " { " + _NewLine;
-            code += " int pageIndex = int.Parse((sender as LinkButton).CommandArgument);" + _NewLine;
-            code += " this.GetPageWise(pageIndex); " + _NewLine;
-
-            code += " ViewState[\"CurrentPage\"] = pageIndex;";
-            code += " }" + _NewLine;
-            code += "  " + _NewLine;
 
             return code;
         }
@@ -325,32 +310,30 @@
 
         public override void Gen()
         {
-            string _code = "";
+            string code = "";
 
-            _code += GenUsign();
-            _code += BeginClass();
-            _code += GenConstance();
+            code += GenUsign();
+            code += BeginClass();
+            code += GenConstance();
 
-            _code += GenPageLoad();
+            code += GenPageLoad();
 
-            _code += GenSearchEvent();
+            code += GenSearchEvent();
             //_code += GenPageChange();
-            _code += GenBind();
+            code += GenBind();
             //_code += GenPopulatePager();
 
             //_code += GenPaggerClass();
 
-            _code += GenHideResult();
-            _code += GenShowResult();
+            code += GenHideResult();
+            code += GenShowResult();
             // _code += GedTagCheck();
             //_code += GenSaveColumn();
 
-            _code += EndClass();
+            code += EndClass();
 
-            FileName name = new FileName();
-            name._TableName = _TableName;
-            name._ds = _ds;
-            _FileCode.writeFile(name.AspxTableCodeBehineName(), _code);
+            InnitProperties();
+            _FileCode.writeFile(_FileName.AspxTableCodeBehineName(), code);
             // _FileCode.writeFile(_TableName + "List", _code);
         }
     }
