@@ -16,7 +16,7 @@ namespace StkGenCode.Code.Column
         public static List<MappingColumn> ExtractMappingColumn(string str)
         {
             var mappingColumnCollection = new List<MappingColumn>();
-            var columnTables = str.Split(';'); // Columnname : TableName;
+            var columnTables = str.Trim(';').Split(';'); // Columnname : TableName;
             foreach (var columnTable in columnTables)
             {
                 var split = columnTable.Split(':');

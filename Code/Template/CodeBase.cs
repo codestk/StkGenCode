@@ -68,7 +68,7 @@ namespace StkGenCode.Code.Template
                 //For Drop Down List
                 if (_MappingColumn != null)
                 {
-                    string codedrp = GenMapDropDownToProPerties(dataColumn.ColumnName);
+                    string codedrp = MapDropDownToProPerties(dataColumn);
                     code += codedrp;
                     if (codedrp != "")
                     {
@@ -108,6 +108,10 @@ namespace StkGenCode.Code.Template
         public Boolean HaveDropDown()
         {
             bool haveDropDown = false;
+
+            if (_MappingColumn == null)
+                return haveDropDown;
+
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
                 foreach (MappingColumn map in _MappingColumn)
@@ -123,12 +127,34 @@ namespace StkGenCode.Code.Template
             return haveDropDown;
         }
 
+        public Boolean IsDropDown(DataColumn Column)
+        {
+            bool isDropDown = false;
+
+            if (_MappingColumn == null)
+                return isDropDown;
+
+            //foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            //{
+            foreach (MappingColumn map in _MappingColumn)
+            {
+                if ((map.ColumnName == Column.ColumnName) && (map.TableName != _TableName))
+                {
+                    isDropDown = true;
+                    break;
+                }
+            }
+            //}
+
+            return isDropDown;
+        }
+
         /// <summary>
         /// For Bind Data
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected string GenProtiesToDropDown(string columnName)
+        protected string DropDownFindByValue(string columnName)
         {
             string code = "";
             foreach (MappingColumn map in _MappingColumn)
@@ -138,7 +164,7 @@ namespace StkGenCode.Code.Template
                     string controlDropDownName = string.Format(_formatDropDownName, columnName);
                     string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
                     //code = string.Format("{0}.Items.FindByValue({1}).Selected = true; ", controlDropDownName, propertieName);
-                    code += string.Format("ListItem {0}ListItem = {0}.Items.FindByValue({1}); ", controlDropDownName, propertieName) + _NewLine;
+                    code += string.Format("ListItem {0}ListItem = {0}.Items.FindByValue({1}.ToString()); ", controlDropDownName, propertieName) + _NewLine;
                     code += " " + _NewLine;
                     code += $"if ({controlDropDownName}ListItem != null) " + _NewLine;
                     code += "{" + _NewLine;
@@ -152,20 +178,36 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        public string GenMapDropDownToProPerties(string columnName)
+        public string MapDropDownToProPerties(DataColumn column)
         {
             string code = "";
             foreach (MappingColumn map in _MappingColumn)
             {
-                if ((map.ColumnName == columnName) && (map.TableName != _TableName))
+                if ((map.ColumnName == column.ColumnName) && (map.TableName != _TableName))
                 {
-                    string controlDropDownName = string.Format(_formatDropDownName, columnName);
-                    string propertieName = string.Format(_formatpropertieName, _TableName, columnName);
+                    string controlDropDownName = string.Format(_formatDropDownName, column.ColumnName);
+                    string propertieName = string.Format(_formatpropertieName, _TableName, column.ColumnName);
                     //mpoOrder.CUS_ID = drpCustomer.SelectedValue;
                     code += $"if ({controlDropDownName}.SelectedIndex > 0)" + _NewLine;
 
                     code += "{" + _NewLine;
-                    code += $"{propertieName} = {controlDropDownName}.SelectedValue; " + _NewLine;
+                    if (column.DataType.ToString() == "System.Decimal")
+                    {
+                        code += $"{propertieName} = Convert.ToDecimal({controlDropDownName}.SelectedValue); " + _NewLine;
+                    }
+                    else if (column.DataType.ToString() == "System.Int32")
+                    {//Convert.ToInt32
+                        code += $"{propertieName} = Convert.ToInt32({controlDropDownName}.SelectedValue); " + _NewLine;
+                    }
+                    else if (column.DataType.ToString() == "System.Int16")
+                    {//Convert.ToInt32
+                        code += $"{propertieName} = Convert.ToInt16({controlDropDownName}.SelectedValue); " + _NewLine;
+                    }
+                    else
+                    {
+                        code += $"{propertieName} = {controlDropDownName}.SelectedValue; " + _NewLine;
+                    }
+
                     code += "}" + _NewLine;
 
                     //code = string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;

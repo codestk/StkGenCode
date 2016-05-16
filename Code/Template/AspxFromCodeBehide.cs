@@ -285,7 +285,7 @@ namespace StkGenCode.Code.Template
                 //For Drop Down List
                 if (_MappingColumn != null)
                 {
-                    string codedrp = GenProtiesToDropDown(dataColumn.ColumnName);
+                    string codedrp = DropDownFindByValue(dataColumn.ColumnName);
                     code += codedrp;
                     if (codedrp != "")
                     {
@@ -303,11 +303,18 @@ namespace StkGenCode.Code.Template
 
                 if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
                 { code += controlChekBoxName + ".Checked = Convert.ToBoolean(" + propertieName + ");" + _NewLine; }
-                else if ((dataColumn.DataType.ToString() == "System.DateTime") || (dataColumn.DataType.ToString() == "System.Decimal") || (dataColumn.DataType.ToString() == "System.Int32"))
+                else if ((dataColumn.DataType.ToString() == "System.DateTime"))
                 {
                     code += " if (" + propertieName + ".HasValue)" + _NewLine;
                     code += "{" + _NewLine;
                     code += controlTextBoxName + ".Text = StkGlobalDate.DateToTextEngFormat(" + propertieName + "); " + _NewLine;
+                    code += "}" + _NewLine;
+                }
+                else if ((dataColumn.DataType.ToString() == "System.Int32") || (dataColumn.DataType.ToString() == "System.Decimal"))
+                {
+                    code += " if (" + propertieName + ".HasValue)" + _NewLine;
+                    code += "{" + _NewLine;
+                    code += controlTextBoxName + ".Text = Stk_TextNull.StringTotext(" + propertieName + ".ToString()); " + _NewLine;
                     code += "}" + _NewLine;
                 }
                 else

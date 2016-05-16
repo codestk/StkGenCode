@@ -19,7 +19,7 @@
 
             //Usign Gen Text Box
             code += "        <div class=\"row\"> " + _NewLine;
-            string txtBoxSet = AspxFromCodeaspx.GenControls(6);
+            string txtBoxSet = AspxFromCodeaspx.GenControls(6, false);
             //txtBoxSet = txtBoxSet.Replace("s12", "s3");
             //txtBoxSet = "";
             code += txtBoxSet;

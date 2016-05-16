@@ -24,14 +24,21 @@ namespace StkGenCode
 
         private string _path;
 
-        private void Gen(DataSet _ds, string _TableName)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="_ds"></param>
+        /// <param name="_TableName"></param>
+        /// <param name="columnDropDown">Clumn:Table;</param>
+        private void Gen(DataSet _ds, string _TableName, string columnDropDown = "")
         {
             FileCode F = new FileCode();
             F.Path = _path;
             //F.ClearAllFile();
 
-            string MappingColumnTable = "STK_TYPE_ID:STK_TYPE";
-            List<MappingColumn> _MappingColumn = MappingColumn.ExtractMappingColumn(MappingColumnTable);
+            List<MappingColumn> _MappingColumn = null;
+            if (columnDropDown != "")
+                _MappingColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
 
             AspxFromCode _AspxFromCodeaspx = new AspxFromCode();
             _AspxFromCodeaspx._FileCode = F;
@@ -91,13 +98,13 @@ namespace StkGenCode
             _PageServiceCodeBehide._TableName = _TableName;
             _PageServiceCodeBehide.Gen();
 
-            //string pathSQlScript = _path + @"SQL\";
-            //F.path = pathSQlScript;
-            //StoreProCode _StoreProCode = new StoreProCode();
-            //_StoreProCode._FileCode = F;
-            //_StoreProCode._ds = _ds;
-            //_StoreProCode._TableName = _TableName;
-            //_StoreProCode.Gen();
+            string pathSQlScript = _path + @"SQL\";
+            F.Path = pathSQlScript;
+            StoreProCode _StoreProCode = new StoreProCode();
+            _StoreProCode._FileCode = F;
+            _StoreProCode._ds = _ds;
+            _StoreProCode._TableName = _TableName;
+            _StoreProCode.Gen();
 
             //Gen Javascript
 
@@ -119,17 +126,17 @@ namespace StkGenCode
             Pcode._TableName = _TableName;
             Pcode.Gen();
 
-            //DbCode _DbCode = new DbCode();
-            //_DbCode._FileCode = F;
-            //_DbCode._ds = _ds;
-            //_DbCode._TableName = _TableName;
-            //_DbCode.Gen();
+            DbCode _DbCode = new DbCode();
+            _DbCode._FileCode = F;
+            _DbCode._ds = _ds;
+            _DbCode._TableName = _TableName;
+            _DbCode.Gen();
 
-            DbCodeFireBird _DbCodeFireBird = new DbCodeFireBird();
-            _DbCodeFireBird._FileCode = F;
-            _DbCodeFireBird._ds = _ds;
-            _DbCodeFireBird._TableName = _TableName;
-            _DbCodeFireBird.Gen();
+            //DbCodeFireBird _DbCodeFireBird = new DbCodeFireBird();
+            //_DbCodeFireBird._FileCode = F;
+            //_DbCodeFireBird._ds = _ds;
+            //_DbCodeFireBird._TableName = _TableName;
+            //_DbCodeFireBird.Gen();
         }
 
         //Delete All Find in folder
@@ -211,16 +218,30 @@ namespace StkGenCode
             //Gen("STK_USER");
             //txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
             //DataSet _ds = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "STK_USER");
-            txtConstring.Text = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
 
+            //txtConstring.Text = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            //ClearFile();
+            //DataSet _ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
+            //Gen(_ds, "STK_USER");
+            //DataSet _ds_ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_TYPE");
+            //Gen(_ds_ds, "STK_TYPE");
+            //=================================================================================================
             ClearFile();
-            DataSet _ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
-            Gen(_ds, "STK_USER");
-            DataSet _ds_ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_TYPE");
-            Gen(_ds_ds, "STK_TYPE");
+            txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
 
-            //MessageBox.Show("Ok");
+            string ColumnDropDown = "CategoryID:TradeFromCategory;TermId:TradeFromTerm";
 
+            //string ColumnDropDown = "CategoryID:TradeFromCategory";
+            DataSet _dsTradeFromFile = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromFile");
+            Gen(_dsTradeFromFile, "TradeFromFile", ColumnDropDown);
+
+            DataSet _dsTradeFromTerm = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromTerm");
+            Gen(_dsTradeFromTerm, "TradeFromTerm");
+
+            DataSet _dsTradeFromCategory = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromCategory");
+            Gen(_dsTradeFromCategory, "TradeFromCategory");
+
+            //Copy ไฟล์
             System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
 
             this.Close();

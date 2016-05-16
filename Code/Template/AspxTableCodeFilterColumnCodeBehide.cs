@@ -25,7 +25,7 @@ namespace StkGenCode.Code.Template
             {
                 if (_MappingColumn != null)
                 {
-                    string codedrp = AspxFromCodeBehide.GenMapDropDownToProPerties(dataColumn.ColumnName);
+                    string codedrp = AspxFromCodeBehide.MapDropDownToProPerties(dataColumn);
                     code += codedrp;
                     if (codedrp != "")
                     {

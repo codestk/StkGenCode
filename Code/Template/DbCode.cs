@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using StkGenCode.Code.Column;
+using System.Data;
 
 namespace StkGenCode.Code.Template
 {
@@ -15,6 +16,11 @@ namespace StkGenCode.Code.Template
             code += "using System.Web.UI.WebControls;" + _NewLine;
 
             return code;
+        }
+
+        private string GenListColumn()
+        {
+            return ColumnString.GenLineString(_ds, "{0},");
         }
 
         private string GenBeginNameSpaceAndClass()
@@ -38,10 +44,19 @@ namespace StkGenCode.Code.Template
 
         private string GenGetAll()
         {
+            //string code = "";
+            //code += "public List<" + _TableName + "> Select()\r\n {";
+            //code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
+            //code += " DataSet ds = Db.GetDataSet(_sql1);  \r\n ";
+            //code += " return DataSetToList(ds);   \r\n";
+            //code += "} \r\n";
+            //return code;
             string code = "";
+            string sqlColumnList = GenListColumn();  //"A,B,C,D,E"
             code += "public List<" + _TableName + "> Select()\r\n {";
-            code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
-            code += " DataSet ds = Db.GetDataSet(_sql1);  \r\n ";
+            //_code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
+            code += " string sql = \"SELECT " + sqlColumnList + "0 AS RecordCount FROM " + _TableName + "\";" + _NewLine;
+            code += " DataSet ds = Db.GetDataSet(sql);  \r\n ";
             code += " return DataSetToList(ds);   \r\n";
             code += "} \r\n";
             return code;
@@ -341,6 +356,11 @@ namespace StkGenCode.Code.Template
                 {
                     code += dataColumn.ColumnName + "= Convert.ToDecimal (temp.Field<Object>(\"" + dataColumn.ColumnName + "\")), \r\n ";
                 }
+                else if (dataColumn.DataType.ToString() == "System.DateTime")
+                {
+                    //  TermUpdateDate = temp.Field<DateTime?>("TermUpdateDate"),
+                    code += dataColumn.ColumnName + "= temp.Field<DateTime?>(\"" + dataColumn.ColumnName + "\"), \r\n ";
+                }
                 else
                 {
                     code += dataColumn.ColumnName + "= temp.Field<" + dataColumn.DataType.Name + ">(\"" + dataColumn.ColumnName + "\"), \r\n ";
@@ -364,12 +384,20 @@ namespace StkGenCode.Code.Template
 
         private string GenConStance()
         {
+            //string code = "";
+            //code += "  public " + _TableName + " _" + _TableName + ";" + _NewLine;
+
+            //code += "public const string DataKey = \"" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\";" + _NewLine;
+            //code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
+            //code += "public const string DataValue = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
+            //return code;
+
             string code = "";
             code += "  public " + _TableName + " _" + _TableName + ";" + _NewLine;
 
             code += "public const string DataKey = \"" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\";" + _NewLine;
-            code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
-            code += "public const string DataValue = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
+            code += "public const string DataText = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
+            code += "public const string DataValue = \"" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\";" + _NewLine;
             return code;
         }
 

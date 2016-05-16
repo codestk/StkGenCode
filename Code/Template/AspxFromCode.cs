@@ -42,6 +42,10 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
+                //ถ้าเป็น DropDown ไม่ต้อง Force ตัวเลข
+                if (IsDropDown(dataColumn))
+                    continue;
+
                 //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
                 string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
                 //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
@@ -228,7 +232,7 @@ namespace StkGenCode.Code.Template
                     code += "<asp:DropDownList ID =\"" + controlDropDownName + "\" runat=\"server\"> " + _NewLine;
                     code += " " + _NewLine;
                     code += "</asp:DropDownList>" + _NewLine;
-                    code += "<label for=\"<%=" + controlDropDownName + ".ClientID %>\">drp</label>" + _NewLine;
+                    code += "<label for=\"<%=" + controlDropDownName + ".ClientID %>\">" + columnname + "</label>" + _NewLine;
                     code += "</div>" + _NewLine;
 
                     break;
@@ -243,7 +247,7 @@ namespace StkGenCode.Code.Template
         /// </summary>
         /// <param name="columnSize"></param>
         /// <returns></returns>
-        public string GenControls(int columnSize)
+        public string GenControls(int columnSize, bool chekPrimarykey = true)
         {
             string code = "";
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
@@ -266,13 +270,13 @@ namespace StkGenCode.Code.Template
                     }
                 }
 
-                //SetDisable For PrimaryKEY
-                //foreach (var item in _ds.Tables[0].PrimaryKey)
-                //{
-                //Check แบบ KEy เดียว
-                if ((dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+                if (chekPrimarykey)
                 {
-                    disabled = "ReadOnly=\"true\" ";
+                    //Check แบบ KEy เดียว
+                    if ((dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+                    {
+                        disabled = "ReadOnly=\"true\" ";
+                    }
                 }
                 //}
 

@@ -16,14 +16,10 @@ namespace StkGenCode.Code.Column
 
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                //if ((_DataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+                //if ((dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
                 //{
-                //    primary = true;
+                //    continue;
                 //}
-                if ((dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
-                {
-                    continue;
-                }
 
                 code += string.Format(format, dataColumn);
             }
