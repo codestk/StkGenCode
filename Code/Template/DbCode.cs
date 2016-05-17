@@ -120,6 +120,60 @@ namespace StkGenCode.Code.Template
             return sql;
         }
 
+        //ทำงาน คู่กับ DB อันเก่า
+        //private string GenGetPageWise()
+        //{
+        //    string code = "";
+
+        //    code += "public List<" + _TableName + "> GetPageWise(int pageIndex, int PageSize, string  wordFullText=\"\") " + _NewLine;
+        //    code += "{ " + _NewLine;
+        //    code += "string store = \"Sp_Get" + _TableName + "PageWise\"; " + _NewLine;
+
+        //    code += "            string sql = \"\"; " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [" + _TableName + "]' + @CommandFilter; " + _NewLine;
+        //    code += "            string ColumnSort = \"\"; " + _NewLine;
+        //    code += "            if (_SortExpression == null) " + _NewLine;
+        //    code += "            { " + _NewLine;
+        //    code += "                ColumnSort = DataKey; " + _NewLine;
+        //    code += "            } " + _NewLine;
+        //    code += "            else " + _NewLine;
+        //    code += "            { " + _NewLine;
+        //    code += "                ColumnSort = _SortExpression; " + _NewLine;
+        //    code += "            } " + _NewLine;
+        //    code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
+        //    code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
+        //    //code += " sql += Wordfilter; " + _NewLine;
+        //    code += "string whereCommnad = \"\"; " + _NewLine;
+        //    code += "        if (wordFullText !=\"\") " + _NewLine;
+        //    code += "        { " + _NewLine;
+        //    code += "            whereCommnad = SearchUtility.SqlContain(wordFullText); " + _NewLine;
+        //    code += "        } " + _NewLine;
+        //    code += "        else " + _NewLine;
+        //    code += "        { " + _NewLine;
+        //    code += "             " + _NewLine;
+        //    code += "            whereCommnad = GenWhereformProperties();  " + _NewLine;
+        //    code += "        }  " + _NewLine;
+
+        //    code += " sql += whereCommnad;" + _NewLine;
+
+        //    code += " " + _NewLine;
+
+        //    code += "var prset = new List<IDataParameter>(); " + _NewLine;
+        //    code += "prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex)); " + _NewLine;
+        //    code += "prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize)); " + _NewLine;
+        //    code += "" + _NewLine;
+
+        //    code += " " + _NewLine;
+        //    code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", sql)); " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "DataSet ds = Db.GetDataSet(store, prset, CommandType.StoredProcedure); " + _NewLine;
+        //    code += "return DataSetToList(ds); " + _NewLine;
+        //    code += "}" + _NewLine;
+
+        //    return code;
+        //}
+
         private string GenGetPageWise()
         {
             string code = "";
@@ -128,45 +182,45 @@ namespace StkGenCode.Code.Template
             code += "{ " + _NewLine;
             code += "string store = \"Sp_Get" + _TableName + "PageWise\"; " + _NewLine;
 
-            code += "            string sql = \"\"; " + _NewLine;
+            //code += "            string sql = \"\"; " + _NewLine;
             code += " " + _NewLine;
-            code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [" + _TableName + "]' + @CommandFilter; " + _NewLine;
-            code += "            string ColumnSort = \"\"; " + _NewLine;
-            code += "            if (_SortExpression == null) " + _NewLine;
-            code += "            { " + _NewLine;
-            code += "                ColumnSort = DataKey; " + _NewLine;
-            code += "            } " + _NewLine;
-            code += "            else " + _NewLine;
-            code += "            { " + _NewLine;
-            code += "                ColumnSort = _SortExpression; " + _NewLine;
-            code += "            } " + _NewLine;
-            code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
-            code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
+            //code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [" + _TableName + "]' + @CommandFilter; " + _NewLine;
+            //code += "            string ColumnSort = \"\"; " + _NewLine;
+            //code += "            if (_SortExpression == null) " + _NewLine;
+            //code += "            { " + _NewLine;
+            //code += "                ColumnSort = DataKey; " + _NewLine;
+            //code += "            } " + _NewLine;
+            //code += "            else " + _NewLine;
+            //code += "            { " + _NewLine;
+            //code += "                ColumnSort = _SortExpression; " + _NewLine;
+            //code += "            } " + _NewLine;
+            //code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
+            //code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
             //code += " sql += Wordfilter; " + _NewLine;
-            code += "string whereCommnad = \"\"; " + _NewLine;
-            code += "        if (wordFullText !=\"\") " + _NewLine;
-            code += "        { " + _NewLine;
-            code += "            whereCommnad = SearchUtility.SqlContain(wordFullText); " + _NewLine;
-            code += "        } " + _NewLine;
-            code += "        else " + _NewLine;
-            code += "        { " + _NewLine;
-            code += "             " + _NewLine;
-            code += "            whereCommnad = GenWhereformProperties();  " + _NewLine;
-            code += "        }  " + _NewLine;
+            //code += "string whereCommnad = \"\"; " + _NewLine;
+            //code += "        if (wordFullText !=\"\") " + _NewLine;
+            //code += "        { " + _NewLine;
+            //code += "            whereCommnad = SearchUtility.SqlContain(wordFullText); " + _NewLine;
+            //code += "        } " + _NewLine;
+            //code += "        else " + _NewLine;
+            //code += "        { " + _NewLine;
+            //code += "             " + _NewLine;
+            //code += "            whereCommnad = GenWhereformProperties();  " + _NewLine;
+            //code += "        }  " + _NewLine;
 
-            code += " sql += whereCommnad;" + _NewLine;
+            //code += " sql += whereCommnad;" + _NewLine;
 
             code += " " + _NewLine;
 
-            code += "var prset = new List<IDataParameter>(); " + _NewLine;
-            code += "prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex)); " + _NewLine;
-            code += "prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize)); " + _NewLine;
+            code += "var dbParameter = GetParameter(pageIndex,PageSize);" + _NewLine;
+            //code += "prset.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex)); " + _NewLine;
+            //code += "prset.Add(Db.CreateParameterDb(\"@PageSize\", PageSize)); " + _NewLine;
             code += "" + _NewLine;
 
             code += " " + _NewLine;
-            code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", sql)); " + _NewLine;
+            //code += "prset.Add(Db.CreateParameterDb(\"@CommandFilter\", sql)); " + _NewLine;
             code += " " + _NewLine;
-            code += "DataSet ds = Db.GetDataSet(store, prset, CommandType.StoredProcedure); " + _NewLine;
+            code += "DataSet ds = Db.GetDataSet(store, dbParameter, CommandType.StoredProcedure); " + _NewLine;
             code += "return DataSetToList(ds); " + _NewLine;
             code += "}" + _NewLine;
 
@@ -575,6 +629,42 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        private string GenGetParameters()
+        {
+            string code = "";
+
+            code += "      public List<IDataParameter> GetParameter(int pageIndex, int PageSize)" + _NewLine;
+            code += "        {" + _NewLine;
+            code += "            var sqlStorePamameters = new List<IDataParameter>();" + _NewLine;
+            code += "            sqlStorePamameters.Add(Db.CreateParameterDb(\"@PageIndex\", pageIndex));" + _NewLine;
+            code += "            sqlStorePamameters.Add(Db.CreateParameterDb(\"@PageSize\", PageSize));" + _NewLine;
+
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                string propertieName = string.Format(_formatpropertieName, _TableName, dataColumn.ColumnName);
+                code += $"if ({propertieName} != null)" + _NewLine;
+                code += "            {" + _NewLine;
+                code += $"sqlStorePamameters.Add(Db.CreateParameterDb(\"@{dataColumn.ColumnName}\", {propertieName}));" + _NewLine;
+                code += "" + _NewLine;
+                code += "            }" + _NewLine;
+            }
+            code += "/*Sort Order*/" + _NewLine;
+            code += "        bool sortAscending = _SortDirection == SortDirection.Ascending;" + _NewLine;
+            code += "        if (_SortExpression != null)" + _NewLine;
+            code += "        {" + _NewLine;
+            code += "            string SortOrder = (sortAscending ? \"ASC\" : \"DESC\");" + _NewLine;
+            code += "            sqlStorePamameters.Add(Db.CreateParameterDb(\"@SortColumn\", _SortExpression));" + _NewLine;
+            code += "            sqlStorePamameters.Add(Db.CreateParameterDb(\"@SortOrder\", SortOrder));" + _NewLine;
+            code += "        }" + _NewLine;
+
+            code += "" + _NewLine;
+            code += "" + _NewLine;
+            code += "            return sqlStorePamameters;" + _NewLine;
+            code += "        }" + _NewLine;
+
+            return code;
+        }
+
         public override void Gen()
 
         {
@@ -599,7 +689,7 @@ namespace StkGenCode.Code.Template
             code += GenGetKeyWordsOneColumn();
             code += GenSql();
             code += GenWhereformProperties();
-
+            code += GenGetParameters();
             code += GenEndNameSpaceAndClass();
 
             code += Comment();

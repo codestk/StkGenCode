@@ -27,12 +27,24 @@
             code += " " + _NewLine;
             // code += "                    <a class=\"waves-effect waves-light btn center\">Search</a> " + _NewLine;
             code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\"   runat=\"server\" Text=\"Search\" />" + _NewLine;
-
+            code += "<asp:Button ID=\"btnClear\" CssClass=\"waves-effect waves-light btn center\" OnClientClick=\"javascript:return ClearValue();\" runat=\"server\" Text=\"Clear\" />";
             code += "                </div> " + _NewLine;
             code += "            </div> " + _NewLine;
             code += "        " + _NewLine;
             code += "        </div> " + _NewLine;
             //code += "        </div> " + _NewLine;
+
+            return code;
+        }
+
+        private string GenClearValue()
+        {
+            string code = "";
+
+            code += "  function ClearValue() {" + _NewLine;
+            code += "            ClearInputValue(\".input-field input[type=text],.input-field  input[type=password],.input-field  input[type=checkbox],.input-field  select,.input-field  input[type=radio]\");" + _NewLine;
+            code += "            return false;" + _NewLine;
+            code += "        }" + _NewLine;
 
             return code;
         }
@@ -89,6 +101,8 @@
             code += " " + _NewLine;
 
             code += ForceNumberTextBoxJavaScript();
+
+            code += GenClearValue();
             code += "</script>";
             return code;
         }

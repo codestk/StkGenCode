@@ -5,14 +5,69 @@ namespace StkGenCode.Code.Template
 {
     public class StoreProCode : CodeBase
     {
-        //public FileCode _FileCode;
-        //public DataSet _ds;
-        //public string _TableName;
+        //อันเก่าก่อนแก้เป็น Store
+        //private string GenSp_GetPageWise()
+        //{
+        //    string code = "";
+        //    string stroeName = "Sp_Get" + _TableName + "PageWise";
+        //    code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + _NewLine;
+        //    code += "go" + _NewLine;
+        //    code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + _NewLine;
+        //    code += "    @PageIndex INT = 1  " + _NewLine;
+        //    code += ", @PageSize INT = 10 ,@CommandFilter varchar(max)" + _NewLine;
 
-        //private string _fileType = ".sql";
-        //private string _NewLine = " \r\n";
+        //    code += "AS  " + _NewLine;
+        //    code += "BEGIN  " + _NewLine;
+        //    code += " SET NOCOUNT ON;  " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "  " + _NewLine;
+        //    code += " create table #Results " + _NewLine;
+        //    code += "( " + _NewLine;
+        //    code += "[RowNumber] [int],";
+        //    foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+        //    {
+        //        code += "[" + dataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "," + _NewLine;
+        //    }
 
-        //private string _NotImplement = "throw new Exception(\"Not implement\");";
+        //    code += ") " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "Declare @Command NVARCHAR(MAX)  " + _NewLine;
+        //    code += " " + _NewLine;
+        //    //code += "--Set @Command = 'SELECT ROW_NUMBER() OVER (ORDER BY [ID1] ASC )AS RowNumber ,* INTO #Results  FROM ["+ _TableName + "] '+ @CommandFilter; " + _NewLine;
+        //    //code += "--Set @Command = 'SELECT ROW_NUMBER() OVER (ORDER BY [AutoID] ASC )AS RowNumber ,*  FROM ["+ _TableName + "] '+ @CommandFilter; " + _NewLine;
+        //    code += " Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [" + _ds.Tables[0].PrimaryKey[0].ColumnName + "] ASC )AS RowNumber ,*  FROM [" + _TableName + "]'+ @CommandFilter; " + _NewLine;
+
+        //    code += " Set @Command =  @CommandFilter; " + _NewLine;
+
+        //    code += " " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "EXEC sp_executesql @Command " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += " declare @RecordCount as int;  " + _NewLine;
+        //    code += " SELECT @RecordCount = COUNT(*)  " + _NewLine;
+        //    code += " FROM #Results  " + _NewLine;
+        //    code += "  " + _NewLine;
+        //    code += " SELECT *,@RecordCount AS RecordCount FROM #Results  " + _NewLine;
+        //    code += " WHERE RowNumber BETWEEN(@PageIndex -1) * @PageSize + 1 AND(((@PageIndex -1) * @PageSize + 1) + @PageSize) - 1  " + _NewLine;
+        //    code += "  " + _NewLine;
+        //    code += " DROP TABLE #Results  " + _NewLine;
+        //    code += "END  " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "  " + _NewLine;
+
+        //    //foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
+        //    //{
+        //    //    code += "," + _DataColumn.ColumnName + _NewLine;
+        //    //}
+
+        //    code += "" + _NewLine;
+        //    code += "" + _NewLine;
+        //    code += "" + _NewLine;
+        //    return code;
+        //}
 
         private string GenSp_GetPageWise()
         {
@@ -21,58 +76,137 @@ namespace StkGenCode.Code.Template
             code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + _NewLine;
             code += "go" + _NewLine;
             code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + _NewLine;
-            code += "    @PageIndex INT = 1  " + _NewLine;
-            code += ", @PageSize INT = 10 ,@CommandFilter varchar(max)" + _NewLine;
 
+            code += "/* Optional Filters for Dynamic Search*/" + _NewLine;
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                code += "@" + dataColumn.ColumnName + " " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + _NewLine;
+            }
+            code += "/*– Pagination Parameters */" + _NewLine;
+            code += "@PageIndex INT = 1 ," + _NewLine;
+            code += "@PageSize INT = 10 ," + _NewLine;
+            code += "/*– Sorting Parameters */" + _NewLine;
+            code += $"@SortColumn NVARCHAR(20) = '{_ds.Tables[0].PrimaryKey[0].ColumnName}'," + _NewLine;
+            code += "@SortOrder NVARCHAR(4) ='ASC'" + _NewLine;
             code += "AS  " + _NewLine;
             code += "BEGIN  " + _NewLine;
             code += " SET NOCOUNT ON;  " + _NewLine;
             code += " " + _NewLine;
             code += "  " + _NewLine;
-            code += " create table #Results " + _NewLine;
-            code += "( " + _NewLine;
-            code += "[RowNumber] [int],";
+            //code += " create table #Results " + _NewLine;
+            //code += "( " + _NewLine;
+            //code += "[RowNumber] [int],";
+            ////foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            ////{
+            ////    code += "[" + dataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "," + _NewLine;
+            ////}
+
+            //code += ") " + _NewLine;
+            code += " " + _NewLine;
+            code += " " + _NewLine;
+            //code += "Declare @Command NVARCHAR(MAX)  " + _NewLine;
+            code += "/*–Declaring Local Variables corresponding to parameters for modification */" + _NewLine;
+            code += "DECLARE ";
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                code += "[" + dataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "," + _NewLine;
+                code += "@l" + dataColumn.ColumnName + " " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + _NewLine;
             }
 
-            code += ") " + _NewLine;
-            code += " " + _NewLine;
-            code += " " + _NewLine;
-            code += "Declare @Command NVARCHAR(MAX)  " + _NewLine;
-            code += " " + _NewLine;
-            //code += "--Set @Command = 'SELECT ROW_NUMBER() OVER (ORDER BY [ID1] ASC )AS RowNumber ,* INTO #Results  FROM ["+ _TableName + "] '+ @CommandFilter; " + _NewLine;
-            //code += "--Set @Command = 'SELECT ROW_NUMBER() OVER (ORDER BY [AutoID] ASC )AS RowNumber ,*  FROM ["+ _TableName + "] '+ @CommandFilter; " + _NewLine;
-            code += " Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [" + _ds.Tables[0].PrimaryKey[0].ColumnName + "] ASC )AS RowNumber ,*  FROM [" + _TableName + "]'+ @CommandFilter; " + _NewLine;
+            //Stattic Vriable
+            code += "@lPageNbr INT," + _NewLine;
+            code += "@lPageSize INT," + _NewLine;
+            code += "@lSortCol NVARCHAR(20)," + _NewLine;
+            code += "@lFirstRec INT," + _NewLine;
+            code += "@lLastRec INT," + _NewLine;
+            code += "@lTotalRows INT" + _NewLine;
 
-            code += " Set @Command =  @CommandFilter; " + _NewLine;
+            code += "/*Setting Local Variables*/" + _NewLine;
+            /*Setting Local Variables*/
 
-            code += " " + _NewLine;
-            code += " " + _NewLine;
-            code += " " + _NewLine;
-            code += " " + _NewLine;
-            code += "EXEC sp_executesql @Command " + _NewLine;
-            code += " " + _NewLine;
-            code += " declare @RecordCount as int;  " + _NewLine;
-            code += " SELECT @RecordCount = COUNT(*)  " + _NewLine;
-            code += " FROM #Results  " + _NewLine;
-            code += "  " + _NewLine;
-            code += " SELECT *,@RecordCount AS RecordCount FROM #Results  " + _NewLine;
-            code += " WHERE RowNumber BETWEEN(@PageIndex -1) * @PageSize + 1 AND(((@PageIndex -1) * @PageSize + 1) + @PageSize) - 1  " + _NewLine;
-            code += "  " + _NewLine;
-            code += " DROP TABLE #Results  " + _NewLine;
-            code += "END  " + _NewLine;
-            code += " " + _NewLine;
-            code += "  " + _NewLine;
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                if (dataColumn.DataType.ToString() == "System.Int32")
+                {
+                    code += "SET @l" + dataColumn.ColumnName + " =@" + dataColumn.ColumnName + _NewLine;
+                }
+                else
+                {
+                    code += $"SET @l{dataColumn.ColumnName} = LTRIM(RTRIM(@{dataColumn.ColumnName}))" + _NewLine;
+                }
+            }
 
-            //foreach (DataColumn _DataColumn in _ds.Tables[0].Columns)
-            //{
-            //    code += "," + _DataColumn.ColumnName + _NewLine;
-            //}
+            //Set stattic vaiable
+            code += "SET @lPageNbr = @PageIndex" + _NewLine;
+            code += "    SET @lPageSize = @PageSize" + _NewLine;
+            code += "    SET @lSortCol = LTRIM(RTRIM(@SortColumn))" + _NewLine;
+            code += " " + _NewLine;
+            code += "    SET @lFirstRec = ( @lPageNbr - 1 ) * @lPageSize" + _NewLine;
+            code += "    SET @lLastRec = ( @lPageNbr * @lPageSize + 1 )" + _NewLine;
+            code += "    SET @lTotalRows = @lFirstRec - @lLastRec + 1" + _NewLine;
 
-            code += "" + _NewLine;
-            code += "" + _NewLine;
+            //================================================================================
+
+            code += $"; WITH {_TableName}Result" + _NewLine;
+            code += "AS(" + _NewLine;
+            code += "SELECT ROW_NUMBER() OVER(ORDER BY " + _NewLine;
+
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                //code += $"CASE WHEN (@lSortCol = '{dataColumn.ColumnName}' AND @SortOrder ='ASC')" + _NewLine;
+                //code += $"        THEN ContactID" + _NewLine;
+                //code += "END ASC," + _NewLine;
+                code += _NewLine + $"CASE WHEN (@lSortCol = '{dataColumn.ColumnName}' AND @SortOrder='ASC')" + _NewLine;
+                code += $"                   THEN {dataColumn.ColumnName}" + _NewLine;
+                code += "       END ASC," + _NewLine;
+                code += $"       CASE WHEN (@lSortCol = '{dataColumn.ColumnName}' AND @SortOrder='DESC')" + _NewLine;
+                code += $"                  THEN {dataColumn.ColumnName}" + _NewLine;
+                code += "       END DESC,";
+            }
+            code = code.TrimEnd(',');
+            code += "  ) AS ROWNUM," + _NewLine;
+            code += "Count(*) over() AS RecordCount," + _NewLine;
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                code += _NewLine + $" {dataColumn.ColumnName},";
+            }
+            code = code.TrimEnd(',') + _NewLine;
+            code += $" FROM {_TableName}" + _NewLine;
+
+            #region Where
+
+            code += $"WHERE" + _NewLine;
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                if ((dataColumn.DataType.ToString() == "System.Int32") || (dataColumn.DataType.ToString() == "System.DateTime") || (dataColumn.DataType.ToString() == "System.Decimal"))
+                {
+                    code += $"(@l{dataColumn.ColumnName} IS NULL OR {dataColumn.ColumnName} = @l{dataColumn.ColumnName}) AND" + _NewLine;
+                }
+                else
+                {
+                    code += $"(@l{dataColumn.ColumnName} IS NULL OR {dataColumn.ColumnName} LIKE '%' +@l{dataColumn.ColumnName} + '%') AND " + _NewLine;
+                }
+            }
+            code = code.Remove(code.Length - ("AND".Length + _NewLine.Length + 1)) + _NewLine;
+            code += ")" + _NewLine;
+
+            #endregion Where
+
+            code += "SELECT   RecordCount," + _NewLine;
+            code += " ROWNUM," + _NewLine;
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                code += _NewLine + $"{dataColumn.ColumnName},";
+            }
+            code = code.TrimEnd(',');
+
+            code += $" FROM {_TableName}Result" + _NewLine;
+            code += " WHERE" + _NewLine;
+            code += "         ROWNUM > @lFirstRec" + _NewLine;
+            code += "               AND ROWNUM < @lLastRec" + _NewLine;
+            code += " ORDER BY ROWNUM ASC" + _NewLine;
+
+            code += "END" + _NewLine;
+            code += "GO" + _NewLine;
             code += "" + _NewLine;
             return code;
         }
