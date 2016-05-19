@@ -1,4 +1,7 @@
-﻿namespace StkGenCode.Code.Template
+﻿using StkGenCode.Code.Column;
+using System.Data;
+
+namespace StkGenCode.Code.Template
 {
     public class JsCode : CodeBase
     {
@@ -10,6 +13,28 @@
             code += "(function () { " + _NewLine;
             code += "    var url = \"" + _FileName.PageServiceName() + "/\"; " + _NewLine;
 
+            code += GenSaveColumn();
+
+            code += GetKeyWordsAllColumn();
+
+            code += GenGetKeyWordsOneColumn();
+
+            code += GenSearch();
+
+            code += GenSave();
+
+            code += GenUpdate();
+
+            code += GenDelete();
+
+            code += "}).apply(" + _TableName + "Service); " + _NewLine;
+
+            return code;
+        }
+
+        private string GenSaveColumn()
+        {
+            string code = "";
             code += " " + _NewLine;
             code += "    this.SaveColumn =  function (id, column, value) { " + _NewLine;
             code += "            var result; " + _NewLine;
@@ -21,8 +46,12 @@
             code += "            return result; " + _NewLine;
             code += "        };//SaveColumn " + _NewLine;
             code += "   " + _NewLine;
+            return code;
+        }
 
-            //--------------------------------------------------------------------------------------
+        private string GetKeyWordsAllColumn()
+        {
+            string code = "";
             code += "   " + _NewLine;
             code += " this.GetKeyWordsAllColumn = function (keyword) { " + _NewLine;
             code += "        var result; " + _NewLine;
@@ -34,7 +63,12 @@
             code += "        return result; " + _NewLine;
             code += "    };//GetKeyWordsAllColumn  " + _NewLine;
             code += "   " + _NewLine;
+            return code;
+        }
 
+        private string GenGetKeyWordsOneColumn()
+        {
+            string code = "";
             code += "   " + _NewLine;
             code += " this.GetKeyWordsOneColumn = function (column,keyword) { " + _NewLine;
             code += "        var result; " + _NewLine;
@@ -48,10 +82,119 @@
             code += "    };//GetKeyWordsOneColumn  " + _NewLine;
             code += "   " + _NewLine;
 
-            code += "}).apply(" + _TableName + "Service); " + _NewLine;
-
             return code;
         }
+
+        #region Search
+
+        private string GenSearch()
+        {
+            //string pararmeter = "";
+            //foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            //{
+            //    //Parameter เป็น String หมด
+            //    pararmeter += $"string {dataColumn.ColumnName},";
+            //}
+            //pararmeter = "string PageIndex,string PageSize,string SortExpression,string SortDirection," + pararmeter.Trim(',');
+            //string code = "";
+            string ColumnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
+            ColumnsParameterFunction = "PageIndex,PageSize,SortExpression,SortDirection," + ColumnsParameterFunction.TrimEnd(',');
+
+            string ColumnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
+            ColumnsParameterJson = "PageIndex:\"'+PageIndex+'\",PageSize:\"'+PageSize+'\",SortExpression:\"'+SortExpression+'\",SortDirection:\"'+SortDirection+'\"," + ColumnsParameterJson.TrimEnd(',');
+            string code = "";
+            code += "" + _NewLine;
+            code += "" + _NewLine;
+            code += $"this.Search = function({ColumnsParameterFunction})" + _NewLine;
+            code += "{" + _NewLine;
+            code += "" + _NewLine;
+            code += "            var result;" + _NewLine;
+            code += "" + _NewLine;
+            code += "            var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
+            code += "            var F = CallServices(url + \"Search\", tag, false, function(msg) {" + _NewLine;
+            code += "                result = msg.d;" + _NewLine;
+            code += "            });" + _NewLine;
+            code += "            return result;" + _NewLine;
+            code += "        };//Save" + _NewLine;
+            code += "" + _NewLine;
+            code += "" + _NewLine;
+            return code;
+        }
+
+        #endregion Search
+
+        #region EditData
+
+        private string GenSave()
+        {
+            string code = "";
+            string ColumnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
+            ColumnsParameterFunction = ColumnsParameterFunction.TrimEnd(',');
+
+            string ColumnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
+            ColumnsParameterJson = ColumnsParameterJson.TrimEnd(',');
+
+            code += $"this.Save = function({ColumnsParameterFunction})" + _NewLine;
+            code += "{" + _NewLine;
+            code += "" + _NewLine;
+            code += "            var result;" + _NewLine;
+            code += "" + _NewLine;
+            code += "            var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
+            code += "            var F = CallServices(url + \"Save\", tag, false, function(msg) {" + _NewLine;
+            code += "                result = msg.d;" + _NewLine;
+            code += "            });" + _NewLine;
+            code += "            return result;" + _NewLine;
+            code += "        };//Save" + _NewLine;
+            return code;
+        }
+
+        private string GenUpdate()
+        {
+            string code = "";
+            string ColumnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
+            ColumnsParameterFunction = ColumnsParameterFunction.TrimEnd(',');
+
+            string ColumnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
+            ColumnsParameterJson = ColumnsParameterJson.TrimEnd(',');
+
+            code += $"this.Update = function({ColumnsParameterFunction})" + _NewLine;
+            code += "{" + _NewLine;
+            code += "" + _NewLine;
+            code += "            var result;" + _NewLine;
+            code += "" + _NewLine;
+            code += "            var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
+            code += "            var F = CallServices(url + \"Update\", tag, false, function(msg) {" + _NewLine;
+            code += "                result = msg.d;" + _NewLine;
+            code += "            });" + _NewLine;
+            code += "            return result;" + _NewLine;
+            code += "        };//Update" + _NewLine;
+            return code;
+        }
+
+        private string GenDelete()
+        {
+            string code = "";
+            string ColumnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
+            ColumnsParameterFunction = ColumnsParameterFunction.TrimEnd(',');
+
+            string ColumnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
+            ColumnsParameterJson = ColumnsParameterJson.TrimEnd(',');
+
+            code += $"this.Delete = function({ColumnsParameterFunction})" + _NewLine;
+            code += "{" + _NewLine;
+            code += "" + _NewLine;
+            code += "            var result;" + _NewLine;
+            code += "" + _NewLine;
+            code += "            var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
+            code += "            var F = CallServices(url + \"Delete\", tag, false, function(msg) {" + _NewLine;
+            code += "                result = msg.d;" + _NewLine;
+            code += "            });" + _NewLine;
+            code += "            return result;" + _NewLine;
+            code += "        };//Delete" + _NewLine;
+            return code;
+        }
+
+        #endregion EditData
 
         public override void Gen()
         {

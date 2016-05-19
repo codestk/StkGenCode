@@ -269,6 +269,102 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        private string GenSp_GetAutocompleteByColumn()
+        {
+            string code = "";
+
+            string stroeName = "Sp_Get" + _TableName + "_Autocomplete";
+            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + _NewLine;
+            code += "go" + _NewLine;
+            code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + _NewLine;
+            //code += "create PROCEDURE [dbo].[Sp_Getfxrates_family_Autocomplete]  " + _NewLine;
+            //code += "     @Key_word    nvarchar(50) " + _NewLine;
+
+            code += "@Column  nvarchar(50),";
+            code += "@keyword nvarchar(50)";
+
+            code += "  " + _NewLine;
+            code += "  " + _NewLine;
+            code += "AS    " + _NewLine;
+            code += "BEGIN    " + _NewLine;
+            code += "SET NOCOUNT ON;    " + _NewLine;
+            code += "   " + _NewLine;
+            code += " select top 20 KetText,count(*) as NumberOfkey from  " + _NewLine;
+            code += "( " + _NewLine;
+
+            string sqlWhenCase = "CASE";
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                // Do Something
+                sqlWhenCase += $"  WHEN (@Column = '{dataColumn.ColumnName}') THEN CONVERT(varchar, {dataColumn.ColumnName} )";
+
+                //  code += "[" + _DataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDB(_DataColumn.DataType.ToString()) + "," + _NewLine;
+
+                //Remove union all
+            }
+            sqlWhenCase += "END";
+            code += "SELECT  " + _NewLine;
+            code += "      " + sqlWhenCase + " As KetText " + _NewLine;
+            code += "        " + _NewLine;
+            code += "  FROM [" + _TableName + "] where " + sqlWhenCase + " like ''+@keyword+'%' " + _NewLine;
+            //code += "SELECT  " + _NewLine;
+            //code += "      [Family] As KetText " + _NewLine;
+            //code += "        " + _NewLine;
+            //code += "  FROM [WEBAPP].[dbo].[fxrates_family] where [Family] like ''+@Key_word+'%' " + _NewLine;
+            //code += "union all" + _NewLine;
+
+            code += "  )KeyTable  " + _NewLine;
+            code += "  group by KetText " + _NewLine;
+            code += "  order by count(*) desc  " + _NewLine;
+            code += " " + _NewLine;
+            code += "END    " + _NewLine;
+            code += "   " + _NewLine;
+
+            code += "" + _NewLine;
+            code += "" + _NewLine;
+            code += "" + _NewLine;
+            return code;
+        }
+
+        private string GenSp_GetTradeFromCategory_UpdateColumn()
+        {
+            string code = "";
+            code += $"DROP PROCEDURE [dbo].[Sp_Get{_TableName}_UpdateColumn];" + _NewLine;
+            code += GenGoSplitBatch();
+            code += "  " + _NewLine;
+            code += "       " + _NewLine;
+            code += $"      create PROCEDURE [dbo].[Sp_Get{_TableName}_UpdateColumn] " + _NewLine;
+            code += $"        @{_ds.Tables[0].PrimaryKey[0]} {DbTypeConversion.CTypeNetToTypeDb(_ds.Tables[0].PrimaryKey[0].DataType.ToString()) },@Column  nvarchar(max),@Data nvarchar(max)   " + _NewLine;
+
+            code += "   AS     " + _NewLine;
+            code += "       BEGIN     " + _NewLine;
+            code += "       --SET NOCOUNT ON;     " + _NewLine;
+            code += "         " + _NewLine;
+
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                if (dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ColumnName)
+                {
+                    continue;
+                }
+                //code += "@" + dataColumn.ColumnName + " " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + _NewLine;
+
+                code += $"         if  @Column = '{dataColumn.ColumnName}'" + _NewLine;
+                code += "           BEGIN " + _NewLine;
+                code += $"           UPDATE   {_TableName} SET {dataColumn.ColumnName}=@Data where {_ds.Tables[0].PrimaryKey[0]} = @{_ds.Tables[0].PrimaryKey[0]};  " + _NewLine;
+                code += "         END " + _NewLine;
+            }
+
+            //code += "         if  @Column = 'Colin'" + _NewLine;
+            //code += "           BEGIN " + _NewLine;
+            //code += "           UPDATE   TradeFromCategory SET CategoryName=@keyword where CategoryID = @CategoryID;  " + _NewLine;
+            //code += "         END " + _NewLine;
+
+            code += "       END     " + _NewLine;
+            code += GenGoSplitBatch();
+            return code;
+        }
+
         private string GenGoSplitBatch()
         {
             string code = "";
@@ -284,6 +380,8 @@ namespace StkGenCode.Code.Template
             code += GenSp_GetPageWise();
             code += GenGoSplitBatch();
             code += GenSp_GetAutocomplete();
+            code += GenSp_GetAutocompleteByColumn();
+            code += GenSp_GetTradeFromCategory_UpdateColumn();
 
             InnitProperties();
             _FileCode.WriteFile(_FileName.StoreProCodeName(), code);

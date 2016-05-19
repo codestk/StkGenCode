@@ -226,13 +226,13 @@ namespace StkGenCode.Code.Template
             code += BeginClass();
             code += GenConstance();
 
-            code += GenPageLoad();
+            //code += GenPageLoad();
             if (AspxFromCodeBehide.HaveDropDown())
             {
                 code += GenInnitDropDown();
             }
-            code += GenSearchEvent();
-            code += GenBind();
+            //code += GenSearchEvent();
+            //code += GenBind();
             // _code += GenGetPageWise();
             //_code += GenPageChange();
             //_code += GenGetPageWise();
@@ -240,8 +240,8 @@ namespace StkGenCode.Code.Template
 
             // _code += GenPaggerClass();
 
-            code += GenHideResult();
-            code += GenShowResult();
+            //code += GenHideResult();
+            //code += GenShowResult();
             // _code += GedTagCheck();
             //_code += GenSaveColumn();
 

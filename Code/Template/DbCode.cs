@@ -184,31 +184,6 @@ namespace StkGenCode.Code.Template
 
             //code += "            string sql = \"\"; " + _NewLine;
             code += " " + _NewLine;
-            //code += "            //Set @Command = 'insert into  #Results   SELECT ROW_NUMBER() OVER (ORDER BY [EM_ID] desc )AS RowNumber ,*  FROM [" + _TableName + "]' + @CommandFilter; " + _NewLine;
-            //code += "            string ColumnSort = \"\"; " + _NewLine;
-            //code += "            if (_SortExpression == null) " + _NewLine;
-            //code += "            { " + _NewLine;
-            //code += "                ColumnSort = DataKey; " + _NewLine;
-            //code += "            } " + _NewLine;
-            //code += "            else " + _NewLine;
-            //code += "            { " + _NewLine;
-            //code += "                ColumnSort = _SortExpression; " + _NewLine;
-            //code += "            } " + _NewLine;
-            //code += "            string sortCommnad = GenSort(_SortDirection, ColumnSort); " + _NewLine;
-            //code += "            sql = string.Format(\"insert into  #Results   SELECT ROW_NUMBER() OVER (  {0} )AS RowNumber ,*  FROM [" + _TableName + "] \", sortCommnad); " + _NewLine;
-            //code += " sql += Wordfilter; " + _NewLine;
-            //code += "string whereCommnad = \"\"; " + _NewLine;
-            //code += "        if (wordFullText !=\"\") " + _NewLine;
-            //code += "        { " + _NewLine;
-            //code += "            whereCommnad = SearchUtility.SqlContain(wordFullText); " + _NewLine;
-            //code += "        } " + _NewLine;
-            //code += "        else " + _NewLine;
-            //code += "        { " + _NewLine;
-            //code += "             " + _NewLine;
-            //code += "            whereCommnad = GenWhereformProperties();  " + _NewLine;
-            //code += "        }  " + _NewLine;
-
-            //code += " sql += whereCommnad;" + _NewLine;
 
             code += " " + _NewLine;
 
@@ -495,10 +470,11 @@ namespace StkGenCode.Code.Template
             code += "        { " + _NewLine;
             code += "            var prset = new List<IDataParameter>(); " + _NewLine;
             code += "            prset.Add(Db.CreateParameterDb(\"@" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\", id)); " + _NewLine;
+            code += "prset.Add(Db.CreateParameterDb(\"@Column\", column));" + _NewLine;
             code += "            prset.Add(Db.CreateParameterDb(\"@Data\", value)); " + _NewLine;
-            code += "             var sql = @\"UPDATE   " + _TableName + " SET  [\"+column+ \"]=@Data where " + _ds.Tables[0].PrimaryKey[0].ColumnName + " = @" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\"; " + _NewLine;
-            code += " " + _NewLine;
-            code += "            int output = Db.FbExecuteNonQuery(sql, prset); " + _NewLine;
+            // code += "             var sql = @\"UPDATE   " + _TableName + " SET  [\"+column+ \"]=@Data where " + _ds.Tables[0].PrimaryKey[0].ColumnName + " = @" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\"; " + _NewLine;
+            code += $"   var sql = @\"Sp_Get{_TableName}_UpdateColumn\";" + _NewLine;
+            code += "            int output = Db.FbExecuteNonQuery(sql, prset, CommandType.StoredProcedure); " + _NewLine;
             code += "            if (output == 1) " + _NewLine;
             code += "            { " + _NewLine;
             code += "                return true; " + _NewLine;
@@ -624,7 +600,7 @@ namespace StkGenCode.Code.Template
 
         {
             string code = "";
-            code += " public SortDirection _SortDirection { get; set; }" + _NewLine;
+            code += " public string _SortDirection { get; set; }" + _NewLine;
             code += " public string _SortExpression { get; set; }" + _NewLine;
             return code;
         }
@@ -649,13 +625,21 @@ namespace StkGenCode.Code.Template
                 code += "            }" + _NewLine;
             }
             code += "/*Sort Order*/" + _NewLine;
-            code += "        bool sortAscending = _SortDirection == SortDirection.Ascending;" + _NewLine;
-            code += "        if (_SortExpression != null)" + _NewLine;
+
+            code += "  if (_SortExpression != null)" + _NewLine;
             code += "        {" + _NewLine;
-            code += "            string SortOrder = (sortAscending ? \"ASC\" : \"DESC\");" + _NewLine;
+            code += "           " + _NewLine;
             code += "            sqlStorePamameters.Add(Db.CreateParameterDb(\"@SortColumn\", _SortExpression));" + _NewLine;
-            code += "            sqlStorePamameters.Add(Db.CreateParameterDb(\"@SortOrder\", SortOrder));" + _NewLine;
+            code += "            sqlStorePamameters.Add(Db.CreateParameterDb(\"@SortOrder\", _SortDirection));" + _NewLine;
             code += "        }" + _NewLine;
+
+            //code += "        bool sortAscending = _SortDirection == SortDirection.Ascending;" + _NewLine;
+            //code += "        if (_SortExpression != null)" + _NewLine;
+            //code += "        {" + _NewLine;
+            //code += "            string SortOrder = (sortAscending ? \"ASC\" : \"DESC\");" + _NewLine;
+            //code += "            sqlStorePamameters.Add(Db.CreateParameterDb(\"@SortColumn\", _SortExpression));" + _NewLine;
+            //code += "            sqlStorePamameters.Add(Db.CreateParameterDb(\"@SortOrder\", SortOrder));" + _NewLine;
+            //code += "        }" + _NewLine;
 
             code += "" + _NewLine;
             code += "" + _NewLine;
@@ -687,7 +671,7 @@ namespace StkGenCode.Code.Template
 
             code += GenAutoCompleteMethod();
             code += GenGetKeyWordsOneColumn();
-            code += GenSql();
+            //code += GenSql();
             code += GenWhereformProperties();
             code += GenGetParameters();
             code += GenEndNameSpaceAndClass();

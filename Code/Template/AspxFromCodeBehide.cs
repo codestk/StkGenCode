@@ -17,7 +17,7 @@ namespace StkGenCode.Code.Template
                 code += "BindDropDown();" + _NewLine;
             }
 
-            code += "BindForm(); " + _NewLine;
+            //code += "BindForm(); " + _NewLine;
 
             code += "} " + _NewLine;
             code += "}  " + _NewLine;
@@ -364,12 +364,11 @@ namespace StkGenCode.Code.Template
             code += GenPageLoad();
 
             code += GenInnitDropDown();
-            code += GenBindForm();
+            //code += GenBindForm();
 
-            code += GenBtnSave();
-            code += GenBtnUpdate();
-
-            code += GenBtnDelete();
+            //code += GenBtnSave();
+            //code += GenBtnUpdate();
+            //code += GenBtnDelete();
 
             code += EndClass();
             //_FileCode.writeFile(FileName, _code, _fileType);

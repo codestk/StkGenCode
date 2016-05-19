@@ -42,7 +42,15 @@ namespace StkGenCode.Code.Template
             _FileName._ds = _ds;
         }
 
-        #region DropDown
+        protected string GetColumnParameter(string format = "{0},")
+        {
+            string parameter = "";
+            parameter = ColumnString.GenLineString(_ds, format);
+            parameter = parameter.Trim(',');
+            return parameter;
+        }
+
+        #region Map
 
         protected string MapControlToProPerties(DataSet _ds, bool CommentKey = false)
         {
@@ -104,6 +112,97 @@ namespace StkGenCode.Code.Template
 
             return code;
         }
+
+        protected string MapControlHtmlToValiable(DataSet _ds)
+        {
+            string columnParameter = ColumnString.GenLineString(_ds, "{0},");
+            columnParameter = columnParameter.TrimEnd(',');
+            string code = "";
+
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                string columnName = dataColumn.ColumnName;
+                string propertieName = string.Format(_formatpropertieName, _TableName, dataColumn.ColumnName);
+                string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
+                string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
+                string controlDropDownName = string.Format(_formatDropDownName, dataColumn.ColumnName);
+
+                if (IsDropDown(dataColumn))
+                {
+                    code += $"var  {columnName} =$('#<%={controlDropDownName}.ClientID %>').val();" + _NewLine;
+                }
+                else
+                if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
+                {//chek bok
+                    code += $"var  {columnName} =$('#<%={controlChekBoxName}.ClientID %>').val();" + _NewLine;
+                }
+                else
+                {//input
+                    code += $"var  {columnName} =$('#<%={controlTextBoxName}.ClientID %>').val();" + _NewLine;
+                }
+            }
+            return code;
+        }
+
+        protected string MapJsonToProPerties(DataSet _ds, bool CommentKey = false)
+        {
+            string code = "";
+
+            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            {
+                string propertieName = string.Format(_formatpropertieName, _TableName, dataColumn.ColumnName);
+                //string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
+                //string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
+                string columName = dataColumn.ColumnName;
+
+                if (CommentKey)
+                {
+                    bool primary = (dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && _ds.Tables[0].PrimaryKey[0].AutoIncrement;
+
+                    if (primary)
+                    {
+                        // continue;
+                        code += "// ";
+                    }
+                }
+                string formatChekEmtyp = "if (" + columName + "!= \"\") {0}" + _NewLine;
+
+                string ConvertPattern = "";
+                if (dataColumn.DataType.ToString() == "System.Guid")
+                { continue; }
+
+                if (dataColumn.DataType.ToString() == "System.Int32")
+                {
+                    ConvertPattern = propertieName + " = Convert.ToInt32(" + columName + ");";
+                    code += string.Format(formatChekEmtyp, ConvertPattern) + _NewLine;
+                }
+                else if (dataColumn.DataType.ToString() == "System.Decimal")
+                {
+                    ConvertPattern = propertieName + " =  Convert.ToDecimal (" + columName + ");";
+                    code += string.Format(formatChekEmtyp, ConvertPattern) + _NewLine;
+                }
+                else if (dataColumn.DataType.ToString() == "System.DateTime")
+                {
+                    ConvertPattern = propertieName + " =StkGlobalDate.TextEnToDate(" + columName + ");";
+                    code += string.Format(formatChekEmtyp, propertieName) + _NewLine;
+                }
+                else if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
+                {
+                    ConvertPattern = propertieName + " =Convert.ToInt16(" + columName + ");";
+                    code += string.Format(formatChekEmtyp, ConvertPattern) + _NewLine;
+                }
+                else
+                {
+                    code += propertieName + " =  " + columName + ";" + _NewLine;
+                }
+            }
+
+            return code;
+        }
+
+        #endregion Map
+
+        #region DropDown
 
         public Boolean HaveDropDown()
         {

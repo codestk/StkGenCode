@@ -144,29 +144,10 @@ namespace StkGenCode.Code.Template
 
         protected string GenPagger()
         {
-            //string code = "  ";
-            //code += "  <ul class=\"pagination\"> " + _NewLine;
-            //code += "   <asp:Repeater ID = \"rpt" + _TableName + "Pager\" runat=\"server\"> " + _NewLine;
-            //code += "   <ItemTemplate> " + _NewLine;
-            //code += "    <li class=\"<%# PaggerClass(Eval(\"Enabled\"), Eval(\"Text\")) %>\"> " + _NewLine;
-            //code += "   <asp:LinkButton ID = \"lnkPage\" runat=\"server\" Text='<%#Eval(\"Text\") %>' CommandArgument='<%# Eval(\"Value\") %>' " + _NewLine;
-            //code += "     OnClick=\"Page_Changed\" OnClientClick='<%# !Convert.ToBoolean(Eval(\"Enabled\")) ? \"javascript:return false;\" : \"\" %>'></asp:LinkButton></li>" + _NewLine;
-            //code += "      </ItemTemplate>" + _NewLine;
-            //code += "   </asp:Repeater> " + _NewLine;
-            //code += " </ul> " + _NewLine;
-            //code += "  " + _NewLine;
-            //code += "  " + _NewLine;
-
             string code = "";
-            code += "  <ul id=\"ulpage\" class=\"pagination\"> " + _NewLine;
-            code += "            <asp:Repeater ID=\"rpt" + _TableName + "Pagger\" runat=\"server\"> " + _NewLine;
-            code += "                <ItemTemplate> " + _NewLine;
-            code += "                    <li class=\"<%# PaggerClass(Eval(\"Enabled\"), Eval(\"Text\")) %>\"> " + _NewLine;
-            code += "                        <asp:LinkButton ID=\"lnkPage\" runat=\"server\" Text='<%#Eval(\"Text\") %>' CommandArgument='<%# Eval(\"Value\") %>' " + _NewLine;
-            code += "                            OnClick=\"Page_Changed\" OnClientClick='<%# !Convert.ToBoolean(Eval(\"Enabled\")) ? \"javascript:return false;\" : \"\" %>'></asp:LinkButton></li> " + _NewLine;
-            code += "                </ItemTemplate> " + _NewLine;
-            code += "            </asp:Repeater> " + _NewLine;
-            code += "        </ul>";
+            code += "<ul id=\"ulpage\" class=\"pagination\"> " + _NewLine;
+
+            code += "</ul>";
 
             return code;
         }
@@ -301,6 +282,8 @@ namespace StkGenCode.Code.Template
             //ClassSet = ClassSet.TrimEnd(',');
 
             var classTextBox = GenClassTextBoxList();
+
+            code = "function BindEditTable() {" + _NewLine;
             code += "            $('" + classTextBox + "').dblclick(function () { " + _NewLine;
 
             code += " " + _NewLine;
@@ -398,6 +381,7 @@ namespace StkGenCode.Code.Template
             code += "                } " + _NewLine;
             code += " " + _NewLine;
             code += "            }); " + _NewLine;
+            code += " }" + _NewLine;
             code += "            //Edit table===================================================================================================================== " + _NewLine;
             code += " " + _NewLine;
 
