@@ -68,40 +68,90 @@ namespace StkGenCode.Code.Template
         private string SetTableJs()
         {
             string code = "";
-            code += "   function SetTable() {" + _NewLine;
+            //code += "   function SetTable() {" + _NewLine;
+            //code += MapControlHtmlToValiable(_ds);// var CategoryName = $('#<%=txtCategoryName.ClientID %>').val();" + _NewLine;
+            //code += "" + _NewLine;
+            //code += "            $('#modal1').openModal();" + _NewLine;
+            //code += $"            var result = {_TableName}Service.Search(PageIndex, PageSize, SortExpression, SortDirection, {GetColumnParameter()});" + _NewLine;
+            //code += "            var totalRecord = 0;" + _NewLine;
+            //code += "" + _NewLine;
+            //code += "            if (result.length > 0) {" + _NewLine;
+            //code += "$('#tbResult').show();" + _NewLine;
+            //code += "$('#ulpage').show();" + _NewLine;
+            //code += "$('#DivNoresults').hide();" + _NewLine;
+            //code += "$(\"#tbResult > tbody:last\").children().remove();" + _NewLine;
+            //code += "for (var key in result) {" + _NewLine;
+            //code += "if (result.hasOwnProperty(key)) {" + _NewLine;
+            //code += "totalRecord = result[key].RecordCount;" + _NewLine;
+
+            //code += GenTrTemplate();//********
+            //code += " $('#tbResult> tbody').append(TrTempplate);" + _NewLine;
+            //code += "                    }" + _NewLine;
+            //code += "                }" + _NewLine;
+            //code += "" + _NewLine;
+            //code += "            }" + _NewLine;
+            //code += "            else {" + _NewLine;
+            //code += "" + _NewLine;
+            //code += "                $('#tbResult').hide();" + _NewLine;
+            //code += "                $('#ulpage').hide();" + _NewLine;
+            //code += "                $('#DivNoresults').show();" + _NewLine;
+            //code += "" + _NewLine;
+            //code += "            }" + _NewLine;
+            //code += "" + _NewLine;
+            //code += "            $('#modal1').closeModal();" + _NewLine;
+            //code += "            BindEditTable();" + _NewLine;
+            //code += "            return totalRecord;" + _NewLine;
+            //code += "        }" + _NewLine;
+
+            code += "  function SetTable() {" + _NewLine;
             code += MapControlHtmlToValiable(_ds);// var CategoryName = $('#<%=txtCategoryName.ClientID %>').val();" + _NewLine;
             code += "" + _NewLine;
             code += "            $('#modal1').openModal();" + _NewLine;
-            code += $"            var result = {_TableName}Service.Search(PageIndex, PageSize, SortExpression, SortDirection, {GetColumnParameter()});" + _NewLine;
-            code += "            var totalRecord = 0;" + _NewLine;
+            code += $"            var result = {_TableName}Service.Search(PageIndex, PageSize, SortExpression, SortDirection, {GetColumnParameter()},RederTable_Pagger);" + _NewLine;
             code += "" + _NewLine;
-            code += "            if (result.length > 0) {" + _NewLine;
-            code += "$('#tbResult').show();" + _NewLine;
-            code += "$('#ulpage').show();" + _NewLine;
-            code += "$('#DivNoresults').hide();" + _NewLine;
-            code += "$(\"#tbResult > tbody:last\").children().remove();" + _NewLine;
-            code += "for (var key in result) {" + _NewLine;
-            code += "if (result.hasOwnProperty(key)) {" + _NewLine;
-            code += "totalRecord = result[key].RecordCount;" + _NewLine;
+            code += "        }" + _NewLine;
 
-            code += GenTrTemplate();//********
-            code += " $('#tbResult> tbody').append(TrTempplate);" + _NewLine;
-            code += "                    }" + _NewLine;
-            code += "                }" + _NewLine;
+            return code;
+        }
+
+        private string RederTable_Pagger()
+        {
+            string code = "";
+            code += "  function RederTable_Pagger(result) {" + _NewLine;
+            code += "                var totalRecord = 0;" + _NewLine;
             code += "" + _NewLine;
-            code += "            }" + _NewLine;
-            code += "            else {" + _NewLine;
+            code += "                if (result.length > 0)" + _NewLine;
+            code += "                {" + _NewLine;
+            code += "                $('#tbResult').show();" + _NewLine;
+            code += "                $('#ulpage').show();" + _NewLine;
+            code += "                $('#DivNoresults').hide();" + _NewLine;
+            code += "                $(\"#tbResult > tbody:last\").children().remove();" + _NewLine;
+            code += "                for (var key in result)" + _NewLine;
+            code += "                    {" + _NewLine;
+            code += "                        if (result.hasOwnProperty(key))" + _NewLine;
+            code += "                        {" + _NewLine;
+            code += "                            totalRecord = result[key].RecordCount;" + _NewLine;
+            code += GenTrTemplate();//********
+            code += "                        $('#tbResult> tbody').append(TrTempplate);" + _NewLine;
+            code += "                        }" + _NewLine;
+            code += "                    }" + _NewLine;
+            code += "" + _NewLine;
+            code += "                }" + _NewLine;
+            code += "                else" + _NewLine;
+            code += "                {" + _NewLine;
             code += "" + _NewLine;
             code += "                $('#tbResult').hide();" + _NewLine;
             code += "                $('#ulpage').hide();" + _NewLine;
             code += "                $('#DivNoresults').show();" + _NewLine;
             code += "" + _NewLine;
-            code += "            }" + _NewLine;
+            code += "                }" + _NewLine;
             code += "" + _NewLine;
             code += "            $('#modal1').closeModal();" + _NewLine;
-            code += "            BindEditTable();" + _NewLine;
-            code += "            return totalRecord;" + _NewLine;
-            code += "        }" + _NewLine;
+            code += "                BindEditTable();" + _NewLine;
+            code += "                SetPagger(totalRecord);" + _NewLine;
+            code += "            }" + _NewLine;
+            code += "" + _NewLine;
+            code += "" + _NewLine;
 
             return code;
         }
@@ -583,7 +633,7 @@ namespace StkGenCode.Code.Template
                     else
                     if ((dataColumn.DataType.ToString() == "System.DateTime"))
                     {
-                        code += "<span> '+result[key]." + dataColumn.ColumnName + "+\"</span> ";
+                        code += "<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span> ";
                     }
                     else if ((dataColumn.DataType.ToString() == "System.String"))
                     {
@@ -728,7 +778,7 @@ namespace StkGenCode.Code.Template
             code += ClearSortJs();
 
             code += SetTableJs();
-
+            code += RederTable_Pagger();
             code += BindEditTableJS();
 
             code += SetPaggerJs();

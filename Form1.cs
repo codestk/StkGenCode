@@ -54,12 +54,12 @@ namespace StkGenCode
             _AspxFromCodeBehide._MappingColumn = _MappingColumn;
             _AspxFromCodeBehide.Gen();
 
-            AspxTableCode _AspxTableCode = new AspxTableCode();
-            _AspxTableCode._FileCode = F;
-            _AspxTableCode._ds = _ds;
-            _AspxTableCode._TableName = _TableName;
-            _AspxTableCode._MappingColumn = _MappingColumn;
-            _AspxTableCode.Gen();
+            //AspxTableCode _AspxTableCode = new AspxTableCode();
+            //_AspxTableCode._FileCode = F;
+            //_AspxTableCode._ds = _ds;
+            //_AspxTableCode._TableName = _TableName;
+            //_AspxTableCode._MappingColumn = _MappingColumn;
+            //_AspxTableCode.Gen();
 
             AspxTableCodeBehine _AspxTableCodeBehine = new AspxTableCodeBehine();
             _AspxTableCodeBehine._FileCode = F;
@@ -81,7 +81,7 @@ namespace StkGenCode
             _AspxTableCodeFilterColumnCodeBehide._ds = _ds;
             _AspxTableCodeFilterColumnCodeBehide._TableName = _TableName;
             _AspxTableCodeFilterColumnCodeBehide._MappingColumn = _MappingColumn;
-            _AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
+            //_AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
             _AspxTableCodeFilterColumnCodeBehide.Gen();
 
             PageService _PageService = new PageService();
@@ -229,13 +229,13 @@ namespace StkGenCode
             ClearFile();
             txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
 
-            //string ColumnDropDown = "CategoryID:TradeFromCategory;TermId:TradeFromTerm";
+            string ColumnDropDown = "CategoryID:TradeFromCategory;TermId:TradeFromTerm";
 
-            //DataSet _dsTradeFromFile = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromFile");
-            //Gen(_dsTradeFromFile, "TradeFromFile", ColumnDropDown);
+            DataSet _dsTradeFromFile = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromFile");
+            Gen(_dsTradeFromFile, "TradeFromFile", ColumnDropDown);
 
-            //DataSet _dsTradeFromTerm = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromTerm");
-            //Gen(_dsTradeFromTerm, "TradeFromTerm");
+            DataSet _dsTradeFromTerm = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromTerm");
+            Gen(_dsTradeFromTerm, "TradeFromTerm");
 
             DataSet _dsTradeFromCategory = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromCategory");
             Gen(_dsTradeFromCategory, "TradeFromCategory");

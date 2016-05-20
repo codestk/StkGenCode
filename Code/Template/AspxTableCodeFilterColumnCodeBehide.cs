@@ -227,7 +227,8 @@ namespace StkGenCode.Code.Template
             code += GenConstance();
 
             //code += GenPageLoad();
-            if (AspxFromCodeBehide.HaveDropDown())
+            //if (AspxFromCodeBehide.HaveDropDown())
+            if (HaveDropDown())
             {
                 code += GenInnitDropDown();
             }

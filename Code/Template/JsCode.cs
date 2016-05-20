@@ -89,35 +89,25 @@ namespace StkGenCode.Code.Template
 
         private string GenSearch()
         {
-            //string pararmeter = "";
-            //foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            //{
-            //    //Parameter เป็น String หมด
-            //    pararmeter += $"string {dataColumn.ColumnName},";
-            //}
-            //pararmeter = "string PageIndex,string PageSize,string SortExpression,string SortDirection," + pararmeter.Trim(',');
-            //string code = "";
             string ColumnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
-            ColumnsParameterFunction = "PageIndex,PageSize,SortExpression,SortDirection," + ColumnsParameterFunction.TrimEnd(',');
+            ColumnsParameterFunction = "PageIndex,PageSize,SortExpression,SortDirection," + ColumnsParameterFunction.TrimEnd(',') + ",RederTable_Pagger";
 
             string ColumnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
             ColumnsParameterJson = "PageIndex:\"'+PageIndex+'\",PageSize:\"'+PageSize+'\",SortExpression:\"'+SortExpression+'\",SortDirection:\"'+SortDirection+'\"," + ColumnsParameterJson.TrimEnd(',');
             string code = "";
+
+            code += "  this.Search = function (" + ColumnsParameterFunction + ") {" + _NewLine;
+            code += "        var result;" + _NewLine;
             code += "" + _NewLine;
+            code += "        var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
+            code += "        var F = CallServices(url + \"Search\", tag, true, function (msg) {" + _NewLine;
+            code += "            result = msg.d;" + _NewLine;
             code += "" + _NewLine;
-            code += $"this.Search = function({ColumnsParameterFunction})" + _NewLine;
-            code += "{" + _NewLine;
-            code += "" + _NewLine;
-            code += "            var result;" + _NewLine;
-            code += "" + _NewLine;
-            code += "            var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
-            code += "            var F = CallServices(url + \"Search\", tag, false, function(msg) {" + _NewLine;
-            code += "                result = msg.d;" + _NewLine;
-            code += "            });" + _NewLine;
-            code += "            return result;" + _NewLine;
-            code += "        };//Save" + _NewLine;
-            code += "" + _NewLine;
-            code += "" + _NewLine;
+            code += "            RederTable_Pagger(result);" + _NewLine;
+            code += "        });" + _NewLine;
+            code += "        return result;" + _NewLine;
+            code += "    };//Save" + _NewLine;
+
             return code;
         }
 

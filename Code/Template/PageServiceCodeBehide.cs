@@ -139,9 +139,9 @@ namespace StkGenCode.Code.Template
 
             code += " if (SortExpression.Trim() != \"\")" + _NewLine;
             code += "        {" + _NewLine;
-            code += "            _TradeFromCategoryDb._SortDirection = SortDirection;" + _NewLine;
+            code += $"            _{_TableName}Db._SortDirection = SortDirection;" + _NewLine;
             code += "" + _NewLine;
-            code += "            _TradeFromCategoryDb._SortExpression = SortExpression;" + _NewLine;
+            code += $"            _{_TableName}Db._SortExpression = SortExpression;" + _NewLine;
             code += "        }" + _NewLine;
 
             code += "return _" + _TableName + "Db.GetPageWise(_PageIndex, _PageSize);" + _NewLine;

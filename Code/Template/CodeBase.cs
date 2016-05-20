@@ -184,7 +184,7 @@ namespace StkGenCode.Code.Template
                 else if (dataColumn.DataType.ToString() == "System.DateTime")
                 {
                     ConvertPattern = propertieName + " =StkGlobalDate.TextEnToDate(" + columName + ");";
-                    code += string.Format(formatChekEmtyp, propertieName) + _NewLine;
+                    code += string.Format(formatChekEmtyp, ConvertPattern) + _NewLine;
                 }
                 else if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
                 {
@@ -193,7 +193,7 @@ namespace StkGenCode.Code.Template
                 }
                 else
                 {
-                    code += propertieName + " =  " + columName + ";" + _NewLine;
+                    code += propertieName + " =  " + columName + "; " + _NewLine;
                 }
             }
 
