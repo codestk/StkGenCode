@@ -40,6 +40,20 @@ namespace StkGenCode.Code.Template
 
         #region JavaScript
 
+        private string SetDatepicker()
+        {
+            string code = "";
+            code += "function SetDatepicker()" + _NewLine;
+            code += "{" + _NewLine;
+            code += "$('.datepicker').pickadate({ " + _NewLine;
+            code += "selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
+            code += "selectYears: 15,// Creates a dropdown of 15 years to control year,  " + _NewLine;
+            code += "format: 'd mmmm yyyy' " + _NewLine;
+            code += "});" + _NewLine;
+            code += "}" + _NewLine;
+            return code;
+        }
+
         private string GenDocumentReady()
         {
             string code = "";
@@ -50,11 +64,12 @@ namespace StkGenCode.Code.Template
             code += "//For dropdown" + _NewLine;
             code += "$('select').material_select(); " + _NewLine;
 
-            code += "$('.datepicker').pickadate({ " + _NewLine;
-            code += "selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
-            code += "selectYears: 15,// Creates a dropdown of 15 years to control year,  " + _NewLine;
-            code += "format: 'd mmmm yyyy' " + _NewLine;
-            code += "});" + _NewLine;
+            code += "SetDatepicker();" + _NewLine;
+            //code += "$('.datepicker').pickadate({ " + _NewLine;
+            //code += "selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
+            //code += "selectYears: 15,// Creates a dropdown of 15 years to control year,  " + _NewLine;
+            //code += "format: 'd mmmm yyyy' " + _NewLine;
+            //code += "});" + _NewLine;
 
             code += LeanModalJs();//
 
@@ -333,9 +348,10 @@ namespace StkGenCode.Code.Template
             code += "                } " + _NewLine;
             code += " " + _NewLine;
             code += "            }); " + _NewLine;
+
+            code += "SetDatepicker();//" + _NewLine;
             code += " }" + _NewLine;
-            code += "            //Edit table===================================================================================================================== " + _NewLine;
-            code += " " + _NewLine;
+            code += "//Edit table===================================================================================================================== " + _NewLine;
 
             return code;
         }
@@ -609,71 +625,73 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
 
-            code += "var TrTempplate =\"  <tr> ";
+            code += "var TrTempplate =\"  <tr> \";" + _NewLine;
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
                 if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
                 {
-                    code += "    <td class='borderRight chekBox" + dataColumn.ColumnName + "'> ";
-                    code += "                                    <p>";
-                    code += "                                        <input name='' type='radio' data-column-id='" + dataColumn.ColumnName + "' data-column-key='" + _ds.Tables[0].PrimaryKey[0] + "') %>'   /><label> </label> ";
-                    code += "                                    </p> ";
-                    code += "                                </td> ";
+                    code += "TrTempplate +=\"<td class='borderRight chekBox" + dataColumn.ColumnName + "'>\";" + _NewLine;
+                    code += "TrTempplate +=\"<p>;";
+                    code += "TrTempplate +=\"<input name='' type='radio' data-column-id='" + dataColumn.ColumnName + "' data-column-key='" + _ds.Tables[0].PrimaryKey[0] + "' '   /><label> </label>\"; " + _NewLine;
+                    code += "TrTempplate +=\"</p>\"; ";
+                    code += "TrTempplate +=\"</td> \";";
                 }
                 else
                 {
-                    code += " <td class='td" + dataColumn.ColumnName + "'> ";
+                    code += "TrTempplate +=\" <td class='td" + dataColumn.ColumnName + "'>\";" + _NewLine;
                     if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
                     {
-                        code += "     <a id='btnShowPopup0' target='_blank' href='" + _TableName + "Web.aspx?Q=222'";
-                        code += "                        title=''> ";
-                        code += "                        <span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>  ";
-                        code += "                    </a>";
+                        code += "TrTempplate +=\"<a id='btnShowPopup0' target='_blank' href='" + _TableName + "Web.aspx?Q=222'\";" + _NewLine;
+                        code += "TrTempplate +=\"title=''>\";" + _NewLine;
+                        code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
+                        code += "TrTempplate +=\"</a>\";" + _NewLine;
                     }
                     else
                     if ((dataColumn.DataType.ToString() == "System.DateTime"))
                     {
-                        code += "<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span> ";
+                        //dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "), 'd mmm yyyy')
+                        code += "TrTempplate +=\"<span>\"+dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "), 'd mmm yyyy')+\"</span>\";" + _NewLine;
+                        //code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
                     }
                     else if ((dataColumn.DataType.ToString() == "System.String"))
                     {
-                        code += "<span class='truncate'>\"+result[key]." + dataColumn.ColumnName + "+\"</span> ";
+                        code += "TrTempplate +=\"<span class='truncate'>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
                     }
                     else
                     {
-                        code += "<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span> ";
+                        code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
                     }
 
-                    code += "<div style='display: none'> ";
+                    code += "TrTempplate +=\"<div style='display: none'>\";" + _NewLine;
 
                     if ((dataColumn.DataType.ToString() == "System.String"))
                     {
-                        code += "<input data-column-id='" + dataColumn.ColumnName + "' type='text' MaxLength='" + dataColumn.MaxLength + "' length='" + dataColumn.MaxLength + "' class='validate truncate" + dataColumn.ColumnName + "' value=\"+result[key]." + dataColumn.ColumnName + "+\" style='height: unset; margin: 0px;'> ";
+                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "' type='text' MaxLength='" + dataColumn.MaxLength + "' length='" + dataColumn.MaxLength + "' class='validate truncate" + dataColumn.ColumnName + "' value=\"+result[key]." + dataColumn.ColumnName + "+\" style='height: unset; margin: 0px;'>\";" + _NewLine;
                     }
                     else if ((dataColumn.DataType.ToString() == "System.Int32"))
 
                     {
-                        code += "<input data-column-id='" + dataColumn.ColumnName + "' type='text' class='validate ForceNumber ' value=\"+result[key]." + dataColumn.ColumnName + "+\" style='height: unset; margin: 0px;'> ";
+                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "' type='text' class='validate ForceNumber ' value=\"+result[key]." + dataColumn.ColumnName + "+\" style='height: unset; margin: 0px;'>\";" + _NewLine;
                     }
                     else if ((dataColumn.DataType.ToString() == "System.Decimal"))
 
                     {
-                        code += "<input data-column-id='" + dataColumn.ColumnName + "' type='text' class='validate ForceNumber2Digit ' value=\"+result[key]." + dataColumn.ColumnName + "+\" style='height: unset; margin: 0px;'> ";
+                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "' type='text' class='validate ForceNumber2Digit ' value=\"+result[key]." + dataColumn.ColumnName + "+\" style='height: unset; margin: 0px;'>\";" + _NewLine;
                     }
                     else if ((dataColumn.DataType.ToString() == "System.DateTime"))
 
                     {
-                        code += "<input data-column-id='" + dataColumn.ColumnName + "'    class='datepicker' type='date' value=\"+result[key]." + dataColumn.ColumnName + "+\" style='height: unset; margin: 0px;'> ";
+                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "'    class='datepicker' type='date' value='\"+dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "),'d mmm yyyy')+\"' style='height: unset; margin: 0px;'>\";" + _NewLine;
                     }
 
-                    code += "<label class='lblSave'>Save</label> ";
-                    code += "<label class='lblCancel'>";
-                    code += "Cancel</label> ";
-                    code += "</div> ";
-                    code += "</td>";
+                    code += "TrTempplate +=\"<label class='lblSave'>Save</label>\";" + _NewLine;
+                    code += "TrTempplate +=\"<label class='lblCancel'>\";" + _NewLine;
+                    code += "TrTempplate +=\"Cancel</label>\";" + _NewLine;
+                    code += "TrTempplate +=\"</div>\";" + _NewLine;
+                    code += "TrTempplate +=\"</td>\";" + _NewLine;
                 }
             }
-            code += "</tr>\" ;" + _NewLine;
+            code += "TrTempplate +=\"</tr>\";" + _NewLine;
 
             return code;
         }
@@ -782,6 +800,7 @@ namespace StkGenCode.Code.Template
             code += BindEditTableJS();
 
             code += SetPaggerJs();
+            code += SetDatepicker();
             code += "</script>";
             return code;
         }
