@@ -293,36 +293,21 @@ namespace StkGenCode.Code.Template
                 }
 
                 updateCommand += dataColumn.ColumnName + "=@" + dataColumn.ColumnName + ",";
-
-                //=====================================================================
-                // New Version
-                //   Db.CreateParameterDb(":V1_GOOD_INOUT_ID", _obj.V1_GOOD_INOUT_ID.ToString().Trim())
-                // insercolumn += _DataColumn.ColumnName + ",";
-                //inservalue += "@" + _DataColumn.ColumnName + ",";
-                //  insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + _DataColumn.ColumnName + "\",_" + _TableName + "." + _DataColumn.ColumnName + "));";
             }
             //Key
 
             string code = "";
             code += "public void Update() {";
             code += _NewLine + "var prset = new List<IDataParameter>();";
-            // _code += "var sql = \"INSERT INTO " + _TableName + "(" + insercolumn + ")";
-            //_code += " VALUES (" + inservalue + ")returning  " + _ds.Tables[0].Columns[0].ColumnName + ";\";";
-            //textBox4.Text +=_NewLine + "var prset = new List<FbParameter> { " + insertparameter + "};";
+
             code += _NewLine + insertparameter;
 
             code += _NewLine;
 
             code += "var sql = @\"UPDATE   " + _TableName + " SET  " + updateCommand.Trim(',') + " where " + _ds.Tables[0].PrimaryKey[0] + " = @" + _ds.Tables[0].PrimaryKey[0] + "\";" + _NewLine;
-            //_code += "var prset = new List<FbParameter> { new FbParameter(\":" + _TableName + "_ID\", " + _TableName + "_ID.ToString().Trim()) };";
+
             code += _NewLine;
 
-            //   Db.CreateParameterDb(":V1_GOOD_INOUT_ID", _obj.V1_GOOD_INOUT_ID.ToString().Trim())
-            //int output = DB_R2.FbExecuteNonQuery(sql, prset);
-            //if (output != 1)
-            //{
-            //    throw new System.Exception("Save " + this.ToString());
-            //}
             code += "int output = Db.FbExecuteNonQuery(sql, prset);" + _NewLine;
             code += "if (output != 1){" + _NewLine;
             code += " throw new System.Exception(\"Update\" + this.ToString());}   }" + _NewLine;
