@@ -76,7 +76,7 @@ namespace StkGenCode
                 _ds = _ds,
                 _TableName = _TableName,
                 _MappingColumn = _MappingColumn,
-                AspxFromCodeaspx = _AspxFromCodeaspx
+                //AspxFromCodeaspx = _AspxFromCodeaspx
             };
             aspxTableCodeFilterColumn.Gen();
 

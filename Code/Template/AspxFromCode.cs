@@ -418,122 +418,122 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenDropDown(string columnname, int columnSize)
-        {
-            string controlDropDownName = string.Format(_formatDropDownName, columnname);
-            string code = "";
-            foreach (MappingColumn map in _MappingColumn)
-            {
-                if ((map.ColumnName == columnname) && (map.TableName != _TableName))
-                {
-                    code += "<div class=\"input-field col s" + columnSize.ToString() + "\"> " + _NewLine;
-                    code += "<asp:DropDownList ID =\"" + controlDropDownName + "\" runat=\"server\"> " + _NewLine;
-                    code += " " + _NewLine;
-                    code += "</asp:DropDownList>" + _NewLine;
-                    code += "<label for=\"<%=" + controlDropDownName + ".ClientID %>\">" + columnname + "</label>" + _NewLine;
-                    code += "</div>" + _NewLine;
+        //private string GenDropDown(string columnname, int columnSize)
+        //{
+        //    string controlDropDownName = string.Format(_formatDropDownName, columnname);
+        //    string code = "";
+        //    foreach (MappingColumn map in _MappingColumn)
+        //    {
+        //        if ((map.ColumnName == columnname) && (map.TableName != _TableName))
+        //        {
+        //            code += "<div class=\"input-field col s" + columnSize.ToString() + "\"> " + _NewLine;
+        //            code += "<asp:DropDownList ID =\"" + controlDropDownName + "\" runat=\"server\"> " + _NewLine;
+        //            code += " " + _NewLine;
+        //            code += "</asp:DropDownList>" + _NewLine;
+        //            code += "<label for=\"<%=" + controlDropDownName + ".ClientID %>\">" + columnname + "</label>" + _NewLine;
+        //            code += "</div>" + _NewLine;
 
-                    break;
-                }
-            }
+        //            break;
+        //        }
+        //    }
 
-            return code;
-        }
+        //    return code;
+        //}
 
-        /// <summary>
-        /// Refer CSS col s12  เป็น Base
-        /// </summary>
-        /// <param name="columnSize"></param>
-        /// <param name="chekPrimarykey"></param>
-        /// <returns></returns>
-        public string GenControls(int columnSize, bool chekPrimarykey = true)
-        {
-            string code = "";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            {
-                if ((dataColumn.DataType.ToString() == "System.Guid"))
-                { continue; }
+        ///// <summary>
+        ///// Refer CSS col s12  เป็น Base
+        ///// </summary>
+        ///// <param name="columnSize"></param>
+        ///// <param name="chekPrimarykey"></param>
+        ///// <returns></returns>
+        //public string GenControls(int columnSize, bool chekPrimarykey = true)
+        //{
+        //    string code = "";
+        //    foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+        //    {
+        //        if ((dataColumn.DataType.ToString() == "System.Guid"))
+        //        { continue; }
 
-                string disabled = "";
-                //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-                string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
-                string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
-                //string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
+        //        string disabled = "";
+        //        //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
+        //        string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
+        //        string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
+        //        //string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
 
-                string currentControl;
-                if (_MappingColumn != null)
-                {
-                    string codedrp = GenDropDown(dataColumn.ColumnName, columnSize);
+        //        string currentControl;
+        //        if (_MappingColumn != null)
+        //        {
+        //            string codedrp = GenDropDown(dataColumn.ColumnName, columnSize);
 
-                    code += codedrp;
-                    if (codedrp != "")
-                    {
-                        continue;
-                    }
-                }
+        //            code += codedrp;
+        //            if (codedrp != "")
+        //            {
+        //                continue;
+        //            }
+        //        }
 
-                bool isPrimayKey = false;
-                if (chekPrimarykey)
-                {
-                    //Check แบบ KEy เดียว
-                    if ((dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
-                    {
-                        isPrimayKey = true;
-                    }
-                }
+        //        bool isPrimayKey = false;
+        //        if (chekPrimarykey)
+        //        {
+        //            //Check แบบ KEy เดียว
+        //            if ((dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+        //            {
+        //                isPrimayKey = true;
+        //            }
+        //        }
 
-                if (isPrimayKey)
-                {
-                    disabled = "ReadOnly=\"true\" ";
+        //        if (isPrimayKey)
+        //        {
+        //            disabled = "ReadOnly=\"true\" ";
 
-                    code += $"<div class=\"  col s{columnSize.ToString()}\"> " + _NewLine;
-                    code += "<label>" + dataColumn.ColumnName + " </label> " + _NewLine;
-                }
-                else
-                {
-                    code += $"<div class=\"input-field col s{columnSize.ToString()}\"> " + _NewLine;
-                }
+        //            code += $"<div class=\"  col s{columnSize.ToString()}\"> " + _NewLine;
+        //            code += "<label>" + dataColumn.ColumnName + " </label> " + _NewLine;
+        //        }
+        //        else
+        //        {
+        //            code += $"<div class=\"input-field col s{columnSize.ToString()}\"> " + _NewLine;
+        //        }
 
-                //CssClass = "datepicker" type = "date"
-                if ((dataColumn.DataType.ToString() == "System.DateTime"))
-                {
-                    //CssClass = "datepicker" type = "date"
-                    currentControl = controlTextBoxName;
-                    code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" CssClass=\"datepicker\" type =\"date\" runat=\"server\"></asp:TextBox>" + _NewLine;
-                }
-                else if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
-                {
-                    //< asp:CheckBox ID = "chkRemittanceService" runat = "server" />
-                    //< label for= "<%= chkRemittanceService.ClientID %>" > RemittanceService </ label >
-                    currentControl = controlChekBoxName;
-                    code += "<asp:CheckBox " + disabled + " ID=\"" + controlChekBoxName + "\"    runat=\"server\"></asp:CheckBox>" + _NewLine;
-                    //code += "<label for=\"<%=" + controlChekBoxName + ".ClientID %>\">" + _DataColumn.ColumnName + " </label> " + _NewLine;
-                }
-                else if ((dataColumn.DataType.ToString() == "System.String"))
-                {
-                    currentControl = controlTextBoxName;
-                    code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" + dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName + "\" MaxLength=\"" + dataColumn.MaxLength + "\" length=\"" + dataColumn.MaxLength + "\" runat=\"server\"></asp:TextBox>" + _NewLine;
-                }
-                else if ((dataColumn.DataType.ToString() == "System.Int32"))
-                {
-                    // int max = System.Int32.MaxValue.ToString().Length;
-                    int max = 9;
-                    currentControl = controlTextBoxName;
-                    code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" + dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName + "\" MaxLength=\"" + max.ToString() + "\" length=\"" + max.ToString() + "\" runat=\"server\"></asp:TextBox>" + _NewLine;
-                }
-                else
-                {
-                    currentControl = controlTextBoxName;
-                    code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" CssClass=\"validate\" runat=\"server\"></asp:TextBox>" + _NewLine;
-                }
-                if (isPrimayKey == false)
-                {
-                    code += "<label for=\"<%=" + currentControl + ".ClientID %>\">" + dataColumn.ColumnName + " </label> " + _NewLine;
-                }
-                code += " </div> " + _NewLine;
-            }
-            return code;
-        }
+        //        //CssClass = "datepicker" type = "date"
+        //        if ((dataColumn.DataType.ToString() == "System.DateTime"))
+        //        {
+        //            //CssClass = "datepicker" type = "date"
+        //            currentControl = controlTextBoxName;
+        //            code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" CssClass=\"datepicker\" type =\"date\" runat=\"server\"></asp:TextBox>" + _NewLine;
+        //        }
+        //        else if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
+        //        {
+        //            //< asp:CheckBox ID = "chkRemittanceService" runat = "server" />
+        //            //< label for= "<%= chkRemittanceService.ClientID %>" > RemittanceService </ label >
+        //            currentControl = controlChekBoxName;
+        //            code += "<asp:CheckBox " + disabled + " ID=\"" + controlChekBoxName + "\"    runat=\"server\"></asp:CheckBox>" + _NewLine;
+        //            //code += "<label for=\"<%=" + controlChekBoxName + ".ClientID %>\">" + _DataColumn.ColumnName + " </label> " + _NewLine;
+        //        }
+        //        else if ((dataColumn.DataType.ToString() == "System.String"))
+        //        {
+        //            currentControl = controlTextBoxName;
+        //            code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" + dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName + "\" MaxLength=\"" + dataColumn.MaxLength + "\" length=\"" + dataColumn.MaxLength + "\" runat=\"server\"></asp:TextBox>" + _NewLine;
+        //        }
+        //        else if ((dataColumn.DataType.ToString() == "System.Int32"))
+        //        {
+        //            // int max = System.Int32.MaxValue.ToString().Length;
+        //            int max = 9;
+        //            currentControl = controlTextBoxName;
+        //            code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" + dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName + "\" MaxLength=\"" + max.ToString() + "\" length=\"" + max.ToString() + "\" runat=\"server\"></asp:TextBox>" + _NewLine;
+        //        }
+        //        else
+        //        {
+        //            currentControl = controlTextBoxName;
+        //            code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" CssClass=\"validate\" runat=\"server\"></asp:TextBox>" + _NewLine;
+        //        }
+        //        if (isPrimayKey == false)
+        //        {
+        //            code += "<label for=\"<%=" + currentControl + ".ClientID %>\">" + dataColumn.ColumnName + " </label> " + _NewLine;
+        //        }
+        //        code += " </div> " + _NewLine;
+        //    }
+        //    return code;
+        //}
 
         protected String GenButton()
         {

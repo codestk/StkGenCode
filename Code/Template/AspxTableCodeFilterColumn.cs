@@ -8,7 +8,7 @@ namespace StkGenCode.Code.Template
     {
         #region Properties
 
-        public AspxFromCode AspxFromCodeaspx;
+        //public AspxFromCode AspxFromCodeaspx;
 
         #endregion Properties
 
@@ -134,7 +134,7 @@ namespace StkGenCode.Code.Template
             code += "$('#modal1').openModal();" + _NewLine;
             code += $"var result = {_TableName}Service.Search(PageIndex, PageSize, SortExpression, SortDirection, {GetColumnParameter()},RederTable_Pagger);" + _NewLine;
             code += "" + _NewLine;
-            code += "        }" + _NewLine;
+            code += "}" + _NewLine;
 
             return code;
         }
@@ -189,7 +189,7 @@ namespace StkGenCode.Code.Template
                     {
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
                         {//SetSelectCategory('#<%=drpTermId.ClientID %>');
-                         //    SetSelectCategoryID('.selectCategoryID');
+                         //SetSelectCategoryID('.selectCategoryID');
                             code += "//Set Selectin table" + _NewLine;
                             code += $"SetSelect{dataColumn.ColumnName}('.select{dataColumn.ColumnName}');" + _NewLine;
                             code += "  $(\".select" + dataColumn.ColumnName + "\").each(function () {" + _NewLine;
@@ -201,14 +201,14 @@ namespace StkGenCode.Code.Template
                             code += "" + _NewLine;
                             code += "$(this).parent().prev()[0].innerText = selectedText" + _NewLine;
                             code += "" + _NewLine;
-                            code += "            });" + _NewLine;
+                            code += "});" + _NewLine;
                             code += "" + _NewLine;
                         }
                     }
                 }
             }
 
-            code += "            }" + _NewLine;
+            code += "}" + _NewLine;
             code += "" + _NewLine;
             code += "" + _NewLine;
 
@@ -227,10 +227,10 @@ namespace StkGenCode.Code.Template
                     {
                         code += " function SetSelect" + dataColumn.ColumnName + "(control) {" + _NewLine;
                         code += "" + _NewLine;
-                        code += "            var innitOption = '<option value=\"\">Please Select</option>';" + _NewLine;
-                        code += $"            var result{map.TableName} = {map.TableName}Service.SelectAll();" + _NewLine;
-                        code += "            $(control).append(innitOption);" + _NewLine;
-                        code += "            $.each(result" + map.TableName + ", function (index, value) {" + _NewLine;
+                        code += "var innitOption = '<option value=\"\">Please Select</option>';" + _NewLine;
+                        code += $"var result{map.TableName} = {map.TableName}Service.SelectAll();" + _NewLine;
+                        code += "$(control).append(innitOption);" + _NewLine;
+                        code += "$.each(result" + map.TableName + ", function (index, value) {" + _NewLine;
                         code += "//Appending the json items to the dropdown (select tag)" + _NewLine;
                         code += "//item is the id of your select tag" + _NewLine;
                         code += "" + _NewLine;
@@ -239,11 +239,11 @@ namespace StkGenCode.Code.Template
                         code += "" + _NewLine;
                         code += "$(control).append('<option value=\"' + value + '\">' + text + '</option>');" + _NewLine;
                         code += "" + _NewLine;
-                        code += "            });" + _NewLine;
+                        code += "});" + _NewLine;
                         code += "" + _NewLine;
                         code += "   " + _NewLine;
                         code += "" + _NewLine;
-                        code += "        }" + _NewLine;
+                        code += "}" + _NewLine;
                     }
                 }
             }
@@ -256,7 +256,7 @@ namespace StkGenCode.Code.Template
             string code = "";
 
             code += "  function SetPagger(RecordCount) {" + _NewLine;
-            code += "            $('#ulpage').pagination({" + _NewLine;
+            code += "$('#ulpage').pagination({" + _NewLine;
             code += "items: RecordCount," + _NewLine;
             code += "itemsOnPage: PageSize," + _NewLine;
             code += "" + _NewLine;
@@ -266,18 +266,18 @@ namespace StkGenCode.Code.Template
             code += "currentPage: PageIndex,//cssStyle: 'light-theme'," + _NewLine;
             code += "onPageClick: function (event) {" + _NewLine;
             code += "" + _NewLine;
-            code += "    if (event < 10) {" + _NewLine;
-            code += "        PageIndex = '0' + event;" + _NewLine;
-            code += "    }" + _NewLine;
-            code += "    else {" + _NewLine;
-            code += "        PageIndex = event;" + _NewLine;
-            code += "    }" + _NewLine;
-            code += "    SetTable();" + _NewLine;
+            code += "if (event < 10) {" + _NewLine;
+            code += "PageIndex = '0' + event;" + _NewLine;
+            code += "}" + _NewLine;
+            code += "else {" + _NewLine;
+            code += "PageIndex = event;" + _NewLine;
+            code += "}" + _NewLine;
+            code += "SetTable();" + _NewLine;
             code += "}" + _NewLine;
             code += "" + _NewLine;
-            code += "            });" + _NewLine;
+            code += "});" + _NewLine;
             code += "" + _NewLine;
-            code += "        }" + _NewLine;
+            code += "}" + _NewLine;
 
             return code;
         }
@@ -340,24 +340,24 @@ namespace StkGenCode.Code.Template
             code += "di.show(); " + _NewLine;
             code += " " + _NewLine;
             code += "di.focus(); " + _NewLine;
-            code += "            }); " + _NewLine;
+            code += "}); " + _NewLine;
             code += " " + _NewLine;
-            code += "            $(\".lblCancel\").click(function (event) { " + _NewLine;
+            code += "$(\".lblCancel\").click(function (event) { " + _NewLine;
             code += "$(this).parent().parent().find(\"span\").show(); " + _NewLine;
             code += "$(this).parent().parent().find(\"div\").hide(); " + _NewLine;
             //code += "$(this).parent().parent().removeClass(\"widthEditBig\"); " + _NewLine;
             //code += "$(this).parent().parent().removeClass(\"widthEditSmall\"); " + _NewLine;
             code += " " + _NewLine;
-            code += "            }); " + _NewLine;
+            code += "}); " + _NewLine;
             code += " " + _NewLine;
 
             code += "" + _NewLine;
-            code += "            $(\".lblSave\").click(function (event) {" + _NewLine;
+            code += "$(\".lblSave\").click(function (event) {" + _NewLine;
             code += "var tdContent = $(this).parent().parent();" + _NewLine;
             code += "var inputBox = tdContent.find(\"input,select\")[0]; //Get Data inputbox" + _NewLine;
             code += "//if (inputBox == undefined) {" + _NewLine;
             code += "" + _NewLine;
-            code += "//    inputBox = tdContent.find(\"select\")[0];" + _NewLine;
+            code += "//inputBox = tdContent.find(\"select\")[0];" + _NewLine;
             code += "//}" + _NewLine;
             code += "" + _NewLine;
             code += "var id = $(this).parent().parent().parent().find(\"span\")[0].outerText; //Get first Td (ID1)" + _NewLine;
@@ -372,27 +372,27 @@ namespace StkGenCode.Code.Template
                 if (IsDropDown(dataColumn))
                 {
                     code += "" + _NewLine;
-                    code += "            if (column == \"" + dataColumn.ColumnName + "\")" + _NewLine;
-                    code += "            {" + _NewLine;
-                    code += "                if ($(inputBox).prop('selectedIndex') == 0) {" + _NewLine;
-                    code += "                        $(inputBox).addClass(\"invalid\");" + _NewLine;
-                    code += "                     Materialize.toast('please validate your input.', 3000, 'toastCss');  " + _NewLine;
-                    code += "                    return;" + _NewLine;
-                    code += "                }" + _NewLine;
-                    code += "            }" + _NewLine;
+                    code += "if (column == \"" + dataColumn.ColumnName + "\")" + _NewLine;
+                    code += "{" + _NewLine;
+                    code += "if ($(inputBox).prop('selectedIndex') == 0) {" + _NewLine;
+                    code += "$(inputBox).addClass(\"invalid\");" + _NewLine;
+                    code += " Materialize.toast('please validate your input.', 3000, 'toastCss');  " + _NewLine;
+                    code += "return;" + _NewLine;
+                    code += "}" + _NewLine;
+                    code += "}" + _NewLine;
                     code += "" + _NewLine;
                 }
                 else
                 {
-                    code += "            if (column == \"" + dataColumn.ColumnName + "\")" + _NewLine;
-                    code += "            {" + _NewLine;
-                    code += "                if ($(inputBox).val().trim() == '') {" + _NewLine;
-                    code += "                        $(inputBox).addClass(\"invalid\");" + _NewLine;
-                    code += "                     Materialize.toast('please validate your input.', 3000, 'toastCss');  " + _NewLine;
+                    code += "if (column == \"" + dataColumn.ColumnName + "\")" + _NewLine;
+                    code += "{" + _NewLine;
+                    code += "if ($(inputBox).val().trim() == '') {" + _NewLine;
+                    code += "$(inputBox).addClass(\"invalid\");" + _NewLine;
+                    code += " Materialize.toast('please validate your input.', 3000, 'toastCss');  " + _NewLine;
 
-                    code += "                    return;" + _NewLine;
-                    code += "                }" + _NewLine;
-                    code += "            }" + _NewLine;
+                    code += "return;" + _NewLine;
+                    code += "}" + _NewLine;
+                    code += "}" + _NewLine;
                     code += "" + _NewLine;
                 }
             }
@@ -404,11 +404,11 @@ namespace StkGenCode.Code.Template
             code += "var oldData = trim(txtspan.innerText, \" \");" + _NewLine;
             code += "" + _NewLine;
             code += "if (data == oldData) {" + _NewLine;
-            code += "    //CalCell" + _NewLine;
-            code += "    tdContent.find(\"span\").show();" + _NewLine;
-            code += "    tdContent.find(\"div\").hide();" + _NewLine;
-            code += "    return;" + _NewLine;
-            code += "    //" + _NewLine;
+            code += "//CalCell" + _NewLine;
+            code += "tdContent.find(\"span\").show();" + _NewLine;
+            code += "tdContent.find(\"div\").hide();" + _NewLine;
+            code += "return;" + _NewLine;
+            code += "//" + _NewLine;
             code += "}" + _NewLine;
             code += "" + _NewLine;
             code += "//Save Data To CodeBehide" + _NewLine;
@@ -416,33 +416,33 @@ namespace StkGenCode.Code.Template
             code += "" + _NewLine;
             code += "//Convert Select" + _NewLine;
             code += "if (inputBox.tagName == 'SELECT') {" + _NewLine;
-            code += "    data = $(inputBox).find('option:selected').text();" + _NewLine;
+            code += "data = $(inputBox).find('option:selected').text();" + _NewLine;
             code += "}" + _NewLine;
             code += "" + _NewLine;
             code += "if (result == true) {" + _NewLine;
-            code += "    tdContent.find(\"span\").show();" + _NewLine;
-            code += "    tdContent.find(\"div\").hide();" + _NewLine;
-            code += "    tdContent.removeClass(\"widthEditBig\");" + _NewLine;
-            code += "    tdContent.removeClass(\"widthEditSmall\");" + _NewLine;
-            code += "    //tdContent.addClass(\"saved\");" + _NewLine;
+            code += "tdContent.find(\"span\").show();" + _NewLine;
+            code += "tdContent.find(\"div\").hide();" + _NewLine;
+            code += "tdContent.removeClass(\"widthEditBig\");" + _NewLine;
+            code += "tdContent.removeClass(\"widthEditSmall\");" + _NewLine;
+            code += "//tdContent.addClass(\"saved\");" + _NewLine;
             code += "" + _NewLine;
-            code += "    //tdContent.find(\"span\")[0].innerText = data; //Swap Value" + _NewLine;
-            code += "    //tdContent.find(\"span\")[0].className += \"saved\";" + _NewLine;
+            code += "//tdContent.find(\"span\")[0].innerText = data; //Swap Value" + _NewLine;
+            code += "//tdContent.find(\"span\")[0].className += \"saved\";" + _NewLine;
             code += "" + _NewLine;
-            code += "    txtspan.innerText = data;" + _NewLine;
-            code += "    txtspan.className = \"saved\";" + _NewLine;
-            code += "    Materialize.toast('Your data has been saved.', 3000, 'toastCss');" + _NewLine;
+            code += "txtspan.innerText = data;" + _NewLine;
+            code += "txtspan.className = \"saved\";" + _NewLine;
+            code += "Materialize.toast('Your data has been saved.', 3000, 'toastCss');" + _NewLine;
             code += "}" + _NewLine;
             code += "else {" + _NewLine;
-            code += "    Materialize.toast(MsgError, 5000, 'toastCss');" + _NewLine;
+            code += "Materialize.toast(MsgError, 5000, 'toastCss');" + _NewLine;
             code += "}" + _NewLine;
             code += "" + _NewLine;
 
-            code += "            });" + _NewLine;
+            code += "});" + _NewLine;
 
             string classCheck = GenClassCheckBoxList();
-            //code += "            $('.chekBoxAtm,.chekBoxBranch,.chekBoxSubBranch,.chekBoxMicroBranch,.chekBoxInternationalBranch,.chekBoxBusinessCenter,.chekBoxFXBooth,.chekBoxBualuangExclusive,.chekBoxFCDService,.chekBoxRemittanceService ,.chekBoxWesternUnionService').dblclick(function () { " + _NewLine;
-            code += "            $('" + classCheck + "').dblclick(function () { " + _NewLine;
+            //code += "$('.chekBoxAtm,.chekBoxBranch,.chekBoxSubBranch,.chekBoxMicroBranch,.chekBoxInternationalBranch,.chekBoxBusinessCenter,.chekBoxFXBooth,.chekBoxBualuangExclusive,.chekBoxFCDService,.chekBoxRemittanceService ,.chekBoxWesternUnionService').dblclick(function () { " + _NewLine;
+            code += "$('" + classCheck + "').dblclick(function () { " + _NewLine;
 
             code += "// <p><input name = '' type = 'radio' id = 'test1'  checked= 'true' /><label for= 'test1'></label></p> " + _NewLine;
             code += "var chk = $(this).find('input:radio')[0]; " + _NewLine;
@@ -455,26 +455,26 @@ namespace StkGenCode.Code.Template
             code += " " + _NewLine;
             code += "var status = false; " + _NewLine;
             code += "if (chk.checked) { " + _NewLine;
-            code += "    status = false; " + _NewLine;
-            code += "    Data = \"0\"; " + _NewLine;
+            code += "status = false; " + _NewLine;
+            code += "Data = \"0\"; " + _NewLine;
             code += "} " + _NewLine;
             code += "else { " + _NewLine;
-            code += "    status = true; " + _NewLine;
-            code += "    Data = \"1\"; " + _NewLine;
+            code += "status = true; " + _NewLine;
+            code += "Data = \"1\"; " + _NewLine;
             code += "} " + _NewLine;
             code += " " + _NewLine;
             code += "var result = " + _TableName + "Service.SaveColumn(id, column, Data); " + _NewLine;
             code += " " + _NewLine;
             code += "if (result == true) { " + _NewLine;
-            code += "    //Display Message Display Checkbox " + _NewLine;
-            code += "    chk.checked = status; " + _NewLine;
-            code += "    Materialize.toast('Your data has been saved.', 3000, 'toastCss'); " + _NewLine;
+            code += "//Display Message Display Checkbox " + _NewLine;
+            code += "chk.checked = status; " + _NewLine;
+            code += "Materialize.toast('Your data has been saved.', 3000, 'toastCss'); " + _NewLine;
             code += "} " + _NewLine;
             code += "else { " + _NewLine;
-            code += "    Materialize.toast(MsgError, 5000, 'toastCss'); " + _NewLine;
+            code += "Materialize.toast(MsgError, 5000, 'toastCss'); " + _NewLine;
             code += "} " + _NewLine;
             code += " " + _NewLine;
-            code += "            }); " + _NewLine;
+            code += "}); " + _NewLine;
 
             code += "ForceNumberTextBoxEditMode();" + _NewLine;
             code += "SetDatepicker();//" + _NewLine;
@@ -487,36 +487,36 @@ namespace StkGenCode.Code.Template
         private string ClearSortJs()
         {
             string code = "";
-            code += " function ClearSort() {" + _NewLine;
-            code += "            $('#tbResult').find('th').each(function() {" + _NewLine;
-            code += "    var columnName = $(this).attr(\"data-column-id\");" + _NewLine;
+            code += "function ClearSort() {" + _NewLine;
+            code += "$('#tbResult').find('th').each(function() {" + _NewLine;
+            code += "var columnName = $(this).attr(\"data-column-id\");" + _NewLine;
             code += "$(this).html(columnName);" + _NewLine;
             code += "});" + _NewLine;
-            code += "            }" + _NewLine;
+            code += "}" + _NewLine;
             return code;
         }
 
         private string SortJs()
         {
             string code = "";
-            code += "   function Sort(th) {" + _NewLine;
+            code += "function Sort(th) {" + _NewLine;
             code += "" + _NewLine;
-            code += "            var ColumnSortName = th.attributes['data-column-id'].value;" + _NewLine;
-            code += "            ClearSort();" + _NewLine;
-            code += "            SortExpression = ColumnSortName;" + _NewLine;
-            code += "            if (SortDirection == 'DESC') {" + _NewLine;
+            code += "var ColumnSortName = th.attributes['data-column-id'].value;" + _NewLine;
+            code += "ClearSort();" + _NewLine;
+            code += "SortExpression = ColumnSortName;" + _NewLine;
+            code += "if (SortDirection == 'DESC') {" + _NewLine;
             code += "SortDirection = 'ASC';" + _NewLine;
             code += "" + _NewLine;
             code += "$(th).html(ColumnSortName + ' <i class=\"Small material-icons\">arrow_drop_up</i>');" + _NewLine;
-            code += "            }" + _NewLine;
-            code += "            else {" + _NewLine;
+            code += "}" + _NewLine;
+            code += "else {" + _NewLine;
             code += "" + _NewLine;
             code += "SortDirection = 'DESC';" + _NewLine;
             code += "$(th).html(ColumnSortName + ' <i class=\"Small material-icons\">arrow_drop_down</i>');" + _NewLine;
-            code += "            }" + _NewLine;
+            code += "}" + _NewLine;
             code += "" + _NewLine;
-            code += "            SetTable();" + _NewLine;
-            code += "        }" + _NewLine;
+            code += "SetTable();" + _NewLine;
+            code += "}" + _NewLine;
             return code;
         }
 
@@ -527,16 +527,16 @@ namespace StkGenCode.Code.Template
         public string LeanModalJs()
         {
             string code = "";
-            code += "            $('.modal-trigger').leanModal({ " + _NewLine;
+            code += "$('.modal-trigger').leanModal({ " + _NewLine;
             code += "dismissible: false, // Modal can be dismissed by clicking outside of the modal " + _NewLine;
             code += "opacity: .5, // Opacity of modal background " + _NewLine;
             code += "in_duration: 300, // Transition in duration " + _NewLine;
             code += "out_duration: 200, // Transition out duration " + _NewLine;
             code += "starting_top: '50%' " + _NewLine;
-            code += " " + _NewLine;
-            code += "//  ready: function () { alert('Ready'); }, // Callback for Modal open " + _NewLine;
-            code += "//  complete: function () { alert('Closed'); } // Callback for Modal close " + _NewLine;
-            code += "            }); " + _NewLine;
+            code += "" + _NewLine;
+            code += "//ready: function () { alert('Ready'); }, // Callback for Modal open " + _NewLine;
+            code += "//complete: function () { alert('Closed'); } // Callback for Modal close " + _NewLine;
+            code += "}); " + _NewLine;
             return code;
         }
 
@@ -544,50 +544,50 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
             code += "//For Autocomplete  ----------------------------------------------------------------------------------- " + _NewLine;
-            //code += "            $(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
-            //code += "              $('" + ClassTextBox + "').autocomplete({ " + _NewLine;
+            //code += "$(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
+            //code += "  $('" + ClassTextBox + "').autocomplete({ " + _NewLine;
             code += " $('#<%= txtSearch.ClientID%>').autocomplete({ " + _NewLine;
             code += " " + _NewLine;
             code += "  source: function (request, response) { " + _NewLine;
             code += " " + _NewLine;
-            //code += "    var postCode = this.element[0].parentNode.parentNode.parentNode.childNodes[13].innerText; " + _NewLine;
-            //code += "    var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
+            //code += "var postCode = this.element[0].parentNode.parentNode.parentNode.childNodes[13].innerText; " + _NewLine;
+            //code += "var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
             code += "var keyword = this.element[0].value " + _NewLine;
             code += " " + _NewLine;
-            code += "    var data = " + _TableName + "Service.GetKeyWordsAllColumn(keyword); " + _NewLine;
+            code += "var data = " + _TableName + "Service.GetKeyWordsAllColumn(keyword); " + _NewLine;
             code += " " + _NewLine;
-            code += "    response(data); " + _NewLine;
-            code += "    //$.ajax({ " + _NewLine;
-            code += "    //    url: \"/WebTemplate/LocationManage.aspx/GenGetKeyWordsAllColumn\", " + _NewLine;
-            code += "    //    dataType: \"json\", " + _NewLine;
-            code += "    //    data: { " + _NewLine;
-            code += "    //        Column: 'EnglishAddress3', " + _NewLine;
-            code += "    //        value: request.term " + _NewLine;
-            code += "    //    }, " + _NewLine;
-            code += "    //    contentType: \"application/json; charset=utf-8\", " + _NewLine;
-            code += "    //    success: function (data) { " + _NewLine;
+            code += "response(data); " + _NewLine;
+            code += "//$.ajax({ " + _NewLine;
+            code += "//url: \"/WebTemplate/LocationManage.aspx/GenGetKeyWordsAllColumn\", " + _NewLine;
+            code += "//dataType: \"json\", " + _NewLine;
+            code += "//data: { " + _NewLine;
+            code += "//Column: 'EnglishAddress3', " + _NewLine;
+            code += "//value: request.term " + _NewLine;
+            code += "//}, " + _NewLine;
+            code += "//contentType: \"application/json; charset=utf-8\", " + _NewLine;
+            code += "//success: function (data) { " + _NewLine;
             code += " " + _NewLine;
-            code += "    //        response(data); " + _NewLine;
-            code += "    //    }, " + _NewLine;
-            code += "    //    error: function (msg) { " + _NewLine;
-            code += "    //        debugger " + _NewLine;
-            code += "    //        alert(msg); " + _NewLine;
+            code += "//response(data); " + _NewLine;
+            code += "//}, " + _NewLine;
+            code += "//error: function (msg) { " + _NewLine;
+            code += "//debugger " + _NewLine;
+            code += "//alert(msg); " + _NewLine;
             code += " " + _NewLine;
-            code += "    //    } " + _NewLine;
-            code += "    //}); " + _NewLine;
+            code += "//} " + _NewLine;
+            code += "//}); " + _NewLine;
             code += "}, " + _NewLine;
             code += "minLength: 3, " + _NewLine;
             code += "select: function (event, ui) { " + _NewLine;
-            code += "    //log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " + _NewLine;
+            code += "//log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " + _NewLine;
             code += "}, " + _NewLine;
             code += "open: function () { " + _NewLine;
-            code += "    $(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + _NewLine;
+            code += "$(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + _NewLine;
             code += "}, " + _NewLine;
             code += "close: function () { " + _NewLine;
-            code += "    $(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + _NewLine;
+            code += "$(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + _NewLine;
             code += "} " + _NewLine;
-            code += "            }); " + _NewLine;
-            code += "            //For Autocomplete================================================================================== " + _NewLine;
+            code += "}); " + _NewLine;
+            code += "//For Autocomplete================================================================================== " + _NewLine;
             code += " " + _NewLine;
             return code;
         }
@@ -601,31 +601,31 @@ namespace StkGenCode.Code.Template
 
             string classIds = GetColumnParameter(".{0},");
             classIds = classIds.TrimEnd(',');
-            //code += "    $(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
-            code += "    $(\"" + classIds + "\").autocomplete({ " + _NewLine;
+            //code += "$(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
+            code += "$(\"" + classIds + "\").autocomplete({ " + _NewLine;
 
             code += " " + _NewLine;
             code += "source: function (request, response) { " + _NewLine;
             code += " " + _NewLine;
 
-            code += "    var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
+            code += "var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
             code += " " + _NewLine;
-            code += "    var data = " + _TableName + "Service.GetKeyWordsOneColumn(column, request.term); " + _NewLine;
+            code += "var data = " + _TableName + "Service.GetKeyWordsOneColumn(column, request.term); " + _NewLine;
             code += " " + _NewLine;
-            code += "    response(data); " + _NewLine;
+            code += "response(data); " + _NewLine;
             code += "   " + _NewLine;
             code += "}, " + _NewLine;
             code += "minLength: 3, " + _NewLine;
             code += "select: function (event, ui) { " + _NewLine;
-            code += "    //log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " + _NewLine;
+            code += "//log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " + _NewLine;
             code += "}, " + _NewLine;
             code += "open: function () { " + _NewLine;
-            code += "    $(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + _NewLine;
+            code += "$(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + _NewLine;
             code += "}, " + _NewLine;
             code += "close: function () { " + _NewLine;
-            code += "    $(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + _NewLine;
+            code += "$(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + _NewLine;
             code += "} " + _NewLine;
-            code += "            });" + _NewLine;
+            code += "});" + _NewLine;
             return code;
         }
 
@@ -637,13 +637,13 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
 
-            code += "        //For Validate Type " + _NewLine;
-            code += "        function ForceNumberTextBoxEditMode() { " + _NewLine;
-            // code += "            $(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
+            code += "//For Validate Type " + _NewLine;
+            code += "function ForceNumberTextBoxEditMode() { " + _NewLine;
+            // code += "$(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
 
             code += "$(\".ForceNumber\").ForceNumericOnly();  " + _NewLine;
             code += "$(\".ForceNumber2Digit\").ForceNumericOnly2Digit(); " + _NewLine;
-            code += "        } " + _NewLine;
+            code += "} " + _NewLine;
 
             return code;
         }
@@ -667,7 +667,7 @@ namespace StkGenCode.Code.Template
 
                 //if ((dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
                 //{
-                //    continue;
+                //continue;
                 //}
 
                 if ((dataColumn.DataType.ToString() == "System.Guid") || (dataColumn.DataType.ToString() == "System.Int16"))
@@ -696,27 +696,27 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
             code += " <div class=\"container\"> " + _NewLine;
-            //code += "        <div class=\" col s12\"> " + _NewLine;
+            //code += "<div class=\" col s12\"> " + _NewLine;
 
             //Usign Gen Text Box
-            code += "        <div class=\"row\"> " + _NewLine;
-            string txtBoxSet = AspxFromCodeaspx.GenControls(6, false);
+            code += "<div class=\"row\"> " + _NewLine;
+            string txtBoxSet = GenControls(6, false);
             //txtBoxSet = txtBoxSet.Replace("s12", "s3");
             //txtBoxSet = "";
             code += txtBoxSet;
             code += "<div class=\"input-field col s12\"> " + _NewLine;
             code += " " + _NewLine;
-            // code += "    <a class=\"waves-effect waves-light btn center\">Search</a> " + _NewLine;
+            // code += "<a class=\"waves-effect waves-light btn center\">Search</a> " + _NewLine;
             //code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\"   runat=\"server\" Text=\"Search\" />" + _NewLine;
             //code += "<asp:Button ID=\"btnClear\" CssClass=\"waves-effect waves-light btn center\" OnClientClick=\"javascript:return ClearValue();\" runat=\"server\" Text=\"Clear\" />";
             code += "<input id=\"btnSearch\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Search\" onclick=\"Search();\" />" + _NewLine;
             code += "<input id=\"btnClear\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Clear\" onclick=\"javascript: return ClearValue();\" />" + _NewLine;
             code += "<input id =\"btnNew\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"New\" onclick=\"javascript: window.open('" + _FileName.AspxFromCodeName() + "', '_blank');\" />" + _NewLine;
             code += "</div> " + _NewLine;
-            code += "            </div> " + _NewLine;
-            code += "        " + _NewLine;
-            code += "        </div> " + _NewLine;
-            //code += "        </div> " + _NewLine;
+            code += "</div> " + _NewLine;
+            code += "" + _NewLine;
+            code += "</div> " + _NewLine;
+            //code += "</div> " + _NewLine;
 
             return code;
         }
@@ -814,7 +814,7 @@ namespace StkGenCode.Code.Template
                         code += $"TrTempplate += \"<select id='select{dataColumn.ColumnName}' data-column-id='{dataColumn.ColumnName}'  data-column-value='\" + result[key].{dataColumn.ColumnName}+\"' class='select{dataColumn.ColumnName} selectInputEditMode' ></select>\";" + _NewLine;
                     }
                     else
-                        if ((dataColumn.DataType.ToString() == "System.String"))
+                    if ((dataColumn.DataType.ToString() == "System.String"))
                     {
                         code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "' type='text' MaxLength='" + dataColumn.MaxLength + "' length='" + dataColumn.MaxLength + "' class='validate truncate" + dataColumn.ColumnName + "' value='\"+result[key]." + dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + _NewLine;
                     }
@@ -831,7 +831,7 @@ namespace StkGenCode.Code.Template
                     else if ((dataColumn.DataType.ToString() == "System.DateTime"))
 
                     {
-                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "'    class='datepicker' type='date' value='\"+dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "),'d mmm yyyy')+\"' style='height: unset; margin: 0px;'>\";" + _NewLine;
+                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "'class='datepicker' type='date' value='\"+dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "),'d mmm yyyy')+\"' style='height: unset; margin: 0px;'>\";" + _NewLine;
                     }
 
                     code += "TrTempplate +=\"<label class='lblSave'>Save</label>\";" + _NewLine;
@@ -860,17 +860,17 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
             code += " " + _NewLine;
-            code += "       <!-- Modal Structure --> " + _NewLine;
-            code += "    <div id=\"modal1\" class=\"modal\"> " + _NewLine;
-            code += "        <div class=\"modal-content\"> " + _NewLine;
-            code += "            <p>Loading</p> " + _NewLine;
-            code += "            <div class=\"progress\"> " + _NewLine;
+            code += "   <!-- Modal Structure --> " + _NewLine;
+            code += "<div id=\"modal1\" class=\"modal\"> " + _NewLine;
+            code += "<div class=\"modal-content\"> " + _NewLine;
+            code += "<p>Loading</p> " + _NewLine;
+            code += "<div class=\"progress\"> " + _NewLine;
             code += "<div class=\"indeterminate\"></div> " + _NewLine;
-            code += "            </div> " + _NewLine;
-            code += "        </div> " + _NewLine;
-            code += "      " + _NewLine;
-            code += "    </div>" + _NewLine;
-            //  code += "    </div>" + _NewLine;
+            code += "</div> " + _NewLine;
+            code += "</div> " + _NewLine;
+            code += "  " + _NewLine;
+            code += "</div>" + _NewLine;
+            //  code += "</div>" + _NewLine;
             return code;
         }
 
@@ -879,24 +879,24 @@ namespace StkGenCode.Code.Template
             string code = "";
 
             code += " <div id=\"DivNoresults\" class=\"container\"  style=\"display: none\" > " + _NewLine;
-            code += "        <p class=\"flow-text\">No results found. Try the following:</p> " + _NewLine;
-            code += "        <p> " + _NewLine;
-            code += "            Make sure all words are spelled correctly. " + _NewLine;
-            code += "        </p> " + _NewLine;
-            code += "        <p> " + _NewLine;
-            code += "            Try different keywords. " + _NewLine;
-            code += "        </p> " + _NewLine;
-            code += "        <p> " + _NewLine;
-            code += "            Try more general keywords. " + _NewLine;
-            code += "        </p> " + _NewLine;
-            code += "    </div>";
+            code += "<p class=\"flow-text\">No results found. Try the following:</p> " + _NewLine;
+            code += "<p> " + _NewLine;
+            code += "Make sure all words are spelled correctly. " + _NewLine;
+            code += "</p> " + _NewLine;
+            code += "<p> " + _NewLine;
+            code += "Try different keywords. " + _NewLine;
+            code += "</p> " + _NewLine;
+            code += "<p> " + _NewLine;
+            code += "Try more general keywords. " + _NewLine;
+            code += "</p> " + _NewLine;
+            code += "</div>";
 
             return code;
         }
 
         #endregion Html
 
-        #region Server Control
+        #region Server Tag
 
         protected string GenContentHeadBegin()
         {
@@ -925,7 +925,7 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        #endregion Server Control
+        #endregion Server Tag
 
         //javascript Method
         private string GenJavaScript()
@@ -964,36 +964,17 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        #region Utility
+
         protected string GenClassCheckBoxList()
         {
             string code = "";
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
-                //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
                 if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
                 {
                     code += $".chekBox{dataColumn.ColumnName},";
-                    //code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
-                    //code += "    <p> " + _NewLine;
-                    //code += "        <input name='' type='radio' data-column-id=\"" + _DataColumn.ColumnName + "\" data-column-key=\"<%# Eval(\"" + _ds.Tables[0].PrimaryKey[0].ToString() + "\") %>\" <%# TagCheck(Eval(\"" + _DataColumn.ColumnName + "\")) %> /><label> </label> " + _NewLine;
-                    //code += "    </p> " + _NewLine;
-                    //code += "</td> " + _NewLine;
                 }
-                //else
-                //{
-                //    code += " <td class=\"td"+ _DataColumn.ColumnName + "\"> " + _NewLine;
-                //    code += "       <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
-                //    code += "    <div style=\"display: none\"> " + _NewLine;
-                //    code += "        <input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate " + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\"> " + _NewLine;
-                //    code += "        <label class=\"lblSave\">Save</label> " + _NewLine;
-                //    code += "        <label class=\"lblCancel\">" + _NewLine;
-                //    code += "            Cancel</label> " + _NewLine;
-                //    code += "    </div> " + _NewLine;
-                //    code += "  </td>" + _NewLine;
-                //}
-
-                // < input name = '' data - column - id = "BualuangExclusive" data - column - key = "<%# Eval("ID1") %>" type = 'radio' <%# ServiceSet(Eval("BualuangExclusive")) %> /><label for='test1'></label>
             }
 
             code = code.TrimEnd(',');
@@ -1014,23 +995,23 @@ namespace StkGenCode.Code.Template
                 if ((dataColumn.DataType.ToString() != "System.Boolean") || (dataColumn.DataType.ToString() != "System.Int16"))
                 {
                     code += $".td{dataColumn.ColumnName},";
-                    //code += "    <td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
-                    //code += "    <p> " + _NewLine;
-                    //code += "        <input name='' type='radio' data-column-id=\"" + _DataColumn.ColumnName + "\" data-column-key=\"<%# Eval(\"" + _ds.Tables[0].PrimaryKey[0].ToString() + "\") %>\" <%# TagCheck(Eval(\"" + _DataColumn.ColumnName + "\")) %> /><label> </label> " + _NewLine;
-                    //code += "    </p> " + _NewLine;
+                    //code += "<td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
+                    //code += "<p> " + _NewLine;
+                    //code += "<input name='' type='radio' data-column-id=\"" + _DataColumn.ColumnName + "\" data-column-key=\"<%# Eval(\"" + _ds.Tables[0].PrimaryKey[0].ToString() + "\") %>\" <%# TagCheck(Eval(\"" + _DataColumn.ColumnName + "\")) %> /><label> </label> " + _NewLine;
+                    //code += "</p> " + _NewLine;
                     //code += "</td> " + _NewLine;
                 }
                 //else
                 //{
-                //    code += " <td class=\"td"+ _DataColumn.ColumnName + "\"> " + _NewLine;
-                //    code += "       <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
-                //    code += "    <div style=\"display: none\"> " + _NewLine;
-                //    code += "        <input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate " + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\"> " + _NewLine;
-                //    code += "        <label class=\"lblSave\">Save</label> " + _NewLine;
-                //    code += "        <label class=\"lblCancel\">" + _NewLine;
-                //    code += "            Cancel</label> " + _NewLine;
-                //    code += "    </div> " + _NewLine;
-                //    code += "  </td>" + _NewLine;
+                //code += " <td class=\"td"+ _DataColumn.ColumnName + "\"> " + _NewLine;
+                //code += "   <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
+                //code += "<div style=\"display: none\"> " + _NewLine;
+                //code += "<input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate " + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\"> " + _NewLine;
+                //code += "<label class=\"lblSave\">Save</label> " + _NewLine;
+                //code += "<label class=\"lblCancel\">" + _NewLine;
+                //code += "Cancel</label> " + _NewLine;
+                //code += "</div> " + _NewLine;
+                //code += "  </td>" + _NewLine;
                 //}
 
                 // < input name = '' data - column - id = "BualuangExclusive" data - column - key = "<%# Eval("ID1") %>" type = 'radio' <%# ServiceSet(Eval("BualuangExclusive")) %> /><label for='test1'></label>
@@ -1040,7 +1021,10 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        #endregion Utility
+
         public override void Gen()
+
         {
             InnitProperties();
 
