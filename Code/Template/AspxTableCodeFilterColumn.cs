@@ -1,936 +1,14 @@
-﻿using StkGenCode.Code.Column;
+﻿using System.Data;
 using StkGenCode.Code.Name;
-using System.Data;
 
 namespace StkGenCode.Code.Template
 {
     public class AspxTableCodeFilterColumn : CodeBase
     {
-        #region Properties
-
-        //public AspxFromCode AspxFromCodeaspx;
-
-        #endregion Properties
-
-        #region Head
-
-        private string GenHeadeFile()
-        {
-            string code = "<%@ Page Title=\"" + _TableName + "\" Language=\"C#\" MasterPageFile=\"~/MasterPage.master\" AutoEventWireup=\"true\" CodeFile=\"" + _FileName.AspxTableCodeFilterColumnBehineName() + "\" Inherits=\"" + _TableName + "Filter\" %>" + _NewLine;
-
-            return code;
-        }
-
-        protected string GenReferJavaScript()
-        {
-            string code = "";
-            // code += "<script src=\"Bu/LocationManageCallServices.js\"></script>" + _NewLine;
-            //code += "<script src=\"Bu/AutoCompleteService.js\"></script>" + _NewLine;
-            code += "<script src=\"Module/Pagger/jquery.simplePagination.js\"></script>" + _NewLine;
-
-            code += "<script src=\"Js_U/" + _FileName.JsCodeName() + "\"></script>" + _NewLine;
-
-            //Refer JsDropDownlist
-
-            if (HaveDropDown())
-            {
-                foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-                {
-                    foreach (MappingColumn map in _MappingColumn)
-                    {
-                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
-                        {
-                            code += "<script src=\"Js_U/" + FileName.JsCodeName(map.TableName) + "\"></script>" + _NewLine;
-                        }
-                    }
-                }
-            }
-            return code;
-        }
-
-        protected string GenReferCss()
-
-        {
-            return " <link href=\"Module/Search/SearchControl.css\" rel=\"stylesheet\" />" + _NewLine;
-        }
-
-        #endregion Head
-
-        #region JavaScript
-
-        private string SetDatepicker()
-        {
-            string code = "";
-            code += "function SetDatepicker()" + _NewLine;
-            code += "{" + _NewLine;
-            code += "$('.datepicker').pickadate({ " + _NewLine;
-            code += "selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
-            code += "selectYears: 15,// Creates a dropdown of 15 years to control year,  " + _NewLine;
-            code += "format: 'd mmmm yyyy' " + _NewLine;
-            code += "});" + _NewLine;
-            code += "}" + _NewLine;
-            return code;
-        }
-
-        private string GenDocumentReady()
-        {
-            string code = "";
-            code += "$(document).ready(function () { " + _NewLine;
-
-            code += "ForceNumberTextBox(); " + _NewLine;
-            code += "SetDatepicker();" + _NewLine;
-
-            code += "//For search dropdown" + _NewLine;
-            // SetSelectCategory('#<%=drpTermId.ClientID %>');//Set slect box in page
-            // $('select').material_select();
-            if (HaveDropDown())
-            {
-                foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-                {
-                    foreach (MappingColumn map in _MappingColumn)
-                    {
-                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
-                        {//SetSelectCategory('#<%=drpTermId.ClientID %>');
-                            code += $"SetSelect{dataColumn.ColumnName}('#<%=drp{dataColumn.ColumnName}.ClientID %>');" + _NewLine;
-                        }
-                    }
-                }
-
-                code += "$('select').material_select(); " + _NewLine;
-            }
-
-            //code += "$('.datepicker').pickadate({ " + _NewLine;
-            //code += "selectMonths: true, // Creates a dropdown to control month  " + _NewLine;
-            //code += "selectYears: 15,// Creates a dropdown of 15 years to control year,  " + _NewLine;
-            //code += "format: 'd mmmm yyyy' " + _NewLine;
-            //code += "});" + _NewLine;
-
-            code += LeanModalJs();//
-
-            code += AutocompleteMutilColumnJs();
-
-            code += "});//End ready " + _NewLine;
-
-            return code;
-        }
-
-        private string SetTableJs()
-        {
-            string code = "";
-
-            code += "  function SetTable() {" + _NewLine;
-
-            code += MapControlHtmlToValiable(_ds);// var CategoryName = $('#<%=txtCategoryName.ClientID %>').val();" + _NewLine;
-
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            {
-                if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
-                {//chek bok
-                    code += $"   {dataColumn.ColumnName} ='';" + _NewLine;
-                }
-            }
-
-            code += "" + _NewLine;
-            code += "$('#modal1').openModal();" + _NewLine;
-            code += $"var result = {_TableName}Service.Search(PageIndex, PageSize, SortExpression, SortDirection, {GetColumnParameter()},RederTable_Pagger);" + _NewLine;
-            code += "" + _NewLine;
-            code += "}" + _NewLine;
-
-            return code;
-        }
-
-        private string RederTable_Pagger()
-        {
-            string code = "";
-            code += "function RederTable_Pagger(result) {" + _NewLine;
-            code += "var totalRecord = 0;" + _NewLine;
-            code += "" + _NewLine;
-            code += "if (result.length > 0)" + _NewLine;
-            code += "{" + _NewLine;
-            code += "$('#tbResult').show();" + _NewLine;
-            code += "$('#ulpage').show();" + _NewLine;
-            code += "$('#DivNoresults').hide();" + _NewLine;
-            code += "$(\"#tbResult > tbody:last\").children().remove();" + _NewLine;
-            code += "for (var key in result)" + _NewLine;
-            code += "{" + _NewLine;
-            code += "if (result.hasOwnProperty(key))" + _NewLine;
-            code += "{" + _NewLine;
-            code += "totalRecord = result[key].RecordCount;" + _NewLine;
-
-            code += GenTrTemplate();//********
-
-            code += "$('#tbResult> tbody').append(TrTempplate);" + _NewLine;
-            code += "}" + _NewLine;
-            code += "}" + _NewLine;
-            code += "" + _NewLine;
-            code += "}" + _NewLine;
-            code += "else" + _NewLine;
-            code += "{" + _NewLine;
-            code += "" + _NewLine;
-            code += "$('#tbResult').hide();" + _NewLine;
-            code += "$('#ulpage').hide();" + _NewLine;
-            code += "$('#DivNoresults').show();" + _NewLine;
-            code += "" + _NewLine;
-            code += "}" + _NewLine;
-            code += "" + _NewLine;
-            code += "$('#modal1').closeModal();" + _NewLine;
-
-            code += "BindEditTable();" + _NewLine;
-
-            code += "SetPagger(totalRecord);" + _NewLine;
-
-            //code += "$('select').material_select();" + _NewLine;
-
-            if (HaveDropDown())
-            {
-                foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-                {
-                    foreach (MappingColumn map in _MappingColumn)
-                    {
-                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
-                        {//SetSelectCategory('#<%=drpTermId.ClientID %>');
-                         //SetSelectCategoryID('.selectCategoryID');
-                            code += "//Set Selectin table" + _NewLine;
-                            code += $"SetSelect{dataColumn.ColumnName}('.select{dataColumn.ColumnName}');" + _NewLine;
-                            code += "  $(\".select" + dataColumn.ColumnName + "\").each(function () {" + _NewLine;
-                            code += "var selectInput = $(this);" + _NewLine;
-                            code += "var DefaultSelected = selectInput.attr('data-column-value');" + _NewLine;
-                            code += "selectInput.val(DefaultSelected);" + _NewLine;
-                            code += "" + _NewLine;
-                            code += "var selectedText = selectInput.find('option:selected').text();" + _NewLine;
-                            code += "" + _NewLine;
-                            code += "$(this).parent().prev()[0].innerText = selectedText" + _NewLine;
-                            code += "" + _NewLine;
-                            code += "});" + _NewLine;
-                            code += "" + _NewLine;
-                        }
-                    }
-                }
-            }
-
-            code += "}" + _NewLine;
-            code += "" + _NewLine;
-            code += "" + _NewLine;
-
-            return code;
-        }
-
-        private string SetSelectInput()
-        {
-            string code = "";
-
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            {
-                foreach (MappingColumn map in _MappingColumn)
-                {
-                    if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
-                    {
-                        code += " function SetSelect" + dataColumn.ColumnName + "(control) {" + _NewLine;
-                        code += "" + _NewLine;
-                        code += "var innitOption = '<option value=\"\">Please Select</option>';" + _NewLine;
-                        code += $"var result{map.TableName} = {map.TableName}Service.SelectAll();" + _NewLine;
-                        code += "$(control).append(innitOption);" + _NewLine;
-                        code += "$.each(result" + map.TableName + ", function (index, value) {" + _NewLine;
-                        code += "//Appending the json items to the dropdown (select tag)" + _NewLine;
-                        code += "//item is the id of your select tag" + _NewLine;
-                        code += "" + _NewLine;
-                        code += "var text = value.text;" + _NewLine;
-                        code += "var value = value.value;" + _NewLine;
-                        code += "" + _NewLine;
-                        code += "$(control).append('<option value=\"' + value + '\">' + text + '</option>');" + _NewLine;
-                        code += "" + _NewLine;
-                        code += "});" + _NewLine;
-                        code += "" + _NewLine;
-                        code += "   " + _NewLine;
-                        code += "" + _NewLine;
-                        code += "}" + _NewLine;
-                    }
-                }
-            }
-
-            return code;
-        }
-
-        private string SetPaggerJs()
-        {
-            string code = "";
-
-            code += "  function SetPagger(RecordCount) {" + _NewLine;
-            code += "$('#ulpage').pagination({" + _NewLine;
-            code += "items: RecordCount," + _NewLine;
-            code += "itemsOnPage: PageSize," + _NewLine;
-            code += "" + _NewLine;
-            code += "prevText: '<img class=\"iconDirection\" src=\"Images/1457020750_arrow-left-01.svg\" />'," + _NewLine;
-            code += "nextText: '<img class=\"iconDirection\" src=\"Images/1457020740_arrow-right-01.svg\" />'," + _NewLine;
-            code += "" + _NewLine;
-            code += "currentPage: PageIndex,//cssStyle: 'light-theme'," + _NewLine;
-            code += "onPageClick: function (event) {" + _NewLine;
-            code += "" + _NewLine;
-            code += "if (event < 10) {" + _NewLine;
-            code += "PageIndex = '0' + event;" + _NewLine;
-            code += "}" + _NewLine;
-            code += "else {" + _NewLine;
-            code += "PageIndex = event;" + _NewLine;
-            code += "}" + _NewLine;
-            code += "SetTable();" + _NewLine;
-            code += "}" + _NewLine;
-            code += "" + _NewLine;
-            code += "});" + _NewLine;
-            code += "" + _NewLine;
-            code += "}" + _NewLine;
-
-            return code;
-        }
-
-        private string ClearValueJs()
-        {
-            string code = "";
-
-            code += "function ClearValue() {" + _NewLine;
-            code += "ClearInputValue(\".input-field input[type=text],.input-field  input[type=password],.input-field  input[type=checkbox],.input-field  select,.input-field  input[type=radio]\");" + _NewLine;
-            code += "return false;" + _NewLine;
-            code += "}" + _NewLine;
-
-            return code;
-        }
-
-        private string Search()
-        {
-            string code = "";
-            code += "function Search() {" + _NewLine;
-            code += "PageIndex = 1;" + _NewLine;
-            code += "SortExpression = '';" + _NewLine;
-            code += "SortDirection = '';" + _NewLine;
-            code += "ClearSort();" + _NewLine;
-            code += "SetTable();" + _NewLine;
-
-            code += "}";
-            return code;
-        }
-
-        private string GlobalValiable()
-        {
-            string code = "";
-            code += "var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.'; " + _NewLine;
-            code += "var PageIndex = '1';" + _NewLine;
-            code += "var PageSize = '10';" + _NewLine;
-            code += "var SortExpression = '';" + _NewLine;
-            code += "var SortDirection = '';" + _NewLine;
-            return code;
-        }
-
-        private string BindEditTableJs()
-        {
-            string code = "";
-
-            code += "//Edit table-------------------------------------------------------------------------------------------- " + _NewLine;
-
-            //ClassSet = ColumnString.GenLineString(_ds, _TableName, ".td{0},");
-            //ClassSet = ClassSet.TrimEnd(',');
-
-            var classTextBox = GenClassTextBoxList();
-
-            code += "function BindEditTable() {" + _NewLine;
-            code += "$('" + classTextBox + "').dblclick(function () { " + _NewLine;
-
-            code += " " + _NewLine;
-            code += "var sp = $(this).find(\"span\"); " + _NewLine;
-            code += "var di = $(this).find(\"div\"); " + _NewLine;
-            code += "sp.hide(); " + _NewLine;
-            code += "di.show(); " + _NewLine;
-            code += " " + _NewLine;
-            code += "di.focus(); " + _NewLine;
-            code += "}); " + _NewLine;
-            code += " " + _NewLine;
-            code += "$(\".lblCancel\").click(function (event) { " + _NewLine;
-            code += "$(this).parent().parent().find(\"span\").show(); " + _NewLine;
-            code += "$(this).parent().parent().find(\"div\").hide(); " + _NewLine;
-            //code += "$(this).parent().parent().removeClass(\"widthEditBig\"); " + _NewLine;
-            //code += "$(this).parent().parent().removeClass(\"widthEditSmall\"); " + _NewLine;
-            code += " " + _NewLine;
-            code += "}); " + _NewLine;
-            code += " " + _NewLine;
-
-            code += "" + _NewLine;
-            code += "$(\".lblSave\").click(function (event) {" + _NewLine;
-            code += "var tdContent = $(this).parent().parent();" + _NewLine;
-            code += "var inputBox = tdContent.find(\"input,select\")[0]; //Get Data inputbox" + _NewLine;
-            code += "//if (inputBox == undefined) {" + _NewLine;
-            code += "" + _NewLine;
-            code += "//inputBox = tdContent.find(\"select\")[0];" + _NewLine;
-            code += "//}" + _NewLine;
-            code += "" + _NewLine;
-            code += "var id = $(this).parent().parent().parent().find(\"span\")[0].outerText; //Get first Td (ID1)" + _NewLine;
-            code += "var column = inputBox.attributes['data-column-id'].value;" + _NewLine;
-            code += "var data = inputBox.value;" + _NewLine;
-            code += "" + _NewLine;
-
-            //validate
-
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            {
-                if (IsDropDown(dataColumn))
-                {
-                    code += "" + _NewLine;
-                    code += "if (column == \"" + dataColumn.ColumnName + "\")" + _NewLine;
-                    code += "{" + _NewLine;
-                    code += "if ($(inputBox).prop('selectedIndex') == 0) {" + _NewLine;
-                    code += "$(inputBox).addClass(\"invalid\");" + _NewLine;
-                    code += " Materialize.toast('please validate your input.', 3000, 'toastCss');  " + _NewLine;
-                    code += "return;" + _NewLine;
-                    code += "}" + _NewLine;
-                    code += "}" + _NewLine;
-                    code += "" + _NewLine;
-                }
-                else
-                {
-                    code += "if (column == \"" + dataColumn.ColumnName + "\")" + _NewLine;
-                    code += "{" + _NewLine;
-                    code += "if ($(inputBox).val().trim() == '') {" + _NewLine;
-                    code += "$(inputBox).addClass(\"invalid\");" + _NewLine;
-                    code += " Materialize.toast('please validate your input.', 3000, 'toastCss');  " + _NewLine;
-
-                    code += "return;" + _NewLine;
-                    code += "}" + _NewLine;
-                    code += "}" + _NewLine;
-                    code += "" + _NewLine;
-                }
-            }
-
-            //======Valide
-
-            code += "" + _NewLine;
-            code += "var txtspan = tdContent.find(\"span\")[0];" + _NewLine;
-            code += "var oldData = trim(txtspan.innerText, \" \");" + _NewLine;
-            code += "" + _NewLine;
-            code += "if (data == oldData) {" + _NewLine;
-            code += "//CalCell" + _NewLine;
-            code += "tdContent.find(\"span\").show();" + _NewLine;
-            code += "tdContent.find(\"div\").hide();" + _NewLine;
-            code += "return;" + _NewLine;
-            code += "//" + _NewLine;
-            code += "}" + _NewLine;
-            code += "" + _NewLine;
-            code += "//Save Data To CodeBehide" + _NewLine;
-            code += $"var result = {_TableName}Service.SaveColumn(id, column, data);" + _NewLine;
-            code += "" + _NewLine;
-            code += "//Convert Select" + _NewLine;
-            code += "if (inputBox.tagName == 'SELECT') {" + _NewLine;
-            code += "data = $(inputBox).find('option:selected').text();" + _NewLine;
-            code += "}" + _NewLine;
-            code += "" + _NewLine;
-            code += "if (result == true) {" + _NewLine;
-            code += "tdContent.find(\"span\").show();" + _NewLine;
-            code += "tdContent.find(\"div\").hide();" + _NewLine;
-            code += "tdContent.removeClass(\"widthEditBig\");" + _NewLine;
-            code += "tdContent.removeClass(\"widthEditSmall\");" + _NewLine;
-            code += "//tdContent.addClass(\"saved\");" + _NewLine;
-            code += "" + _NewLine;
-            code += "//tdContent.find(\"span\")[0].innerText = data; //Swap Value" + _NewLine;
-            code += "//tdContent.find(\"span\")[0].className += \"saved\";" + _NewLine;
-            code += "" + _NewLine;
-            code += "txtspan.innerText = data;" + _NewLine;
-            code += "txtspan.className = \"saved\";" + _NewLine;
-            code += "Materialize.toast('Your data has been saved.', 3000, 'toastCss');" + _NewLine;
-            code += "}" + _NewLine;
-            code += "else {" + _NewLine;
-            code += "Materialize.toast(MsgError, 5000, 'toastCss');" + _NewLine;
-            code += "}" + _NewLine;
-            code += "" + _NewLine;
-
-            code += "});" + _NewLine;
-
-            string classCheck = GenClassCheckBoxList();
-            //code += "$('.chekBoxAtm,.chekBoxBranch,.chekBoxSubBranch,.chekBoxMicroBranch,.chekBoxInternationalBranch,.chekBoxBusinessCenter,.chekBoxFXBooth,.chekBoxBualuangExclusive,.chekBoxFCDService,.chekBoxRemittanceService ,.chekBoxWesternUnionService').dblclick(function () { " + _NewLine;
-            code += "$('" + classCheck + "').dblclick(function () { " + _NewLine;
-
-            code += "// <p><input name = '' type = 'radio' id = 'test1'  checked= 'true' /><label for= 'test1'></label></p> " + _NewLine;
-            code += "var chk = $(this).find('input:radio')[0]; " + _NewLine;
-            code += " " + _NewLine;
-            code += "//  var id = $(this).parent().parent().parent().find(\"td:first\")[0].outerText; //Get first Td (ID1) " + _NewLine;
-            code += "var id = chk.attributes['data-column-key'].value; " + _NewLine;
-
-            code += "var column = chk.attributes['data-column-id'].value; " + _NewLine;
-            code += "var Data = \"\"; " + _NewLine;
-            code += " " + _NewLine;
-            code += "var status = false; " + _NewLine;
-            code += "if (chk.checked) { " + _NewLine;
-            code += "status = false; " + _NewLine;
-            code += "Data = \"0\"; " + _NewLine;
-            code += "} " + _NewLine;
-            code += "else { " + _NewLine;
-            code += "status = true; " + _NewLine;
-            code += "Data = \"1\"; " + _NewLine;
-            code += "} " + _NewLine;
-            code += " " + _NewLine;
-            code += "var result = " + _TableName + "Service.SaveColumn(id, column, Data); " + _NewLine;
-            code += " " + _NewLine;
-            code += "if (result == true) { " + _NewLine;
-            code += "//Display Message Display Checkbox " + _NewLine;
-            code += "chk.checked = status; " + _NewLine;
-            code += "Materialize.toast('Your data has been saved.', 3000, 'toastCss'); " + _NewLine;
-            code += "} " + _NewLine;
-            code += "else { " + _NewLine;
-            code += "Materialize.toast(MsgError, 5000, 'toastCss'); " + _NewLine;
-            code += "} " + _NewLine;
-            code += " " + _NewLine;
-            code += "}); " + _NewLine;
-
-            code += "ForceNumberTextBoxEditMode();" + _NewLine;
-            code += "SetDatepicker();//" + _NewLine;
-            code += " }" + _NewLine;
-            code += "//Edit table===================================================================================================================== " + _NewLine;
-
-            return code;
-        }
-
-        private string ClearSortJs()
-        {
-            string code = "";
-            code += "function ClearSort() {" + _NewLine;
-            code += "$('#tbResult').find('th').each(function() {" + _NewLine;
-            code += "var columnName = $(this).attr(\"data-column-id\");" + _NewLine;
-            code += "$(this).html(columnName);" + _NewLine;
-            code += "});" + _NewLine;
-            code += "}" + _NewLine;
-            return code;
-        }
-
-        private string SortJs()
-        {
-            string code = "";
-            code += "function Sort(th) {" + _NewLine;
-            code += "" + _NewLine;
-            code += "var ColumnSortName = th.attributes['data-column-id'].value;" + _NewLine;
-            code += "ClearSort();" + _NewLine;
-            code += "SortExpression = ColumnSortName;" + _NewLine;
-            code += "if (SortDirection == 'DESC') {" + _NewLine;
-            code += "SortDirection = 'ASC';" + _NewLine;
-            code += "" + _NewLine;
-            code += "$(th).html(ColumnSortName + ' <i class=\"Small material-icons\">arrow_drop_up</i>');" + _NewLine;
-            code += "}" + _NewLine;
-            code += "else {" + _NewLine;
-            code += "" + _NewLine;
-            code += "SortDirection = 'DESC';" + _NewLine;
-            code += "$(th).html(ColumnSortName + ' <i class=\"Small material-icons\">arrow_drop_down</i>');" + _NewLine;
-            code += "}" + _NewLine;
-            code += "" + _NewLine;
-            code += "SetTable();" + _NewLine;
-            code += "}" + _NewLine;
-            return code;
-        }
-
-        /// <summary>
-        /// InnitModal
-        /// </summary>
-        /// <returns></returns>
-        public string LeanModalJs()
-        {
-            string code = "";
-            code += "$('.modal-trigger').leanModal({ " + _NewLine;
-            code += "dismissible: false, // Modal can be dismissed by clicking outside of the modal " + _NewLine;
-            code += "opacity: .5, // Opacity of modal background " + _NewLine;
-            code += "in_duration: 300, // Transition in duration " + _NewLine;
-            code += "out_duration: 200, // Transition out duration " + _NewLine;
-            code += "starting_top: '50%' " + _NewLine;
-            code += "" + _NewLine;
-            code += "//ready: function () { alert('Ready'); }, // Callback for Modal open " + _NewLine;
-            code += "//complete: function () { alert('Closed'); } // Callback for Modal close " + _NewLine;
-            code += "}); " + _NewLine;
-            return code;
-        }
-
-        public string AutocompleteOneJavaScript()
-        {
-            string code = "";
-            code += "//For Autocomplete  ----------------------------------------------------------------------------------- " + _NewLine;
-            //code += "$(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
-            //code += "  $('" + ClassTextBox + "').autocomplete({ " + _NewLine;
-            code += " $('#<%= txtSearch.ClientID%>').autocomplete({ " + _NewLine;
-            code += " " + _NewLine;
-            code += "  source: function (request, response) { " + _NewLine;
-            code += " " + _NewLine;
-            //code += "var postCode = this.element[0].parentNode.parentNode.parentNode.childNodes[13].innerText; " + _NewLine;
-            //code += "var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
-            code += "var keyword = this.element[0].value " + _NewLine;
-            code += " " + _NewLine;
-            code += "var data = " + _TableName + "Service.GetKeyWordsAllColumn(keyword); " + _NewLine;
-            code += " " + _NewLine;
-            code += "response(data); " + _NewLine;
-            code += "//$.ajax({ " + _NewLine;
-            code += "//url: \"/WebTemplate/LocationManage.aspx/GenGetKeyWordsAllColumn\", " + _NewLine;
-            code += "//dataType: \"json\", " + _NewLine;
-            code += "//data: { " + _NewLine;
-            code += "//Column: 'EnglishAddress3', " + _NewLine;
-            code += "//value: request.term " + _NewLine;
-            code += "//}, " + _NewLine;
-            code += "//contentType: \"application/json; charset=utf-8\", " + _NewLine;
-            code += "//success: function (data) { " + _NewLine;
-            code += " " + _NewLine;
-            code += "//response(data); " + _NewLine;
-            code += "//}, " + _NewLine;
-            code += "//error: function (msg) { " + _NewLine;
-            code += "//debugger " + _NewLine;
-            code += "//alert(msg); " + _NewLine;
-            code += " " + _NewLine;
-            code += "//} " + _NewLine;
-            code += "//}); " + _NewLine;
-            code += "}, " + _NewLine;
-            code += "minLength: 3, " + _NewLine;
-            code += "select: function (event, ui) { " + _NewLine;
-            code += "//log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " + _NewLine;
-            code += "}, " + _NewLine;
-            code += "open: function () { " + _NewLine;
-            code += "$(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + _NewLine;
-            code += "}, " + _NewLine;
-            code += "close: function () { " + _NewLine;
-            code += "$(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + _NewLine;
-            code += "} " + _NewLine;
-            code += "}); " + _NewLine;
-            code += "//For Autocomplete================================================================================== " + _NewLine;
-            code += " " + _NewLine;
-            return code;
-        }
-
-        protected string AutocompleteMutilColumnJs()
-        {
-            string code = "";
-            //string classIds = ColumnString.GenLineString(_ds, ".{0},");
-
-            //classIds = classIds.TrimEnd(',');
-
-            string classIds = GetColumnParameter(".{0},");
-            classIds = classIds.TrimEnd(',');
-            //code += "$(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
-            code += "$(\"" + classIds + "\").autocomplete({ " + _NewLine;
-
-            code += " " + _NewLine;
-            code += "source: function (request, response) { " + _NewLine;
-            code += " " + _NewLine;
-
-            code += "var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
-            code += " " + _NewLine;
-            code += "var data = " + _TableName + "Service.GetKeyWordsOneColumn(column, request.term); " + _NewLine;
-            code += " " + _NewLine;
-            code += "response(data); " + _NewLine;
-            code += "   " + _NewLine;
-            code += "}, " + _NewLine;
-            code += "minLength: 3, " + _NewLine;
-            code += "select: function (event, ui) { " + _NewLine;
-            code += "//log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " + _NewLine;
-            code += "}, " + _NewLine;
-            code += "open: function () { " + _NewLine;
-            code += "$(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + _NewLine;
-            code += "}, " + _NewLine;
-            code += "close: function () { " + _NewLine;
-            code += "$(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + _NewLine;
-            code += "} " + _NewLine;
-            code += "});" + _NewLine;
-            return code;
-        }
-
-        /// <summary>
-        ///บังคับให้กรอกได้แต่ตัวเลข
-        /// </summary>
-        /// <returns></returns>
-        public string ForceNumberTableEditJs()
-        {
-            string code = "";
-
-            code += "//For Validate Type " + _NewLine;
-            code += "function ForceNumberTextBoxEditMode() { " + _NewLine;
-            // code += "$(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
-
-            code += "$(\".ForceNumber\").ForceNumericOnly();  " + _NewLine;
-            code += "$(\".ForceNumber2Digit\").ForceNumericOnly2Digit(); " + _NewLine;
-            code += "} " + _NewLine;
-
-            return code;
-        }
-
-        public string ForceNumberFilterJs()
-        {
-            string code = "";
-            code += "function ForceNumberTextBox() " + _NewLine;
-            code += "{" + _NewLine;
-
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            {
-                //ถ้าเป็น DropDown ไม่ต้อง Force ตัวเลข
-                if (IsDropDown(dataColumn))
-                    continue;
-
-                //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-                string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
-                //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
-                //string controlDropDownName = string.Format(formatDropDownName , _DataColumn.ColumnName);
-
-                //if ((dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
-                //{
-                //continue;
-                //}
-
-                if ((dataColumn.DataType.ToString() == "System.Guid") || (dataColumn.DataType.ToString() == "System.Int16"))
-                { continue; }
-
-                if (dataColumn.DataType.ToString() == "System.Int32")
-                {
-                    code += "$(\"#<%=" + controlTextBoxName + ".ClientID %>\").ForceNumericOnly();" + _NewLine;
-                }
-                else if (dataColumn.DataType.ToString() == "System.Decimal")
-                {
-                    code += "$(\"#<%=" + controlTextBoxName + ".ClientID %>\").ForceNumericOnly2Digit();" + _NewLine;
-                }
-            }
-
-            code += "}" + _NewLine;
-
-            return code;
-        }
-
-        #endregion JavaScript
-
-        #region Html
-
-        private string SearcFilterHtml()
-        {
-            string code = "";
-            code += " <div class=\"container\"> " + _NewLine;
-            //code += "<div class=\" col s12\"> " + _NewLine;
-
-            //Usign Gen Text Box
-            code += "<div class=\"row\"> " + _NewLine;
-            string txtBoxSet = GenControls(6, false);
-            //txtBoxSet = txtBoxSet.Replace("s12", "s3");
-            //txtBoxSet = "";
-            code += txtBoxSet;
-            code += "<div class=\"input-field col s12\"> " + _NewLine;
-            code += " " + _NewLine;
-            // code += "<a class=\"waves-effect waves-light btn center\">Search</a> " + _NewLine;
-            //code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\"   runat=\"server\" Text=\"Search\" />" + _NewLine;
-            //code += "<asp:Button ID=\"btnClear\" CssClass=\"waves-effect waves-light btn center\" OnClientClick=\"javascript:return ClearValue();\" runat=\"server\" Text=\"Clear\" />";
-            code += "<input id=\"btnSearch\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Search\" onclick=\"Search();\" />" + _NewLine;
-            code += "<input id=\"btnClear\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Clear\" onclick=\"javascript: return ClearValue();\" />" + _NewLine;
-            code += "<input id =\"btnNew\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"New\" onclick=\"javascript: window.open('" + _FileName.AspxFromCodeName() + "', '_blank');\" />" + _NewLine;
-            code += "</div> " + _NewLine;
-            code += "</div> " + _NewLine;
-            code += "" + _NewLine;
-            code += "</div> " + _NewLine;
-            //code += "</div> " + _NewLine;
-
-            return code;
-        }
-
-        protected string GenTableFromJson()
-        {
-            string code = "  ";
-
-            code += "<table id=tbResult class=\"  bordered  striped \"  style=\"display: none;\" > " + _NewLine;
-            code += "  <thead> " + _NewLine;
-            code += "  <tr> " + _NewLine;
-            //code += " <th>Currency</th>  " + _NewLine;
-            //code += "  <th>Description</th> " + _NewLine;
-            //code += "   <th>Bank Note</th>" + _NewLine;
-            //code += "  <th>Buying Rates	</th> " + _NewLine;
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            {
-                //code += " <th style=\"width: 300px; \">" + dataColumn.ColumnName.ToUpper() + "</th> " + _NewLine;
-                code += $"<th style=\"width:300px;\" data-column-id=\"{dataColumn.ColumnName}\"  onclick=\"Sort(this);\">{dataColumn.ColumnName}</th>" + _NewLine;
-                // code += "<th> " + dataColumn.ColumnName + "\" CssClass=\"hrefclass\"  >" + dataColumn.ColumnName + " </th> " + _NewLine;
-            }
-
-            code += "</tr>" + _NewLine;
-            code += "</thead>" + _NewLine;
-            code += "<tbody>" + _NewLine;
-            code += "</tbody>" + _NewLine;
-            code += "</table>" + _NewLine;
-
-            return code;
-        }
-
-        private string GenTrTemplate()
-        {
-            string code = "";
-
-            code += "var TrTempplate =\"<tr>\";" + _NewLine;
-
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            {
-                if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
-                {//check box
-                    code += " var status" + dataColumn.ColumnName + " ='' ;" + _NewLine;
-                    code += "if (result[key]." + dataColumn.ColumnName + " == '1')" + _NewLine;
-                    code += "{" + _NewLine;
-                    code += "status" + dataColumn.ColumnName + " = 'checked';" + _NewLine;
-                    code += "} else" + _NewLine;
-                    code += "{" + _NewLine;
-                    code += "status" + dataColumn.ColumnName + " = '';" + _NewLine;
-                    code += "}" + _NewLine;
-
-                    code += "TrTempplate +=\"<td class='borderRight chekBox" + dataColumn.ColumnName + "'>\";" + _NewLine;
-                    code += "TrTempplate +=\"<p>\";" + _NewLine;
-                    code += "TrTempplate +=\"<input name='' type='radio' data-column-id='" + dataColumn.ColumnName + "' data-column-key='\"+result[key]." + _ds.Tables[0].PrimaryKey[0] + "+\"' \"+status" + dataColumn.ColumnName + "+\"/><label> </label>\"; " + _NewLine;
-                    code += "TrTempplate +=\"</p>\"; ";
-                    code += "TrTempplate +=\"</td> \";";
-                }
-                else
-                {
-                    code += "TrTempplate +=\"<td class='td" + dataColumn.ColumnName + "'>\";" + _NewLine;
-                    //ใช้สำหรับทำ Drop down ตอน Display ก่อน Edit
-                    if (IsDropDown(dataColumn))
-                    {
-                        // code += "TrTempplate +=\"<td class='borderRight chekBox" + dataColumn.ColumnName + "'>\";" + _NewLine;
-
-                        code += "TrTempplate +=\"<span class='truncate'>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
-                    }
-                    else if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
-                    {
-                        code += "TrTempplate +=\"<a id='btnShowPopup0' target='_blank' href='" + _TableName + "Web.aspx?Q=\"+result[key]." + dataColumn.ColumnName + "+\"'\";" + _NewLine;
-                        code += "TrTempplate +=\"title=''>\";" + _NewLine;
-                        code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
-                        code += "TrTempplate +=\"</a>\";" + _NewLine;
-                    }
-                    else if ((dataColumn.DataType.ToString() == "System.DateTime"))
-                    {
-                        //dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "), 'd mmm yyyy')
-                        code += "TrTempplate +=\"<span>\"+dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "), 'd mmm yyyy')+\"</span>\";" + _NewLine;
-                        //code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
-                    }
-                    else if ((dataColumn.DataType.ToString() == "System.String"))
-                    {
-                        code += "TrTempplate +=\"<span class=''>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
-                    }
-                    else
-                    {
-                        code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
-                    }
-
-                    //ตัว Edit DataTable ===========================================================================
-                    code += "TrTempplate +=\"<div style='display: none'>\";" + _NewLine;
-
-                    if (IsDropDown(dataColumn))
-                    {
-                        //TrTempplate += "<select id='selectCategoryID' class='selectCategoryID selectInputEditMode'></select>";
-                        code += $"TrTempplate += \"<select id='select{dataColumn.ColumnName}' data-column-id='{dataColumn.ColumnName}'  data-column-value='\" + result[key].{dataColumn.ColumnName}+\"' class='select{dataColumn.ColumnName} selectInputEditMode' ></select>\";" + _NewLine;
-                    }
-                    else
-                    if ((dataColumn.DataType.ToString() == "System.String"))
-                    {
-                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "' type='text' MaxLength='" + dataColumn.MaxLength + "' length='" + dataColumn.MaxLength + "' class='validate truncate" + dataColumn.ColumnName + "' value='\"+result[key]." + dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + _NewLine;
-                    }
-                    else if ((dataColumn.DataType.ToString() == "System.Int32"))
-
-                    {
-                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "' type='text' class='validate ForceNumber ' value='\"+result[key]." + dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + _NewLine;
-                    }
-                    else if ((dataColumn.DataType.ToString() == "System.Decimal"))
-
-                    {
-                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "' type='text' class='validate ForceNumber2Digit' value='\"+result[key]." + dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + _NewLine;
-                    }
-                    else if ((dataColumn.DataType.ToString() == "System.DateTime"))
-
-                    {
-                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName + "'class='datepicker' type='date' value='\"+dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "),'d mmm yyyy')+\"' style='height: unset; margin: 0px;'>\";" + _NewLine;
-                    }
-
-                    code += "TrTempplate +=\"<label class='lblSave'>Save</label>\";" + _NewLine;
-                    code += "TrTempplate +=\"<label class='lblCancel'>\";" + _NewLine;
-                    code += "TrTempplate +=\"Cancel</label>\";" + _NewLine;
-                    code += "TrTempplate +=\"</div>\";" + _NewLine;
-                    code += "TrTempplate +=\"</td>\";" + _NewLine;
-                }
-            }
-            code += "TrTempplate +=\"</tr>\";" + _NewLine;
-
-            return code;
-        }
-
-        protected string PaggerHtml()
-        {
-            string code = "";
-            code += "<ul id=\"ulpage\" class=\"pagination\"> " + _NewLine;
-
-            code += "</ul>";
-
-            return code;
-        }
-
-        protected string ModalProgressHtml()
-        {
-            string code = "";
-            code += " " + _NewLine;
-            code += "   <!-- Modal Structure --> " + _NewLine;
-            code += "<div id=\"modal1\" class=\"modal\"> " + _NewLine;
-            code += "<div class=\"modal-content\"> " + _NewLine;
-            code += "<p>Loading</p> " + _NewLine;
-            code += "<div class=\"progress\"> " + _NewLine;
-            code += "<div class=\"indeterminate\"></div> " + _NewLine;
-            code += "</div> " + _NewLine;
-            code += "</div> " + _NewLine;
-            code += "  " + _NewLine;
-            code += "</div>" + _NewLine;
-            //  code += "</div>" + _NewLine;
-            return code;
-        }
-
-        protected string NoResultHtml()
-        {
-            string code = "";
-
-            code += " <div id=\"DivNoresults\" class=\"container\"  style=\"display: none\" > " + _NewLine;
-            code += "<p class=\"flow-text\">No results found. Try the following:</p> " + _NewLine;
-            code += "<p> " + _NewLine;
-            code += "Make sure all words are spelled correctly. " + _NewLine;
-            code += "</p> " + _NewLine;
-            code += "<p> " + _NewLine;
-            code += "Try different keywords. " + _NewLine;
-            code += "</p> " + _NewLine;
-            code += "<p> " + _NewLine;
-            code += "Try more general keywords. " + _NewLine;
-            code += "</p> " + _NewLine;
-            code += "</div>";
-
-            return code;
-        }
-
-        #endregion Html
-
-        #region Server Tag
-
-        protected string GenContentHeadBegin()
-        {
-            string code = "<asp:Content ID=\"Content1\" ContentPlaceHolderID=\"head\" runat=\"server\">  " + _NewLine;
-
-            return code;
-        }
-
-        protected string GenContentHeadEnd()
-        {
-            string code = "";
-
-            code += " </asp:Content> " + _NewLine;
-            return code;
-        }
-
-        protected string GenContentBodyBegin()
-        {
-            string code = "<asp:Content ID=\"Content2\" ContentPlaceHolderID=\"ContentPlaceHolder1\" runat=\"server\" > " + _NewLine;
-            return code;
-        }
-
-        protected string GenContentBodyEnd()
-        {
-            string code = "</asp:Content>" + _NewLine;
-            return code;
-        }
-
-        #endregion Server Tag
-
         //javascript Method
         private string GenJavaScript()
         {
-            string code = "<script>" + _NewLine;
+            var code = "<script>" + NewLine;
 
             code += GlobalValiable();
 
@@ -955,23 +33,1034 @@ namespace StkGenCode.Code.Template
             code += SetPaggerJs();
 
             code += SetDatepicker();
-            if (HaveDropDown())
-            {
-                code += SetSelectInput();
-            }
-            code += ForceNumberFilterJs();
+
+            code += SetSelectInput();
+
+            code += ForceNumberTextBox(false);
             code += "</script>";
             return code;
         }
+
+        public override void Gen()
+
+        {
+            InnitProperties();
+
+            var code = "";
+
+            code += GenHeadeFile();
+
+            code += GenContentHeadBegin();
+
+            code += GenReferJavaScript();
+
+            code += GenJavaScript();
+
+            code += GenReferCss();
+
+            code += GenContentHeadEnd();
+
+            code += GenContentBodyBegin();
+
+            code += SearcFilterHtml();
+
+            code += GenTableFromJson();
+
+            code += PaggerHtml();
+
+            code += NoResultHtml();
+
+            code += ModalProgressHtml();
+
+            code += GenContentBodyEnd();
+
+            FileCode.WriteFile(FileName.AspxTableCodeFilterColumnName(), code);
+        }
+
+        #region Properties
+
+        //public AspxFromCode AspxFromCodeaspx;
+
+        #endregion Properties
+
+        #region Head
+
+        private string GenHeadeFile()
+        {
+            var code = "<%@ Page Title=\"" + TableName +
+                       "\" Language=\"C#\" MasterPageFile=\"~/MasterPage.master\" AutoEventWireup=\"true\" CodeFile=\"" +
+                       FileName.AspxTableCodeFilterColumnBehineName() + "\" Inherits=\"" + TableName + "Filter\" %>" +
+                       NewLine;
+
+            return code;
+        }
+
+        protected string GenReferJavaScript()
+        {
+            var code = "";
+            // code += "<script src=\"Bu/LocationManageCallServices.js\"></script>" + _NewLine;
+            //code += "<script src=\"Bu/AutoCompleteService.js\"></script>" + _NewLine;
+            code += "<script src=\"Module/Pagger/jquery.simplePagination.js\"></script>" + NewLine;
+
+            code += "<script src=\"Js_U/" + FileName.JsCodeName() + "\"></script>" + NewLine;
+
+            //Refer JsDropDownlist
+
+            if (HaveDropDown())
+            {
+                foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+                {
+                    foreach (var map in MappingColumn)
+                    {
+                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
+                        {
+                            code += "<script src=\"Js_U/" + FileName.JsCodeName(map.TableName) + "\"></script>" +
+                                    NewLine;
+                        }
+                    }
+                }
+            }
+            return code;
+        }
+
+        protected string GenReferCss()
+
+        {
+            return " <link href=\"Module/Search/SearchControl.css\" rel=\"stylesheet\" />" + NewLine;
+        }
+
+        #endregion Head
+
+        #region JavaScript
+
+        private string SetDatepicker()
+        {
+            var code = "";
+            code += "function SetDatepicker()" + NewLine;
+            code += "{" + NewLine;
+            code += "$('.datepicker').pickadate({ " + NewLine;
+            code += "selectMonths: true, // Creates a dropdown to control month  " + NewLine;
+            code += "selectYears: 15,// Creates a dropdown of 15 years to control year,  " + NewLine;
+            code += "format: 'd mmmm yyyy' " + NewLine;
+            code += "});" + NewLine;
+            code += "}" + NewLine;
+            return code;
+        }
+
+        private string GenDocumentReady()
+        {
+            var code = "";
+            code += "$(document).ready(function () { " + NewLine;
+
+            code += "ForceNumberTextBox(); " + NewLine;
+            code += "SetDatepicker();" + NewLine;
+
+            code += "//For search dropdown" + NewLine;
+
+            //if (HaveDropDown())
+            //{
+            //    foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            //    {
+            //        foreach (MappingColumn map in _MappingColumn)
+            //        {
+            //            if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
+            //            {//SetSelectCategory('#<%=drpTermId.ClientID %>');
+            //                code += $"SetSelect{dataColumn.ColumnName}('#<%=drp{dataColumn.ColumnName}.ClientID %>');" + _NewLine;
+            //            }
+            //        }
+            //    }
+
+            //    code += "$('select').material_select(); " + _NewLine;
+            //}
+            code += SetSelect();
+
+            code += LeanModalJs(); //
+
+            code += AutocompleteMutilColumnJs();
+
+            code += "});//End ready " + NewLine;
+
+            return code;
+        }
+
+        private string SetTableJs()
+        {
+            var code = "";
+
+            code += "  function SetTable() {" + NewLine;
+
+            code += MapControlHtmlToValiable(Ds);
+                // var CategoryName = $('#<%=txtCategoryName.ClientID %>').val();" + _NewLine;
+
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+            {
+                if ((dataColumn.DataType.ToString() == "System.Boolean") ||
+                    (dataColumn.DataType.ToString() == "System.Int16"))
+                {
+//chek bok
+                    code += $"   {dataColumn.ColumnName} ='';" + NewLine;
+                }
+            }
+
+            code += "" + NewLine;
+            code += "$('#modal1').openModal();" + NewLine;
+            code +=
+                $"var result = {TableName}Service.Search(PageIndex, PageSize, SortExpression, SortDirection, {GetColumnParameter()},RederTable_Pagger);" +
+                NewLine;
+            code += "" + NewLine;
+            code += "}" + NewLine;
+
+            return code;
+        }
+
+        private string RederTable_Pagger()
+        {
+            var code = "";
+            code += "function RederTable_Pagger(result) {" + NewLine;
+            code += "var totalRecord = 0;" + NewLine;
+            code += "" + NewLine;
+            code += "if (result.length > 0)" + NewLine;
+            code += "{" + NewLine;
+            code += "$('#tbResult').show();" + NewLine;
+            code += "$('#ulpage').show();" + NewLine;
+            code += "$('#DivNoresults').hide();" + NewLine;
+            code += "$(\"#tbResult > tbody:last\").children().remove();" + NewLine;
+            code += "for (var key in result)" + NewLine;
+            code += "{" + NewLine;
+            code += "if (result.hasOwnProperty(key))" + NewLine;
+            code += "{" + NewLine;
+            code += "totalRecord = result[key].RecordCount;" + NewLine;
+
+            code += GenTrTemplate(); //********
+
+            code += "$('#tbResult> tbody').append(TrTempplate);" + NewLine;
+            code += "}" + NewLine;
+            code += "}" + NewLine;
+            code += "" + NewLine;
+            code += "}" + NewLine;
+            code += "else" + NewLine;
+            code += "{" + NewLine;
+            code += "" + NewLine;
+            code += "$('#tbResult').hide();" + NewLine;
+            code += "$('#ulpage').hide();" + NewLine;
+            code += "$('#DivNoresults').show();" + NewLine;
+            code += "" + NewLine;
+            code += "}" + NewLine;
+            code += "" + NewLine;
+            code += "$('#modal1').closeModal();" + NewLine;
+
+            code += "BindEditTable();" + NewLine;
+
+            code += "SetPagger(totalRecord);" + NewLine;
+
+            //code += "$('select').material_select();" + _NewLine;
+
+            if (HaveDropDown())
+            {
+                foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+                {
+                    foreach (var map in MappingColumn)
+                    {
+                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
+                        {
+//SetSelectCategory('#<%=drpTermId.ClientID %>');
+                            //SetSelectCategoryID('.selectCategoryID');
+                            code += "//Set Selectin table" + NewLine;
+                            code += $"SetSelect{dataColumn.ColumnName}('.select{dataColumn.ColumnName}');" + NewLine;
+                            code += "  $(\".select" + dataColumn.ColumnName + "\").each(function () {" + NewLine;
+                            code += "var selectInput = $(this);" + NewLine;
+                            code += "var DefaultSelected = selectInput.attr('data-column-value');" + NewLine;
+                            code += "selectInput.val(DefaultSelected);" + NewLine;
+                            code += "" + NewLine;
+                            code += "var selectedText = selectInput.find('option:selected').text();" + NewLine;
+                            code += "" + NewLine;
+                            code += "$(this).parent().prev()[0].innerText = selectedText" + NewLine;
+                            code += "" + NewLine;
+                            code += "});" + NewLine;
+                            code += "" + NewLine;
+                        }
+                    }
+                }
+            }
+
+            code += "}" + NewLine;
+            code += "" + NewLine;
+            code += "" + NewLine;
+
+            return code;
+        }
+
+        //private string SetSelectInput()
+        //{
+        //    string code = "";
+
+        //    foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+        //    {
+        //        foreach (MappingColumn map in _MappingColumn)
+        //        {
+        //            if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
+        //            {
+        //                code += " function SetSelect" + dataColumn.ColumnName + "(control) {" + _NewLine;
+        //                code += "" + _NewLine;
+        //                code += "var innitOption = '<option value=\"\">Please Select</option>';" + _NewLine;
+        //                code += $"var result{map.TableName} = {map.TableName}Service.SelectAll();" + _NewLine;
+        //                code += "$(control).append(innitOption);" + _NewLine;
+        //                code += "$.each(result" + map.TableName + ", function (index, value) {" + _NewLine;
+        //                code += "//Appending the json items to the dropdown (select tag)" + _NewLine;
+        //                code += "//item is the id of your select tag" + _NewLine;
+        //                code += "" + _NewLine;
+        //                code += "var text = value.text;" + _NewLine;
+        //                code += "var value = value.value;" + _NewLine;
+        //                code += "" + _NewLine;
+        //                code += "$(control).append('<option value=\"' + value + '\">' + text + '</option>');" + _NewLine;
+        //                code += "" + _NewLine;
+        //                code += "});" + _NewLine;
+        //                code += "" + _NewLine;
+        //                code += "   " + _NewLine;
+        //                code += "" + _NewLine;
+        //                code += "}" + _NewLine;
+        //            }
+        //        }
+        //    }
+
+        //    return code;
+        //}
+
+        private string SetPaggerJs()
+        {
+            var code = "";
+
+            code += "  function SetPagger(RecordCount) {" + NewLine;
+            code += "$('#ulpage').pagination({" + NewLine;
+            code += "items: RecordCount," + NewLine;
+            code += "itemsOnPage: PageSize," + NewLine;
+            code += "" + NewLine;
+            code += "prevText: '<img class=\"iconDirection\" src=\"Images/1457020750_arrow-left-01.svg\" />'," + NewLine;
+            code += "nextText: '<img class=\"iconDirection\" src=\"Images/1457020740_arrow-right-01.svg\" />'," +
+                    NewLine;
+            code += "" + NewLine;
+            code += "currentPage: PageIndex,//cssStyle: 'light-theme'," + NewLine;
+            code += "onPageClick: function (event) {" + NewLine;
+            code += "" + NewLine;
+            code += "if (event < 10) {" + NewLine;
+            code += "PageIndex = '0' + event;" + NewLine;
+            code += "}" + NewLine;
+            code += "else {" + NewLine;
+            code += "PageIndex = event;" + NewLine;
+            code += "}" + NewLine;
+            code += "SetTable();" + NewLine;
+            code += "}" + NewLine;
+            code += "" + NewLine;
+            code += "});" + NewLine;
+            code += "" + NewLine;
+            code += "}" + NewLine;
+
+            return code;
+        }
+
+        private string ClearValueJs()
+        {
+            var code = "";
+
+            code += "function ClearValue() {" + NewLine;
+            code +=
+                "ClearInputValue(\".input-field input[type=text],.input-field  input[type=password],.input-field  input[type=checkbox],.input-field  select,.input-field  input[type=radio]\");" +
+                NewLine;
+            code += "return false;" + NewLine;
+            code += "}" + NewLine;
+
+            return code;
+        }
+
+        private string Search()
+        {
+            var code = "";
+            code += "function Search() {" + NewLine;
+            code += "PageIndex = 1;" + NewLine;
+            code += "SortExpression = '';" + NewLine;
+            code += "SortDirection = '';" + NewLine;
+            code += "ClearSort();" + NewLine;
+            code += "SetTable();" + NewLine;
+
+            code += "}";
+            return code;
+        }
+
+        private string GlobalValiable()
+        {
+            var code = "";
+            code +=
+                "var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.'; " +
+                NewLine;
+            code += "var PageIndex = '1';" + NewLine;
+            code += "var PageSize = '10';" + NewLine;
+            code += "var SortExpression = '';" + NewLine;
+            code += "var SortDirection = '';" + NewLine;
+            return code;
+        }
+
+        private string BindEditTableJs()
+        {
+            var code = "";
+
+            code +=
+                "//Edit table-------------------------------------------------------------------------------------------- " +
+                NewLine;
+
+            //ClassSet = ColumnString.GenLineString(_ds, _TableName, ".td{0},");
+            //ClassSet = ClassSet.TrimEnd(',');
+
+            var classTextBox = GenClassTextBoxList();
+
+            code += "function BindEditTable() {" + NewLine;
+            code += "$('" + classTextBox + "').dblclick(function () { " + NewLine;
+
+            code += " " + NewLine;
+            code += "var sp = $(this).find(\"span\"); " + NewLine;
+            code += "var di = $(this).find(\"div\"); " + NewLine;
+            code += "sp.hide(); " + NewLine;
+            code += "di.show(); " + NewLine;
+            code += " " + NewLine;
+            code += "di.focus(); " + NewLine;
+            code += "}); " + NewLine;
+            code += " " + NewLine;
+            code += "$(\".lblCancel\").click(function (event) { " + NewLine;
+            code += "$(this).parent().parent().find(\"span\").show(); " + NewLine;
+            code += "$(this).parent().parent().find(\"div\").hide(); " + NewLine;
+            //code += "$(this).parent().parent().removeClass(\"widthEditBig\"); " + _NewLine;
+            //code += "$(this).parent().parent().removeClass(\"widthEditSmall\"); " + _NewLine;
+            code += " " + NewLine;
+            code += "}); " + NewLine;
+            code += " " + NewLine;
+
+            code += "" + NewLine;
+            code += "$(\".lblSave\").click(function (event) {" + NewLine;
+            code += "var tdContent = $(this).parent().parent();" + NewLine;
+            code += "var inputBox = tdContent.find(\"input,select\")[0]; //Get Data inputbox" + NewLine;
+            code += "//if (inputBox == undefined) {" + NewLine;
+            code += "" + NewLine;
+            code += "//inputBox = tdContent.find(\"select\")[0];" + NewLine;
+            code += "//}" + NewLine;
+            code += "" + NewLine;
+            code += "var id = $(this).parent().parent().parent().find(\"span\")[0].outerText; //Get first Td (ID1)" +
+                    NewLine;
+            code += "var column = inputBox.attributes['data-column-id'].value;" + NewLine;
+            code += "var data = inputBox.value;" + NewLine;
+            code += "" + NewLine;
+
+            //validate
+
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+            {
+                if (IsDropDown(dataColumn))
+                {
+                    code += "" + NewLine;
+                    code += "if (column == \"" + dataColumn.ColumnName + "\")" + NewLine;
+                    code += "{" + NewLine;
+                    code += "if ($(inputBox).prop('selectedIndex') == 0) {" + NewLine;
+                    code += "$(inputBox).addClass(\"invalid\");" + NewLine;
+                    code += " Materialize.toast('please validate your input.', 3000, 'toastCss');  " + NewLine;
+                    code += "return;" + NewLine;
+                    code += "}" + NewLine;
+                    code += "}" + NewLine;
+                    code += "" + NewLine;
+                }
+                else
+                {
+                    code += "if (column == \"" + dataColumn.ColumnName + "\")" + NewLine;
+                    code += "{" + NewLine;
+                    code += "if ($(inputBox).val().trim() == '') {" + NewLine;
+                    code += "$(inputBox).addClass(\"invalid\");" + NewLine;
+                    code += " Materialize.toast('please validate your input.', 3000, 'toastCss');  " + NewLine;
+
+                    code += "return;" + NewLine;
+                    code += "}" + NewLine;
+                    code += "}" + NewLine;
+                    code += "" + NewLine;
+                }
+            }
+
+            //======Valide
+
+            code += "" + NewLine;
+            code += "var txtspan = tdContent.find(\"span\")[0];" + NewLine;
+            code += "var oldData = trim(txtspan.innerText, \" \");" + NewLine;
+            code += "" + NewLine;
+            code += "if (data == oldData) {" + NewLine;
+            code += "//CalCell" + NewLine;
+            code += "tdContent.find(\"span\").show();" + NewLine;
+            code += "tdContent.find(\"div\").hide();" + NewLine;
+            code += "return;" + NewLine;
+            code += "//" + NewLine;
+            code += "}" + NewLine;
+            code += "" + NewLine;
+            code += "//Save Data To CodeBehide" + NewLine;
+            code += $"var result = {TableName}Service.SaveColumn(id, column, data);" + NewLine;
+            code += "" + NewLine;
+            code += "//Convert Select" + NewLine;
+            code += "if (inputBox.tagName == 'SELECT') {" + NewLine;
+            code += "data = $(inputBox).find('option:selected').text();" + NewLine;
+            code += "}" + NewLine;
+            code += "" + NewLine;
+            code += "if (result == true) {" + NewLine;
+            code += "tdContent.find(\"span\").show();" + NewLine;
+            code += "tdContent.find(\"div\").hide();" + NewLine;
+            code += "tdContent.removeClass(\"widthEditBig\");" + NewLine;
+            code += "tdContent.removeClass(\"widthEditSmall\");" + NewLine;
+            code += "//tdContent.addClass(\"saved\");" + NewLine;
+            code += "" + NewLine;
+            code += "//tdContent.find(\"span\")[0].innerText = data; //Swap Value" + NewLine;
+            code += "//tdContent.find(\"span\")[0].className += \"saved\";" + NewLine;
+            code += "" + NewLine;
+            code += "txtspan.innerText = data;" + NewLine;
+            code += "txtspan.className = \"saved\";" + NewLine;
+            code += "Materialize.toast('Your data has been saved.', 3000, 'toastCss');" + NewLine;
+            code += "}" + NewLine;
+            code += "else {" + NewLine;
+            code += "Materialize.toast(MsgError, 5000, 'toastCss');" + NewLine;
+            code += "}" + NewLine;
+            code += "" + NewLine;
+
+            code += "});" + NewLine;
+
+            var classCheck = GenClassCheckBoxList();
+            //code += "$('.chekBoxAtm,.chekBoxBranch,.chekBoxSubBranch,.chekBoxMicroBranch,.chekBoxInternationalBranch,.chekBoxBusinessCenter,.chekBoxFXBooth,.chekBoxBualuangExclusive,.chekBoxFCDService,.chekBoxRemittanceService ,.chekBoxWesternUnionService').dblclick(function () { " + _NewLine;
+            code += "$('" + classCheck + "').dblclick(function () { " + NewLine;
+
+            code +=
+                "// <p><input name = '' type = 'radio' id = 'test1'  checked= 'true' /><label for= 'test1'></label></p> " +
+                NewLine;
+            code += "var chk = $(this).find('input:radio')[0]; " + NewLine;
+            code += " " + NewLine;
+            code +=
+                "//  var id = $(this).parent().parent().parent().find(\"td:first\")[0].outerText; //Get first Td (ID1) " +
+                NewLine;
+            code += "var id = chk.attributes['data-column-key'].value; " + NewLine;
+
+            code += "var column = chk.attributes['data-column-id'].value; " + NewLine;
+            code += "var Data = \"\"; " + NewLine;
+            code += " " + NewLine;
+            code += "var status = false; " + NewLine;
+            code += "if (chk.checked) { " + NewLine;
+            code += "status = false; " + NewLine;
+            code += "Data = \"0\"; " + NewLine;
+            code += "} " + NewLine;
+            code += "else { " + NewLine;
+            code += "status = true; " + NewLine;
+            code += "Data = \"1\"; " + NewLine;
+            code += "} " + NewLine;
+            code += " " + NewLine;
+            code += "var result = " + TableName + "Service.SaveColumn(id, column, Data); " + NewLine;
+            code += " " + NewLine;
+            code += "if (result == true) { " + NewLine;
+            code += "//Display Message Display Checkbox " + NewLine;
+            code += "chk.checked = status; " + NewLine;
+            code += "Materialize.toast('Your data has been saved.', 3000, 'toastCss'); " + NewLine;
+            code += "} " + NewLine;
+            code += "else { " + NewLine;
+            code += "Materialize.toast(MsgError, 5000, 'toastCss'); " + NewLine;
+            code += "} " + NewLine;
+            code += " " + NewLine;
+            code += "}); " + NewLine;
+
+            code += "ForceNumberTextBoxEditMode();" + NewLine;
+            code += "SetDatepicker();//" + NewLine;
+            code += " }" + NewLine;
+            code +=
+                "//Edit table===================================================================================================================== " +
+                NewLine;
+
+            return code;
+        }
+
+        private string ClearSortJs()
+        {
+            var code = "";
+            code += "function ClearSort() {" + NewLine;
+            code += "$('#tbResult').find('th').each(function() {" + NewLine;
+            code += "var columnName = $(this).attr(\"data-column-id\");" + NewLine;
+            code += "$(this).html(columnName);" + NewLine;
+            code += "});" + NewLine;
+            code += "}" + NewLine;
+            return code;
+        }
+
+        private string SortJs()
+        {
+            var code = "";
+            code += "function Sort(th) {" + NewLine;
+            code += "" + NewLine;
+            code += "var ColumnSortName = th.attributes['data-column-id'].value;" + NewLine;
+            code += "ClearSort();" + NewLine;
+            code += "SortExpression = ColumnSortName;" + NewLine;
+            code += "if (SortDirection == 'DESC') {" + NewLine;
+            code += "SortDirection = 'ASC';" + NewLine;
+            code += "" + NewLine;
+            code += "$(th).html(ColumnSortName + ' <i class=\"Small material-icons\">arrow_drop_up</i>');" + NewLine;
+            code += "}" + NewLine;
+            code += "else {" + NewLine;
+            code += "" + NewLine;
+            code += "SortDirection = 'DESC';" + NewLine;
+            code += "$(th).html(ColumnSortName + ' <i class=\"Small material-icons\">arrow_drop_down</i>');" + NewLine;
+            code += "}" + NewLine;
+            code += "" + NewLine;
+            code += "SetTable();" + NewLine;
+            code += "}" + NewLine;
+            return code;
+        }
+
+        /// <summary>
+        ///     InnitModal
+        /// </summary>
+        /// <returns></returns>
+        public string LeanModalJs()
+        {
+            var code = "";
+            code += "$('.modal-trigger').leanModal({ " + NewLine;
+            code += "dismissible: false, // Modal can be dismissed by clicking outside of the modal " + NewLine;
+            code += "opacity: .5, // Opacity of modal background " + NewLine;
+            code += "in_duration: 300, // Transition in duration " + NewLine;
+            code += "out_duration: 200, // Transition out duration " + NewLine;
+            code += "starting_top: '50%' " + NewLine;
+            code += "" + NewLine;
+            code += "//ready: function () { alert('Ready'); }, // Callback for Modal open " + NewLine;
+            code += "//complete: function () { alert('Closed'); } // Callback for Modal close " + NewLine;
+            code += "}); " + NewLine;
+            return code;
+        }
+
+        public string AutocompleteOneJavaScript()
+        {
+            var code = "";
+            code +=
+                "//For Autocomplete  ----------------------------------------------------------------------------------- " +
+                NewLine;
+            //code += "$(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
+            //code += "  $('" + ClassTextBox + "').autocomplete({ " + _NewLine;
+            code += " $('#<%= txtSearch.ClientID%>').autocomplete({ " + NewLine;
+            code += " " + NewLine;
+            code += "  source: function (request, response) { " + NewLine;
+            code += " " + NewLine;
+            //code += "var postCode = this.element[0].parentNode.parentNode.parentNode.childNodes[13].innerText; " + _NewLine;
+            //code += "var column = this.element[0].attributes[\"data-column-id\"].value; " + _NewLine;
+            code += "var keyword = this.element[0].value " + NewLine;
+            code += " " + NewLine;
+            code += "var data = " + TableName + "Service.GetKeyWordsAllColumn(keyword); " + NewLine;
+            code += " " + NewLine;
+            code += "response(data); " + NewLine;
+            code += "//$.ajax({ " + NewLine;
+            code += "//url: \"/WebTemplate/LocationManage.aspx/GenGetKeyWordsAllColumn\", " + NewLine;
+            code += "//dataType: \"json\", " + NewLine;
+            code += "//data: { " + NewLine;
+            code += "//Column: 'EnglishAddress3', " + NewLine;
+            code += "//value: request.term " + NewLine;
+            code += "//}, " + NewLine;
+            code += "//contentType: \"application/json; charset=utf-8\", " + NewLine;
+            code += "//success: function (data) { " + NewLine;
+            code += " " + NewLine;
+            code += "//response(data); " + NewLine;
+            code += "//}, " + NewLine;
+            code += "//error: function (msg) { " + NewLine;
+            code += "//debugger " + NewLine;
+            code += "//alert(msg); " + NewLine;
+            code += " " + NewLine;
+            code += "//} " + NewLine;
+            code += "//}); " + NewLine;
+            code += "}, " + NewLine;
+            code += "minLength: 3, " + NewLine;
+            code += "select: function (event, ui) { " + NewLine;
+            code += "//log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " +
+                    NewLine;
+            code += "}, " + NewLine;
+            code += "open: function () { " + NewLine;
+            code += "$(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + NewLine;
+            code += "}, " + NewLine;
+            code += "close: function () { " + NewLine;
+            code += "$(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + NewLine;
+            code += "} " + NewLine;
+            code += "}); " + NewLine;
+            code +=
+                "//For Autocomplete================================================================================== " +
+                NewLine;
+            code += " " + NewLine;
+            return code;
+        }
+
+        protected string AutocompleteMutilColumnJs()
+        {
+            var code = "";
+            //string classIds = ColumnString.GenLineString(_ds, ".{0},");
+
+            //classIds = classIds.TrimEnd(',');
+
+            var classIds = GetColumnParameter(".{0},");
+            classIds = classIds.TrimEnd(',');
+            //code += "$(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
+            code += "$(\"" + classIds + "\").autocomplete({ " + NewLine;
+
+            code += " " + NewLine;
+            code += "source: function (request, response) { " + NewLine;
+            code += " " + NewLine;
+
+            code += "var column = this.element[0].attributes[\"data-column-id\"].value; " + NewLine;
+            code += " " + NewLine;
+            code += "var data = " + TableName + "Service.GetKeyWordsOneColumn(column, request.term); " + NewLine;
+            code += " " + NewLine;
+            code += "response(data); " + NewLine;
+            code += "   " + NewLine;
+            code += "}, " + NewLine;
+            code += "minLength: 3, " + NewLine;
+            code += "select: function (event, ui) { " + NewLine;
+            code += "//log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " +
+                    NewLine;
+            code += "}, " + NewLine;
+            code += "open: function () { " + NewLine;
+            code += "$(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + NewLine;
+            code += "}, " + NewLine;
+            code += "close: function () { " + NewLine;
+            code += "$(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + NewLine;
+            code += "} " + NewLine;
+            code += "});" + NewLine;
+            return code;
+        }
+
+        /// <summary>
+        ///     บังคับให้กรอกได้แต่ตัวเลข
+        /// </summary>
+        /// <returns></returns>
+        public string ForceNumberTableEditJs()
+        {
+            var code = "";
+
+            code += "//For Validate Type " + NewLine;
+            code += "function ForceNumberTextBoxEditMode() { " + NewLine;
+            // code += "$(\".ForceNumber\").ForceNumericOnly(); " + _NewLine;
+
+            code += "$(\".ForceNumber\").ForceNumericOnly();  " + NewLine;
+            code += "$(\".ForceNumber2Digit\").ForceNumericOnly2Digit(); " + NewLine;
+            code += "} " + NewLine;
+
+            return code;
+        }
+
+        //public string ForceNumberFilterJs()
+        //{
+        //    string code = "";
+        //    code += "function ForceNumberTextBox() " + _NewLine;
+        //    code += "{" + _NewLine;
+
+        //    foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+        //    {
+        //        //ถ้าเป็น DropDown ไม่ต้อง Force ตัวเลข
+        //        if (IsDropDown(dataColumn))
+        //            continue;
+
+        //        //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
+        //        string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
+        //        //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
+        //        //string controlDropDownName = string.Format(formatDropDownName , _DataColumn.ColumnName);
+
+        //        //if ((dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+        //        //{
+        //        //continue;
+        //        //}
+
+        //        if ((dataColumn.DataType.ToString() == "System.Guid") || (dataColumn.DataType.ToString() == "System.Int16"))
+        //        { continue; }
+
+        //        if (dataColumn.DataType.ToString() == "System.Int32")
+        //        {
+        //            code += "$(\"#<%=" + controlTextBoxName + ".ClientID %>\").ForceNumericOnly();" + _NewLine;
+        //        }
+        //        else if (dataColumn.DataType.ToString() == "System.Decimal")
+        //        {
+        //            code += "$(\"#<%=" + controlTextBoxName + ".ClientID %>\").ForceNumericOnly2Digit();" + _NewLine;
+        //        }
+        //    }
+
+        //    code += "}" + _NewLine;
+
+        //    return code;
+        //}
+
+        #endregion JavaScript
+
+        #region Html
+
+        private string SearcFilterHtml()
+        {
+            var code = "";
+            code += " <div class=\"container\"> " + NewLine;
+            //code += "<div class=\" col s12\"> " + _NewLine;
+
+            //Usign Gen Text Box
+            code += "<div class=\"row\"> " + NewLine;
+            var txtBoxSet = GenControls(6, false);
+            //txtBoxSet = txtBoxSet.Replace("s12", "s3");
+            //txtBoxSet = "";
+            code += txtBoxSet;
+            code += "<div class=\"input-field col s12\"> " + NewLine;
+            code += " " + NewLine;
+            // code += "<a class=\"waves-effect waves-light btn center\">Search</a> " + _NewLine;
+            //code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\"   runat=\"server\" Text=\"Search\" />" + _NewLine;
+            //code += "<asp:Button ID=\"btnClear\" CssClass=\"waves-effect waves-light btn center\" OnClientClick=\"javascript:return ClearValue();\" runat=\"server\" Text=\"Clear\" />";
+            code +=
+                "<input id=\"btnSearch\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Search\" onclick=\"Search();\" />" +
+                NewLine;
+            code +=
+                "<input id=\"btnClear\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Clear\" onclick=\"javascript: return ClearValue();\" />" +
+                NewLine;
+            code +=
+                "<input id =\"btnNew\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"New\" onclick=\"javascript: window.open('" +
+                FileName.AspxFromCodeName() + "', '_blank');\" />" + NewLine;
+            code += "</div> " + NewLine;
+            code += "</div> " + NewLine;
+            code += "" + NewLine;
+            code += "</div> " + NewLine;
+            //code += "</div> " + _NewLine;
+
+            return code;
+        }
+
+        protected string GenTableFromJson()
+        {
+            var code = "  ";
+
+            code += "<table id=tbResult class=\"  bordered  striped \"  style=\"display: none;\" > " + NewLine;
+            code += "  <thead> " + NewLine;
+            code += "  <tr> " + NewLine;
+            //code += " <th>Currency</th>  " + _NewLine;
+            //code += "  <th>Description</th> " + _NewLine;
+            //code += "   <th>Bank Note</th>" + _NewLine;
+            //code += "  <th>Buying Rates	</th> " + _NewLine;
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+            {
+                //code += " <th style=\"width: 300px; \">" + dataColumn.ColumnName.ToUpper() + "</th> " + _NewLine;
+                code +=
+                    $"<th style=\"width:300px;\" data-column-id=\"{dataColumn.ColumnName}\"  onclick=\"Sort(this);\">{dataColumn.ColumnName}</th>" +
+                    NewLine;
+                // code += "<th> " + dataColumn.ColumnName + "\" CssClass=\"hrefclass\"  >" + dataColumn.ColumnName + " </th> " + _NewLine;
+            }
+
+            code += "</tr>" + NewLine;
+            code += "</thead>" + NewLine;
+            code += "<tbody>" + NewLine;
+            code += "</tbody>" + NewLine;
+            code += "</table>" + NewLine;
+
+            return code;
+        }
+
+        private string GenTrTemplate()
+        {
+            var code = "";
+
+            code += "var TrTempplate =\"<tr>\";" + NewLine;
+
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+            {
+                if ((dataColumn.DataType.ToString() == "System.Boolean") ||
+                    (dataColumn.DataType.ToString() == "System.Int16"))
+                {
+//check box
+                    code += " var status" + dataColumn.ColumnName + " ='' ;" + NewLine;
+                    code += "if (result[key]." + dataColumn.ColumnName + " == '1')" + NewLine;
+                    code += "{" + NewLine;
+                    code += "status" + dataColumn.ColumnName + " = 'checked';" + NewLine;
+                    code += "} else" + NewLine;
+                    code += "{" + NewLine;
+                    code += "status" + dataColumn.ColumnName + " = '';" + NewLine;
+                    code += "}" + NewLine;
+
+                    code += "TrTempplate +=\"<td class='borderRight chekBox" + dataColumn.ColumnName + "'>\";" + NewLine;
+                    code += "TrTempplate +=\"<p>\";" + NewLine;
+                    code += "TrTempplate +=\"<input name='' type='radio' data-column-id='" + dataColumn.ColumnName +
+                            "' data-column-key='\"+result[key]." + Ds.Tables[0].PrimaryKey[0] + "+\"' \"+status" +
+                            dataColumn.ColumnName + "+\"/><label> </label>\"; " + NewLine;
+                    code += "TrTempplate +=\"</p>\"; ";
+                    code += "TrTempplate +=\"</td> \";";
+                }
+                else
+                {
+                    code += "TrTempplate +=\"<td class='td" + dataColumn.ColumnName + "'>\";" + NewLine;
+                    //ใช้สำหรับทำ Drop down ตอน Display ก่อน Edit
+                    if (IsDropDown(dataColumn))
+                    {
+                        // code += "TrTempplate +=\"<td class='borderRight chekBox" + dataColumn.ColumnName + "'>\";" + _NewLine;
+
+                        code += "TrTempplate +=\"<span class='truncate'>\"+result[key]." + dataColumn.ColumnName +
+                                "+\"</span>\";" + NewLine;
+                    }
+                    else if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
+                    {
+                        code += "TrTempplate +=\"<a id='btnShowPopup0' target='_blank' href='" + TableName +
+                                "Web.aspx?Q=\"+result[key]." + dataColumn.ColumnName + "+\"'\";" + NewLine;
+                        code += "TrTempplate +=\"title=''>\";" + NewLine;
+                        code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" +
+                                NewLine;
+                        code += "TrTempplate +=\"</a>\";" + NewLine;
+                    }
+                    else if (dataColumn.DataType.ToString() == "System.DateTime")
+                    {
+                        //dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "), 'd mmm yyyy')
+                        code += "TrTempplate +=\"<span>\"+dateFormat(JsonDateToDate(result[key]." +
+                                dataColumn.ColumnName + "), 'd mmm yyyy')+\"</span>\";" + NewLine;
+                        //code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
+                    }
+                    else if (dataColumn.DataType.ToString() == "System.String")
+                    {
+                        code += "TrTempplate +=\"<span class=''>\"+result[key]." + dataColumn.ColumnName +
+                                "+\"</span>\";" + NewLine;
+                    }
+                    else
+                    {
+                        code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" +
+                                NewLine;
+                    }
+
+                    //ตัว Edit DataTable ===========================================================================
+                    code += "TrTempplate +=\"<div style='display: none'>\";" + NewLine;
+
+                    if (IsDropDown(dataColumn))
+                    {
+                        //TrTempplate += "<select id='selectCategoryID' class='selectCategoryID selectInputEditMode'></select>";
+                        code +=
+                            $"TrTempplate += \"<select id='select{dataColumn.ColumnName}' data-column-id='{dataColumn.ColumnName}'  data-column-value='\" + result[key].{dataColumn.ColumnName}+\"' class='select{dataColumn.ColumnName} selectInputEditMode' ></select>\";" +
+                            NewLine;
+                    }
+                    else if (dataColumn.DataType.ToString() == "System.String")
+                    {
+                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName +
+                                "' type='text' MaxLength='" + dataColumn.MaxLength + "' length='" + dataColumn.MaxLength +
+                                "' class='validate truncate" + dataColumn.ColumnName + "' value='\"+result[key]." +
+                                dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
+                    }
+                    else if (dataColumn.DataType.ToString() == "System.Int32")
+
+                    {
+                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName +
+                                "' type='text' class='validate ForceNumber ' value='\"+result[key]." +
+                                dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
+                    }
+                    else if (dataColumn.DataType.ToString() == "System.Decimal")
+
+                    {
+                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName +
+                                "' type='text' class='validate ForceNumber2Digit' value='\"+result[key]." +
+                                dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
+                    }
+                    else if (dataColumn.DataType.ToString() == "System.DateTime")
+
+                    {
+                        code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName +
+                                "'class='datepicker' type='date' value='\"+dateFormat(JsonDateToDate(result[key]." +
+                                dataColumn.ColumnName + "),'d mmm yyyy')+\"' style='height: unset; margin: 0px;'>\";" +
+                                NewLine;
+                    }
+
+                    code += "TrTempplate +=\"<label class='lblSave'>Save</label>\";" + NewLine;
+                    code += "TrTempplate +=\"<label class='lblCancel'>\";" + NewLine;
+                    code += "TrTempplate +=\"Cancel</label>\";" + NewLine;
+                    code += "TrTempplate +=\"</div>\";" + NewLine;
+                    code += "TrTempplate +=\"</td>\";" + NewLine;
+                }
+            }
+            code += "TrTempplate +=\"</tr>\";" + NewLine;
+
+            return code;
+        }
+
+        protected string PaggerHtml()
+        {
+            var code = "";
+            code += "<ul id=\"ulpage\" class=\"pagination\"> " + NewLine;
+
+            code += "</ul>";
+
+            return code;
+        }
+
+        protected string ModalProgressHtml()
+        {
+            var code = "";
+            code += " " + NewLine;
+            code += "   <!-- Modal Structure --> " + NewLine;
+            code += "<div id=\"modal1\" class=\"modal\"> " + NewLine;
+            code += "<div class=\"modal-content\"> " + NewLine;
+            code += "<p>Loading</p> " + NewLine;
+            code += "<div class=\"progress\"> " + NewLine;
+            code += "<div class=\"indeterminate\"></div> " + NewLine;
+            code += "</div> " + NewLine;
+            code += "</div> " + NewLine;
+            code += "  " + NewLine;
+            code += "</div>" + NewLine;
+            //  code += "</div>" + _NewLine;
+            return code;
+        }
+
+        protected string NoResultHtml()
+        {
+            var code = "";
+
+            code += " <div id=\"DivNoresults\" class=\"container\"  style=\"display: none\" > " + NewLine;
+            code += "<p class=\"flow-text\">No results found. Try the following:</p> " + NewLine;
+            code += "<p> " + NewLine;
+            code += "Make sure all words are spelled correctly. " + NewLine;
+            code += "</p> " + NewLine;
+            code += "<p> " + NewLine;
+            code += "Try different keywords. " + NewLine;
+            code += "</p> " + NewLine;
+            code += "<p> " + NewLine;
+            code += "Try more general keywords. " + NewLine;
+            code += "</p> " + NewLine;
+            code += "</div>";
+
+            return code;
+        }
+
+        #endregion Html
+
+        #region Server Tag
+
+        protected string GenContentHeadBegin()
+        {
+            var code = "<asp:Content ID=\"Content1\" ContentPlaceHolderID=\"head\" runat=\"server\">  " + NewLine;
+
+            return code;
+        }
+
+        protected string GenContentHeadEnd()
+        {
+            var code = "";
+
+            code += " </asp:Content> " + NewLine;
+            return code;
+        }
+
+        protected string GenContentBodyBegin()
+        {
+            var code = "<asp:Content ID=\"Content2\" ContentPlaceHolderID=\"ContentPlaceHolder1\" runat=\"server\" > " +
+                       NewLine;
+            return code;
+        }
+
+        protected string GenContentBodyEnd()
+        {
+            var code = "</asp:Content>" + NewLine;
+            return code;
+        }
+
+        #endregion Server Tag
 
         #region Utility
 
         protected string GenClassCheckBoxList()
         {
-            string code = "";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            var code = "";
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
+                if ((dataColumn.DataType.ToString() == "System.Boolean") ||
+                    (dataColumn.DataType.ToString() == "System.Int16"))
                 {
                     code += $".chekBox{dataColumn.ColumnName},";
                 }
@@ -983,16 +1072,17 @@ namespace StkGenCode.Code.Template
 
         protected string GenClassTextBoxList()
         {
-            string code = "";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            var code = "";
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if ((dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName))
+                if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
                 {
                     continue;
                 }
                 //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
                 //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
-                if ((dataColumn.DataType.ToString() != "System.Boolean") || (dataColumn.DataType.ToString() != "System.Int16"))
+                if ((dataColumn.DataType.ToString() != "System.Boolean") ||
+                    (dataColumn.DataType.ToString() != "System.Int16"))
                 {
                     code += $".td{dataColumn.ColumnName},";
                     //code += "<td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
@@ -1022,41 +1112,5 @@ namespace StkGenCode.Code.Template
         }
 
         #endregion Utility
-
-        public override void Gen()
-
-        {
-            InnitProperties();
-
-            string code = "";
-
-            code += GenHeadeFile();
-
-            code += GenContentHeadBegin();
-
-            code += GenReferJavaScript();
-
-            code += GenJavaScript();
-
-            code += GenReferCss();
-
-            code += GenContentHeadEnd();
-
-            code += GenContentBodyBegin();
-
-            code += SearcFilterHtml();
-
-            code += GenTableFromJson();
-
-            code += PaggerHtml();
-
-            code += NoResultHtml();
-
-            code += ModalProgressHtml();
-
-            code += GenContentBodyEnd();
-
-            _FileCode.WriteFile(_FileName.AspxTableCodeFilterColumnName(), code);
-        }
     }
 }

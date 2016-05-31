@@ -1,7 +1,6 @@
-﻿using FirebirdSql.Data.FirebirdClient;
-using System.Data;
-
+﻿using System.Data;
 using System.Data.SqlClient;
+using FirebirdSql.Data.FirebirdClient;
 
 namespace StkGenCode.Code
 {
@@ -10,10 +9,10 @@ namespace StkGenCode.Code
         public static DataSet GetSchemaSqlServer(string connectstring, string tableName)
         {
             var sql = "select * from " + tableName + " where 1=0;";
-            SqlConnection fbConnection = new SqlConnection { ConnectionString = connectstring };
-            DataSet ds = new DataSet();
+            var fbConnection = new SqlConnection {ConnectionString = connectstring};
+            var ds = new DataSet();
 
-            SqlDataAdapter adapter = new SqlDataAdapter(sql, fbConnection);
+            var adapter = new SqlDataAdapter(sql, fbConnection);
             adapter.Fill(ds);
 
             //For Get Lenght
@@ -27,12 +26,12 @@ namespace StkGenCode.Code
         public static DataSet GetSchemaFireBird(string connectstring, string tableName)
         {
             var sql = "select * from " + tableName + " where 1=0;";
-            FbConnection fbConnection = new FbConnection { ConnectionString = connectstring };
+            var fbConnection = new FbConnection {ConnectionString = connectstring};
 
             fbConnection.Open();
-            DataSet ds = new DataSet();
+            var ds = new DataSet();
 
-            FbDataAdapter adapter = new FbDataAdapter(sql, fbConnection);
+            var adapter = new FbDataAdapter(sql, fbConnection);
             adapter.Fill(ds);
 
             //For Get Lenght

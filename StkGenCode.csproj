@@ -60,8 +60,6 @@
     <Compile Include="Code\Name\FileName.cs" />
     <Compile Include="Code\Template\AspxFromCodeBehide.cs" />
     <Compile Include="Code\Template\AspxFromCode.cs" />
-    <Compile Include="Code\Template\AspxTableCode.cs" />
-    <Compile Include="Code\Template\AspxTableCodeBehine.cs" />
     <Compile Include="Code\Template\AspxTableCodeFilterColumn.cs" />
     <Compile Include="Code\Template\AspxTableCodeFilterColumnCodeBehide.cs" />
     <Compile Include="Code\Template\CodeBase.cs" />
@@ -79,6 +77,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

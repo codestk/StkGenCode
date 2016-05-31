@@ -4,18 +4,14 @@ using StkGenCode.Code.Template;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace StkGenCode
 {
     public partial class Form1 : Form
     {
-        public Form1()
-        {
-            InitializeComponent();
-        }
-
+        private readonly DataSet _ds = null;
         //List All Table to display
 
         //Write file by path
@@ -23,35 +19,39 @@ namespace StkGenCode
 
         private string _path;
 
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
         /// <summary>
-        ///
         /// </summary>
         /// <param name="_ds"></param>
-        /// <param name="_TableName"></param>
+        /// <param name="tableName"></param>
         /// <param name="columnDropDown">Clumn:Table;</param>
-        private void Gen(DataSet _ds, string _TableName, string columnDropDown = "")
+        private void Gen(DataSet _ds, string tableName, string columnDropDown = "")
         {
-            FileCode F = new FileCode { Path = _path };
+            var f = new FileCode { Path = _path };
 
-            List<MappingColumn> _MappingColumn = null;
+            List<MappingColumn> mappingColumn = null;
             if (columnDropDown != "")
-                _MappingColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
+                mappingColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
 
-            AspxFromCode _AspxFromCodeaspx = new AspxFromCode
+            var aspxFromCodeaspx = new AspxFromCode
             {
-                _FileCode = F,
-                _ds = _ds,
-                _TableName = _TableName,
-                _MappingColumn = _MappingColumn
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName,
+                MappingColumn = mappingColumn
             };
-            _AspxFromCodeaspx.Gen();
+            aspxFromCodeaspx.Gen();
 
-            AspxFromCodeBehide aspxFromCodeBehide = new AspxFromCodeBehide
+            var aspxFromCodeBehide = new AspxFromCodeBehide
             {
-                _FileCode = F,
-                _ds = _ds,
-                _TableName = _TableName,
-                _MappingColumn = _MappingColumn
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName,
+                MappingColumn = mappingColumn
             };
             aspxFromCodeBehide.Gen();
 
@@ -70,78 +70,78 @@ namespace StkGenCode
             //    _MappingColumn = _MappingColumn
             //};
 
-            AspxTableCodeFilterColumn aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
+            var aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
             {
-                _FileCode = F,
-                _ds = _ds,
-                _TableName = _TableName,
-                _MappingColumn = _MappingColumn,
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName,
+                MappingColumn = mappingColumn
                 //AspxFromCodeaspx = _AspxFromCodeaspx
             };
             aspxTableCodeFilterColumn.Gen();
 
-            AspxTableCodeFilterColumnCodeBehide aspxTableCodeFilterColumnCodeBehide =
+            var aspxTableCodeFilterColumnCodeBehide =
                 new AspxTableCodeFilterColumnCodeBehide
                 {
-                    _FileCode = F,
-                    _ds = _ds,
-                    _TableName = _TableName,
-                    _MappingColumn = _MappingColumn
+                    FileCode = f,
+                    Ds = _ds,
+                    TableName = tableName,
+                    MappingColumn = mappingColumn
                 };
             //_AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
             aspxTableCodeFilterColumnCodeBehide.Gen();
 
-            PageService pageService = new PageService
+            var pageService = new PageService
             {
-                _FileCode = F,
-                _ds = _ds,
-                _TableName = _TableName
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName
             };
             pageService.Gen();
 
-            string pathPageServiceCodeBehide = _path + @"App_Code\Services\";
-            F.Path = pathPageServiceCodeBehide;
-            PageServiceCodeBehide pageServiceCodeBehide = new PageServiceCodeBehide
+            var pathPageServiceCodeBehide = _path + @"App_Code\Services\";
+            f.Path = pathPageServiceCodeBehide;
+            var pageServiceCodeBehide = new PageServiceCodeBehide
             {
-                _FileCode = F,
-                _ds = _ds,
-                _TableName = _TableName
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName
             };
             pageServiceCodeBehide.Gen();
 
-            string pathSQlScript = _path + @"SQL\";
-            F.Path = pathSQlScript;
-            StoreProCode storeProCode = new StoreProCode
+            var pathSQlScript = _path + @"SQL\";
+            f.Path = pathSQlScript;
+            var storeProCode = new StoreProCode
             {
-                _FileCode = F,
-                _ds = _ds,
-                _TableName = _TableName
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName
             };
             storeProCode.Gen();
 
             //Gen Javascript
 
-            string pathJs_U = _path + @"Js_U\";
-            F.Path = pathJs_U;
-            JsCode jsCode = new JsCode
+            var pathJsU = _path + @"Js_U\";
+            f.Path = pathJsU;
+            var jsCode = new JsCode
             {
-                _FileCode = F,
-                _ds = _ds,
-                _TableName = _TableName
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName
             };
             jsCode.Gen();
 
             //========Folder Code
 
-            string pathBuCode = _path + @"App_Code\Business\";
-            F.Path = pathBuCode;
-            PropertiesCode Pcode = new PropertiesCode
+            var pathBuCode = _path + @"App_Code\Business\";
+            f.Path = pathBuCode;
+            var pcode = new PropertiesCode
             {
-                _FileCode = F,
-                _ds = _ds,
-                _TableName = _TableName
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName
             };
-            Pcode.Gen();
+            pcode.Gen();
 
             //DbCode _DbCode = new DbCode();
             //_DbCode._FileCode = F;
@@ -149,26 +149,13 @@ namespace StkGenCode
             //_DbCode._TableName = _TableName;
             //_DbCode.Gen();
 
-            DbCodeFireBird _DbCodeFireBird = new DbCodeFireBird
+            var dbCodeFireBird = new DbCodeFireBird
             {
-                _FileCode = F,
-                _ds = _ds,
-                _TableName = _TableName
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName
             };
-            _DbCodeFireBird.Gen();
-        }
-
-        //Delete All Find in folder
-        private void ClearAllFile(string patch)
-        {
-            System.IO.DirectoryInfo di = new DirectoryInfo(patch);
-
-            foreach (FileInfo file in di.GetFiles())
-            {
-                file.Delete();
-            }
-
-            // File.Delete(path);
+            dbCodeFireBird.Gen();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -181,18 +168,23 @@ namespace StkGenCode
             btnGen_Click(sender, e);
         }
 
-        private DataSet ds = null;
-
         private void btnConnect_Click(object sender, EventArgs e)
         {
             //string con = @"Server=localhost;User=SYSDBA;Password=P@ssw0rd;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
             //var _ds = Db.GetDataFireBird(con, "MPO_FISH");
 
-            string sqlServer = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
+#pragma warning disable CS0219 // The variable 'sqlServer' is assigned but its value is never used
+#pragma warning disable CS0219 // The variable 'sqlServer' is assigned but its value is never used
+            //string sqlServer = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
+#pragma warning disable CS0219 // The variable 'sqlFireBird' is assigned but its value is never used
+#pragma warning restore CS0219 // The variable 'sqlServer' is assigned but its value is never used
 
-            string sqlFireBird = "select rdb$relation_name as TABLE_NAME from rdb$relations where rdb$view_blr is null  and(rdb$system_flag is null or rdb$system_flag = 0);";
-
-            var connecStionstring = txtConstring.Text;
+#pragma warning disable CS0219 // The variable 'sqlFireBird' is assigned but its value is never used
+            var sqlFireBird =
+                "select rdb$relation_name as TABLE_NAME from rdb$relations where rdb$view_blr is null  and(rdb$system_flag is null or rdb$system_flag = 0);";
+#pragma warning restore CS0219 // The variable 'sqlFireBird' is assigned but its value is never used
+#pragma warning restore CS0219 // The variable 'sqlServer' is assigned but its value is never used
+#pragma warning restore CS0219 // The variable 'sqlFireBird' is assigned but its value is never used
 
             //DataAccessLayer Db = null;
             //DataSet ds = null;
@@ -213,7 +205,7 @@ namespace StkGenCode
             //    throw new Exception("Fails");
             //}
 
-            foreach (DataRow item in ds.Tables[0].Rows)
+            foreach (DataRow item in _ds.Tables[0].Rows)
             {
                 checkedListBox1.Items.Add(item["TABLE_NAME"].ToString(), false);
             }
@@ -238,16 +230,17 @@ namespace StkGenCode
 
             ClearFile();
 
-            txtConstring.Text = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            txtConstring.Text =
+                @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
             ClearFile();
-            string ColumnDropDown = "EM_FLAG:STK_USER_FLAG;";
-            DataSet _ds_STK_USER = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
-            Gen(_ds_STK_USER, "STK_USER", ColumnDropDown);
+            var columnDropDown = "EM_FLAG:STK_USER_FLAG;";
+            var dsStkUser = Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
+            Gen(dsStkUser, "STK_USER", columnDropDown);
             //DataSet _ds_STK_TYPE = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_TYPE");
             //Gen(_ds_STK_TYPE, "STK_TYPE", ColumnDropDown);
 
-            DataSet _ds_STK_USER_FLAG = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER_FLAG");
-            Gen(_ds_STK_USER_FLAG, "STK_USER_FLAG", ColumnDropDown);
+            var dsStkUserFlag = Db.GetSchemaFireBird(txtConstring.Text, "STK_USER_FLAG");
+            Gen(dsStkUserFlag, "STK_USER_FLAG", columnDropDown);
             //=================================================================================================
 
             //ClearFile();
@@ -265,41 +258,15 @@ namespace StkGenCode
             //Gen(_dsTradeFromCategory, "TradeFromCategory");
 
             //Copy ไฟล์=================================================================================================================
-            System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
+            Process.Start(@"C:\Users\Node\Desktop\copy.bat");
 
-            this.Close();
+            Close();
         }
 
         private void ClearFile()
         {
-            FileCode f = new FileCode { Path = _path };
+            var f = new FileCode { Path = _path };
             f.ClearAllFile();
-        }
-
-        private void SetDb()
-        {
-            string sqlServer = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
-
-            string sqlFireBird = "select rdb$relation_name as TABLE_NAME from rdb$relations where rdb$view_blr is null  and(rdb$system_flag is null or rdb$system_flag = 0);";
-
-            var connecStionstring = txtConstring.Text;
-
-            //if (rsSqlServer.Checked)
-            //{
-            //    connecStionstring = "Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
-            //    Db = new DataBaseSql(connecStionstring);
-            //    ds = Db.GetDataSet(sqlServer);
-            //}
-            //else if (rdFireBird.Checked)
-            //{
-            //    connecStionstring = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
-            //    Db = new DataBaseFireBird(connecStionstring);
-            //    ds = Db.GetDataSet(sqlFireBird);
-            //}
-            //else
-            //{
-            //    throw new Exception("Fails");
-            //}
         }
     }
 }

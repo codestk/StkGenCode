@@ -10,8 +10,9 @@
             InnitProperties();
 
             //code = "<%@ WebService Language=\"C#\" CodeBehind=\""+ _FileName.PageServiceCodeBehideName()+ "\" Class=\""+_TableName+"Service\" %>";
-            var code = "<%@ WebService Language=\"C#\" CodeBehind=\"~/App_Code/" + _FileName.PageServiceCodeBehideName() + "\" Class=\"" + _TableName + "Service\" %>";
-            _FileCode.WriteFile(_FileName.PageServiceName(), code);
+            var code = "<%@ WebService Language=\"C#\" CodeBehind=\"~/App_Code/" + FileName.PageServiceCodeBehideName() +
+                       "\" Class=\"" + TableName + "Service\" %>";
+            FileCode.WriteFile(FileName.PageServiceName(), code);
         }
     }
 }

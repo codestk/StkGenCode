@@ -25,9 +25,9 @@ namespace StkGenCode.Code
             }
 
             // log the error now
-            using (StreamWriter writer = File.AppendText(pathFull))
+            using (var writer = File.AppendText(pathFull))
             {
-                string error = content;
+                var error = content;
                 writer.WriteLine(error);
                 //writer.WriteLine("==========================================");
                 writer.Flush();
@@ -52,9 +52,10 @@ namespace StkGenCode.Code
             // File.Delete(path);
         }
 
-        //public void AddSpace(string Table, string FileType)
-        //{
         //    string space = "\r\n";
+        //{
+
+        //public void AddSpace(string Table, string FileType)
         //    writeFile(Table, space);
         //}
     }

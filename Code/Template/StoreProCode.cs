@@ -1,5 +1,5 @@
-﻿using StkGenCode.Code.Type;
-using System.Data;
+﻿using System.Data;
+using StkGenCode.Code.Type;
 
 namespace StkGenCode.Code.Template
 {
@@ -71,28 +71,29 @@ namespace StkGenCode.Code.Template
 
         private string GenSp_GetPageWise()
         {
-            string code = "";
-            string stroeName = "Sp_Get" + _TableName + "PageWise";
-            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + _NewLine;
-            code += "go" + _NewLine;
-            code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + _NewLine;
+            var code = "";
+            var stroeName = "Sp_Get" + TableName + "PageWise";
+            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + NewLine;
+            code += "go" + NewLine;
+            code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + NewLine;
 
-            code += "/* Optional Filters for Dynamic Search*/" + _NewLine;
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            code += "/* Optional Filters for Dynamic Search*/" + NewLine;
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                code += "@" + dataColumn.ColumnName + " " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + _NewLine;
+                code += "@" + dataColumn.ColumnName + " " +
+                        DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + NewLine;
             }
-            code += "/*– Pagination Parameters */" + _NewLine;
-            code += "@PageIndex INT = 1 ," + _NewLine;
-            code += "@PageSize INT = 10 ," + _NewLine;
-            code += "/*– Sorting Parameters */" + _NewLine;
-            code += $"@SortColumn NVARCHAR(20) = '{_ds.Tables[0].PrimaryKey[0].ColumnName}'," + _NewLine;
-            code += "@SortOrder NVARCHAR(4) ='ASC'" + _NewLine;
-            code += "AS  " + _NewLine;
-            code += "BEGIN  " + _NewLine;
-            code += " SET NOCOUNT ON;  " + _NewLine;
-            code += " " + _NewLine;
-            code += "  " + _NewLine;
+            code += "/*– Pagination Parameters */" + NewLine;
+            code += "@PageIndex INT = 1 ," + NewLine;
+            code += "@PageSize INT = 10 ," + NewLine;
+            code += "/*– Sorting Parameters */" + NewLine;
+            code += $"@SortColumn NVARCHAR(20) = '{Ds.Tables[0].PrimaryKey[0].ColumnName}'," + NewLine;
+            code += "@SortOrder NVARCHAR(4) ='ASC'" + NewLine;
+            code += "AS  " + NewLine;
+            code += "BEGIN  " + NewLine;
+            code += " SET NOCOUNT ON;  " + NewLine;
+            code += " " + NewLine;
+            code += "  " + NewLine;
             //code += " create table #Results " + _NewLine;
             //code += "( " + _NewLine;
             //code += "[RowNumber] [int],";
@@ -102,257 +103,270 @@ namespace StkGenCode.Code.Template
             ////}
 
             //code += ") " + _NewLine;
-            code += " " + _NewLine;
-            code += " " + _NewLine;
+            code += " " + NewLine;
+            code += " " + NewLine;
             //code += "Declare @Command NVARCHAR(MAX)  " + _NewLine;
-            code += "/*–Declaring Local Variables corresponding to parameters for modification */" + _NewLine;
+            code += "/*–Declaring Local Variables corresponding to parameters for modification */" + NewLine;
             code += "DECLARE ";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                code += "@l" + dataColumn.ColumnName + " " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + _NewLine;
+                code += "@l" + dataColumn.ColumnName + " " +
+                        DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + NewLine;
             }
 
             //Stattic Vriable
-            code += "@lPageNbr INT," + _NewLine;
-            code += "@lPageSize INT," + _NewLine;
-            code += "@lSortCol NVARCHAR(20)," + _NewLine;
-            code += "@lFirstRec INT," + _NewLine;
-            code += "@lLastRec INT," + _NewLine;
-            code += "@lTotalRows INT" + _NewLine;
+            code += "@lPageNbr INT," + NewLine;
+            code += "@lPageSize INT," + NewLine;
+            code += "@lSortCol NVARCHAR(20)," + NewLine;
+            code += "@lFirstRec INT," + NewLine;
+            code += "@lLastRec INT," + NewLine;
+            code += "@lTotalRows INT" + NewLine;
 
-            code += "/*Setting Local Variables*/" + _NewLine;
+            code += "/*Setting Local Variables*/" + NewLine;
             /*Setting Local Variables*/
 
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 if (dataColumn.DataType.ToString() == "System.Int32")
                 {
-                    code += "SET @l" + dataColumn.ColumnName + " =@" + dataColumn.ColumnName + _NewLine;
+                    code += "SET @l" + dataColumn.ColumnName + " =@" + dataColumn.ColumnName + NewLine;
                 }
                 else
                 {
-                    code += $"SET @l{dataColumn.ColumnName} = LTRIM(RTRIM(@{dataColumn.ColumnName}))" + _NewLine;
+                    code += $"SET @l{dataColumn.ColumnName} = LTRIM(RTRIM(@{dataColumn.ColumnName}))" + NewLine;
                 }
             }
 
             //Set stattic vaiable
-            code += "SET @lPageNbr = @PageIndex" + _NewLine;
-            code += "    SET @lPageSize = @PageSize" + _NewLine;
-            code += "    SET @lSortCol = LTRIM(RTRIM(@SortColumn))" + _NewLine;
-            code += " " + _NewLine;
-            code += "    SET @lFirstRec = ( @lPageNbr - 1 ) * @lPageSize" + _NewLine;
-            code += "    SET @lLastRec = ( @lPageNbr * @lPageSize + 1 )" + _NewLine;
-            code += "    SET @lTotalRows = @lFirstRec - @lLastRec + 1" + _NewLine;
+            code += "SET @lPageNbr = @PageIndex" + NewLine;
+            code += "    SET @lPageSize = @PageSize" + NewLine;
+            code += "    SET @lSortCol = LTRIM(RTRIM(@SortColumn))" + NewLine;
+            code += " " + NewLine;
+            code += "    SET @lFirstRec = ( @lPageNbr - 1 ) * @lPageSize" + NewLine;
+            code += "    SET @lLastRec = ( @lPageNbr * @lPageSize + 1 )" + NewLine;
+            code += "    SET @lTotalRows = @lFirstRec - @lLastRec + 1" + NewLine;
 
             //================================================================================
 
-            code += $"; WITH {_TableName}Result" + _NewLine;
-            code += "AS(" + _NewLine;
-            code += "SELECT ROW_NUMBER() OVER(ORDER BY " + _NewLine;
+            code += $"; WITH {TableName}Result" + NewLine;
+            code += "AS(" + NewLine;
+            code += "SELECT ROW_NUMBER() OVER(ORDER BY " + NewLine;
 
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 //code += $"CASE WHEN (@lSortCol = '{dataColumn.ColumnName}' AND @SortOrder ='ASC')" + _NewLine;
                 //code += $"        THEN ContactID" + _NewLine;
                 //code += "END ASC," + _NewLine;
-                code += _NewLine + $"CASE WHEN (@lSortCol = '{dataColumn.ColumnName}' AND @SortOrder='ASC')" + _NewLine;
-                code += $"                   THEN {dataColumn.ColumnName}" + _NewLine;
-                code += "       END ASC," + _NewLine;
-                code += $"       CASE WHEN (@lSortCol = '{dataColumn.ColumnName}' AND @SortOrder='DESC')" + _NewLine;
-                code += $"                  THEN {dataColumn.ColumnName}" + _NewLine;
+                code += NewLine + $"CASE WHEN (@lSortCol = '{dataColumn.ColumnName}' AND @SortOrder='ASC')" + NewLine;
+                code += $"                   THEN {dataColumn.ColumnName}" + NewLine;
+                code += "       END ASC," + NewLine;
+                code += $"       CASE WHEN (@lSortCol = '{dataColumn.ColumnName}' AND @SortOrder='DESC')" + NewLine;
+                code += $"                  THEN {dataColumn.ColumnName}" + NewLine;
                 code += "       END DESC,";
             }
             code = code.TrimEnd(',');
-            code += "  ) AS ROWNUM," + _NewLine;
-            code += "Count(*) over() AS RecordCount," + _NewLine;
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            code += "  ) AS ROWNUM," + NewLine;
+            code += "Count(*) over() AS RecordCount," + NewLine;
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                code += _NewLine + $" {dataColumn.ColumnName},";
+                code += NewLine + $" {dataColumn.ColumnName},";
             }
-            code = code.TrimEnd(',') + _NewLine;
-            code += $" FROM {_TableName}" + _NewLine;
+            code = code.TrimEnd(',') + NewLine;
+            code += $" FROM {TableName}" + NewLine;
 
             #region Where
 
-            code += "WHERE" + _NewLine;
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            code += "WHERE" + NewLine;
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if ((dataColumn.DataType.ToString() == "System.Int32") || (dataColumn.DataType.ToString() == "System.DateTime") || (dataColumn.DataType.ToString() == "System.Decimal"))
+                if ((dataColumn.DataType.ToString() == "System.Int32") ||
+                    (dataColumn.DataType.ToString() == "System.DateTime") ||
+                    (dataColumn.DataType.ToString() == "System.Decimal"))
                 {
-                    code += $"(@l{dataColumn.ColumnName} IS NULL OR {dataColumn.ColumnName} = @l{dataColumn.ColumnName}) AND" + _NewLine;
+                    code +=
+                        $"(@l{dataColumn.ColumnName} IS NULL OR {dataColumn.ColumnName} = @l{dataColumn.ColumnName}) AND" +
+                        NewLine;
                 }
                 else
                 {
-                    code += $"(@l{dataColumn.ColumnName} IS NULL OR {dataColumn.ColumnName} LIKE '%' +@l{dataColumn.ColumnName} + '%') AND " + _NewLine;
+                    code +=
+                        $"(@l{dataColumn.ColumnName} IS NULL OR {dataColumn.ColumnName} LIKE '%' +@l{dataColumn.ColumnName} + '%') AND " +
+                        NewLine;
                 }
             }
-            code = code.Remove(code.Length - ("AND".Length + _NewLine.Length + 1)) + _NewLine;
-            code += ")" + _NewLine;
+            code = code.Remove(code.Length - ("AND".Length + NewLine.Length + 1)) + NewLine;
+            code += ")" + NewLine;
 
             #endregion Where
 
-            code += "SELECT   RecordCount," + _NewLine;
-            code += " ROWNUM," + _NewLine;
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            code += "SELECT   RecordCount," + NewLine;
+            code += " ROWNUM," + NewLine;
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                code += _NewLine + $"{dataColumn.ColumnName},";
+                code += NewLine + $"{dataColumn.ColumnName},";
             }
             code = code.TrimEnd(',');
 
-            code += $" FROM {_TableName}Result" + _NewLine;
-            code += " WHERE" + _NewLine;
-            code += "         ROWNUM > @lFirstRec" + _NewLine;
-            code += "               AND ROWNUM < @lLastRec" + _NewLine;
-            code += " ORDER BY ROWNUM ASC" + _NewLine;
+            code += $" FROM {TableName}Result" + NewLine;
+            code += " WHERE" + NewLine;
+            code += "         ROWNUM > @lFirstRec" + NewLine;
+            code += "               AND ROWNUM < @lLastRec" + NewLine;
+            code += " ORDER BY ROWNUM ASC" + NewLine;
 
-            code += "END" + _NewLine;
-            code += "GO" + _NewLine;
-            code += "" + _NewLine;
+            code += "END" + NewLine;
+            code += "GO" + NewLine;
+            code += "" + NewLine;
             return code;
         }
 
         private string GenSp_GetAutocomplete()
         {
-            string code = "";
+            var code = "";
 
-            string stroeName = "Sp_Get" + _TableName + "_Autocomplete";
-            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + _NewLine;
-            code += "go" + _NewLine;
-            code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + _NewLine;
+            var stroeName = "Sp_Get" + TableName + "_Autocomplete";
+            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + NewLine;
+            code += "go" + NewLine;
+            code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + NewLine;
             //code += "create PROCEDURE [dbo].[Sp_Getfxrates_family_Autocomplete]  " + _NewLine;
-            code += "     @Key_word    nvarchar(50) " + _NewLine;
-            code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            code += "AS    " + _NewLine;
-            code += "BEGIN    " + _NewLine;
-            code += " SET NOCOUNT ON;    " + _NewLine;
-            code += "   " + _NewLine;
-            code += " select top 20 KetText,count(*) as NumberOfkey from  " + _NewLine;
-            code += "( " + _NewLine;
+            code += "     @Key_word    nvarchar(50) " + NewLine;
+            code += "  " + NewLine;
+            code += "  " + NewLine;
+            code += "AS    " + NewLine;
+            code += "BEGIN    " + NewLine;
+            code += " SET NOCOUNT ON;    " + NewLine;
+            code += "   " + NewLine;
+            code += " select top 20 KetText,count(*) as NumberOfkey from  " + NewLine;
+            code += "( " + NewLine;
 
-            string UnionAll = "union all";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            var UnionAll = "union all";
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 // Do Something
 
                 //  code += "[" + _DataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDB(_DataColumn.DataType.ToString()) + "," + _NewLine;
                 if (dataColumn.DataType.ToString() == "System.String")
                 {
-                    code += "SELECT  " + _NewLine;
-                    code += "      [" + dataColumn.ColumnName + "] As KetText " + _NewLine;
-                    code += "        " + _NewLine;
-                    code += "  FROM [" + _TableName + "] where [" + dataColumn.ColumnName + "] like ''+@Key_word+'%' " + _NewLine;
+                    code += "SELECT  " + NewLine;
+                    code += "      [" + dataColumn.ColumnName + "] As KetText " + NewLine;
+                    code += "        " + NewLine;
+                    code += "  FROM [" + TableName + "] where [" + dataColumn.ColumnName + "] like ''+@Key_word+'%' " +
+                            NewLine;
 
-                    code += UnionAll + _NewLine;
+                    code += UnionAll + NewLine;
                 }
 
                 //Remove union all
             }
 
-            code = code.Remove(code.Length - (UnionAll.Length + _NewLine.Length)) + _NewLine;
+            code = code.Remove(code.Length - (UnionAll.Length + NewLine.Length)) + NewLine;
             //code += "SELECT  " + _NewLine;
             //code += "      [Family] As KetText " + _NewLine;
             //code += "        " + _NewLine;
             //code += "  FROM [WEBAPP].[dbo].[fxrates_family] where [Family] like ''+@Key_word+'%' " + _NewLine;
             //code += "union all" + _NewLine;
 
-            code += "  )KeyTable  " + _NewLine;
-            code += "  group by KetText " + _NewLine;
-            code += "  order by count(*) desc  " + _NewLine;
-            code += " " + _NewLine;
-            code += "END    " + _NewLine;
-            code += "   " + _NewLine;
+            code += "  )KeyTable  " + NewLine;
+            code += "  group by KetText " + NewLine;
+            code += "  order by count(*) desc  " + NewLine;
+            code += " " + NewLine;
+            code += "END    " + NewLine;
+            code += "   " + NewLine;
 
-            code += "" + _NewLine;
-            code += "" + _NewLine;
-            code += "" + _NewLine;
+            code += "" + NewLine;
+            code += "" + NewLine;
+            code += "" + NewLine;
             return code;
         }
 
         private string GenSp_GetAutocompleteByColumn()
         {
-            string code = "";
+            var code = "";
 
-            string stroeName = "Sp_Get" + _TableName + "_Autocomplete";
-            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + _NewLine;
-            code += "go" + _NewLine;
-            code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + _NewLine;
+            var stroeName = "Sp_Get" + TableName + "_Autocomplete";
+            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + NewLine;
+            code += "go" + NewLine;
+            code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + NewLine;
             //code += "create PROCEDURE [dbo].[Sp_Getfxrates_family_Autocomplete]  " + _NewLine;
             //code += "     @Key_word    nvarchar(50) " + _NewLine;
 
             code += "@Column  nvarchar(50),";
             code += "@keyword nvarchar(50)";
 
-            code += "  " + _NewLine;
-            code += "  " + _NewLine;
-            code += "AS    " + _NewLine;
-            code += "BEGIN    " + _NewLine;
-            code += "SET NOCOUNT ON;    " + _NewLine;
-            code += "   " + _NewLine;
-            code += " select top 20 KetText,count(*) as NumberOfkey from  " + _NewLine;
-            code += "( " + _NewLine;
+            code += "  " + NewLine;
+            code += "  " + NewLine;
+            code += "AS    " + NewLine;
+            code += "BEGIN    " + NewLine;
+            code += "SET NOCOUNT ON;    " + NewLine;
+            code += "   " + NewLine;
+            code += " select top 20 KetText,count(*) as NumberOfkey from  " + NewLine;
+            code += "( " + NewLine;
 
-            string sqlWhenCase = "CASE";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            var sqlWhenCase = "CASE";
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 // Do Something
-                sqlWhenCase += $"  WHEN (@Column = '{dataColumn.ColumnName}') THEN CONVERT(varchar, {dataColumn.ColumnName} )";
+                sqlWhenCase +=
+                    $"  WHEN (@Column = '{dataColumn.ColumnName}') THEN CONVERT(varchar, {dataColumn.ColumnName} )";
 
                 //  code += "[" + _DataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDB(_DataColumn.DataType.ToString()) + "," + _NewLine;
 
                 //Remove union all
             }
             sqlWhenCase += "END";
-            code += "SELECT  " + _NewLine;
-            code += "      " + sqlWhenCase + " As KetText " + _NewLine;
-            code += "        " + _NewLine;
-            code += "  FROM [" + _TableName + "] where " + sqlWhenCase + " like ''+@keyword+'%' " + _NewLine;
+            code += "SELECT  " + NewLine;
+            code += "      " + sqlWhenCase + " As KetText " + NewLine;
+            code += "        " + NewLine;
+            code += "  FROM [" + TableName + "] where " + sqlWhenCase + " like ''+@keyword+'%' " + NewLine;
             //code += "SELECT  " + _NewLine;
             //code += "      [Family] As KetText " + _NewLine;
             //code += "        " + _NewLine;
             //code += "  FROM [WEBAPP].[dbo].[fxrates_family] where [Family] like ''+@Key_word+'%' " + _NewLine;
             //code += "union all" + _NewLine;
 
-            code += "  )KeyTable  " + _NewLine;
-            code += "  group by KetText " + _NewLine;
-            code += "  order by count(*) desc  " + _NewLine;
-            code += " " + _NewLine;
-            code += "END    " + _NewLine;
-            code += "   " + _NewLine;
+            code += "  )KeyTable  " + NewLine;
+            code += "  group by KetText " + NewLine;
+            code += "  order by count(*) desc  " + NewLine;
+            code += " " + NewLine;
+            code += "END    " + NewLine;
+            code += "   " + NewLine;
 
-            code += "" + _NewLine;
-            code += "" + _NewLine;
-            code += "" + _NewLine;
+            code += "" + NewLine;
+            code += "" + NewLine;
+            code += "" + NewLine;
             return code;
         }
 
         private string GenSp_GetTradeFromCategory_UpdateColumn()
         {
-            string code = "";
-            code += $"DROP PROCEDURE [dbo].[Sp_Get{_TableName}_UpdateColumn];" + _NewLine;
+            var code = "";
+            code += $"DROP PROCEDURE [dbo].[Sp_Get{TableName}_UpdateColumn];" + NewLine;
             code += GenGoSplitBatch();
-            code += "  " + _NewLine;
-            code += "       " + _NewLine;
-            code += $"      create PROCEDURE [dbo].[Sp_Get{_TableName}_UpdateColumn] " + _NewLine;
-            code += $"        @{_ds.Tables[0].PrimaryKey[0]} {DbTypeConversion.CTypeNetToTypeDb(_ds.Tables[0].PrimaryKey[0].DataType.ToString()) },@Column  nvarchar(max),@Data nvarchar(max)   " + _NewLine;
+            code += "  " + NewLine;
+            code += "       " + NewLine;
+            code += $"      create PROCEDURE [dbo].[Sp_Get{TableName}_UpdateColumn] " + NewLine;
+            code +=
+                $"        @{Ds.Tables[0].PrimaryKey[0]} {DbTypeConversion.CTypeNetToTypeDb(Ds.Tables[0].PrimaryKey[0].DataType.ToString())},@Column  nvarchar(max),@Data nvarchar(max)   " +
+                NewLine;
 
-            code += "   AS     " + _NewLine;
-            code += "       BEGIN     " + _NewLine;
-            code += "       --SET NOCOUNT ON;     " + _NewLine;
-            code += "         " + _NewLine;
+            code += "   AS     " + NewLine;
+            code += "       BEGIN     " + NewLine;
+            code += "       --SET NOCOUNT ON;     " + NewLine;
+            code += "         " + NewLine;
 
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ColumnName)
+                if (dataColumn.ColumnName == Ds.Tables[0].PrimaryKey[0].ColumnName)
                 {
                     continue;
                 }
                 //code += "@" + dataColumn.ColumnName + " " + DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + _NewLine;
 
-                code += $"         if  @Column = '{dataColumn.ColumnName}'" + _NewLine;
-                code += "           BEGIN " + _NewLine;
-                code += $"           UPDATE   {_TableName} SET {dataColumn.ColumnName}=@Data where {_ds.Tables[0].PrimaryKey[0]} = @{_ds.Tables[0].PrimaryKey[0]};  " + _NewLine;
-                code += "         END " + _NewLine;
+                code += $"         if  @Column = '{dataColumn.ColumnName}'" + NewLine;
+                code += "           BEGIN " + NewLine;
+                code +=
+                    $"           UPDATE   {TableName} SET {dataColumn.ColumnName}=@Data where {Ds.Tables[0].PrimaryKey[0]} = @{Ds.Tables[0].PrimaryKey[0]};  " +
+                    NewLine;
+                code += "         END " + NewLine;
             }
 
             //code += "         if  @Column = 'Colin'" + _NewLine;
@@ -360,23 +374,23 @@ namespace StkGenCode.Code.Template
             //code += "           UPDATE   TradeFromCategory SET CategoryName=@keyword where CategoryID = @CategoryID;  " + _NewLine;
             //code += "         END " + _NewLine;
 
-            code += "       END     " + _NewLine;
+            code += "       END     " + NewLine;
             code += GenGoSplitBatch();
             return code;
         }
 
         private string GenGoSplitBatch()
         {
-            string code = "";
-            code += "" + _NewLine;
-            code += "go" + _NewLine;
-            code += "" + _NewLine;
+            var code = "";
+            code += "" + NewLine;
+            code += "go" + NewLine;
+            code += "" + NewLine;
             return code;
         }
 
         public override void Gen()
         {
-            string code = "";
+            var code = "";
             code += GenSp_GetPageWise();
             code += GenGoSplitBatch();
             code += GenSp_GetAutocomplete();
@@ -384,7 +398,7 @@ namespace StkGenCode.Code.Template
             code += GenSp_GetTradeFromCategory_UpdateColumn();
 
             InnitProperties();
-            _FileCode.WriteFile(_FileName.StoreProCodeName(), code);
+            FileCode.WriteFile(FileName.StoreProCodeName(), code);
             //_FileCode.writeFile("Sp_" + _TableName + "Store", _code, _fileType);
         }
     }

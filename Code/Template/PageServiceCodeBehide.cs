@@ -6,176 +6,182 @@ namespace StkGenCode.Code.Template
     {
         private string GenUsign()
         {
-            string code = "";
-            code += "using System; " + _NewLine;
-            code += "using System.Collections.Generic; " + _NewLine;
-            code += "using System.Linq; " + _NewLine;
-            code += "using System.Web; " + _NewLine;
-            code += "using System.Web.Services; " + _NewLine;
+            var code = "";
+            code += "using System; " + NewLine;
+            code += "using System.Collections.Generic; " + NewLine;
+            code += "using System.Linq; " + NewLine;
+            code += "using System.Web; " + NewLine;
+            code += "using System.Web.Services; " + NewLine;
 
             return code;
         }
 
         public string GenHeadFile()
         {
-            string code = "";
-            code += "    /// <summary> " + _NewLine;
-            code += "    /// Summary description for AutoCompleteService " + _NewLine;
-            code += "    /// </summary> " + _NewLine;
-            code += "    [WebService(Namespace = \"http://tempuri.org/\")] " + _NewLine;
-            code += "    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)] " + _NewLine;
-            code += "    [System.ComponentModel.ToolboxItem(false)] " + _NewLine;
-            code += "    // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line.  " + _NewLine;
-            code += "     [System.Web.Script.Services.ScriptService] " + _NewLine;
-            code += " " + _NewLine;
+            var code = "";
+            code += "    /// <summary> " + NewLine;
+            code += "    /// Summary description for AutoCompleteService " + NewLine;
+            code += "    /// </summary> " + NewLine;
+            code += "    [WebService(Namespace = \"http://tempuri.org/\")] " + NewLine;
+            code += "    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)] " + NewLine;
+            code += "    [System.ComponentModel.ToolboxItem(false)] " + NewLine;
+            code +=
+                "    // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line.  " +
+                NewLine;
+            code += "     [System.Web.Script.Services.ScriptService] " + NewLine;
+            code += " " + NewLine;
             return code;
         }
 
         private string GenBeginClass()
         {
-            string code = "";
-            code += "public class " + _TableName + "Service : System.Web.Services.WebService " + _NewLine;
-            code += "{" + _NewLine;
+            var code = "";
+            code += "public class " + TableName + "Service : System.Web.Services.WebService " + NewLine;
+            code += "{" + NewLine;
             return code;
         }
 
         private string GenEndClass()
         {
-            string code = "";
+            var code = "";
             code += "}";
             return code;
         }
 
         private string GenVersionMethod()
         {
-            string code = "";
-            code += " " + _NewLine;
-            code += "        [WebMethod] " + _NewLine;
-            code += "        public string Service()" + _NewLine;
-            code += "        { " + _NewLine;
-            code += "            return \"1.0.0.1\";" + _NewLine;
-            code += "        } " + _NewLine;
+            var code = "";
+            code += " " + NewLine;
+            code += "        [WebMethod] " + NewLine;
+            code += "        public string Service()" + NewLine;
+            code += "        { " + NewLine;
+            code += "            return \"1.0.0.1\";" + NewLine;
+            code += "        } " + NewLine;
             return code;
         }
 
         private string GenSaveColumn()
         {
-            string code = "";
+            var code = "";
 
-            code += " //For Jquery  ---------------------------------------------------------------------------------------------- " + _NewLine;
-            code += "        [WebMethod] " + _NewLine;
-            code += "        public   Boolean SaveColumn(string id, string column, string value) " + _NewLine;
-            code += "        { " + _NewLine;
-            code += "            " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            code +=
+                " //For Jquery  ---------------------------------------------------------------------------------------------- " +
+                NewLine;
+            code += "        [WebMethod] " + NewLine;
+            code += "        public   Boolean SaveColumn(string id, string column, string value) " + NewLine;
+            code += "        { " + NewLine;
+            code += "            " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += " " + _NewLine;
+            code += " " + NewLine;
 
-            code += " " + _NewLine;
-            code += "            bool isUpdate = _" + _TableName + "Db.UpdateColumn(id, column, value); " + _NewLine;
-            code += "            return isUpdate; " + _NewLine;
-            code += "        }" + _NewLine;
+            code += " " + NewLine;
+            code += "            bool isUpdate = _" + TableName + "Db.UpdateColumn(id, column, value); " + NewLine;
+            code += "            return isUpdate; " + NewLine;
+            code += "        }" + NewLine;
 
             return code;
         }
 
         private string GenGetKeyWordsAllColumn()
         {
-            string code = "";
-            code += "[WebMethod] " + _NewLine;
-            code += "       public List<string> GetKeyWordsAllColumn(string keyword) " + _NewLine;
-            code += "       { " + _NewLine;
-            code += "           " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            var code = "";
+            code += "[WebMethod] " + NewLine;
+            code += "       public List<string> GetKeyWordsAllColumn(string keyword) " + NewLine;
+            code += "       { " + NewLine;
+            code += "           " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += "           List<string> keywords = _" + _TableName + "Db.GetKeyWordsAllColumn(keyword); " + _NewLine;
-            code += "           return keywords; " + _NewLine;
-            code += "       }" + _NewLine;
-            code += "" + _NewLine;
+            code += "           List<string> keywords = _" + TableName + "Db.GetKeyWordsAllColumn(keyword); " + NewLine;
+            code += "           return keywords; " + NewLine;
+            code += "       }" + NewLine;
+            code += "" + NewLine;
 
             return code;
         }
 
         private string GenGetKeyWordsOneColumn()
         {
-            string code = "";
-            code += "[WebMethod] " + _NewLine;
-            code += "       public List<string> GetKeyWordsOneColumn(string column, string keyword) " + _NewLine;
-            code += "       { " + _NewLine;
-            code += "           " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            var code = "";
+            code += "[WebMethod] " + NewLine;
+            code += "       public List<string> GetKeyWordsOneColumn(string column, string keyword) " + NewLine;
+            code += "       { " + NewLine;
+            code += "           " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += "           List<string> keywords = _" + _TableName + "Db.GetKeyWordsOneColumn(column,keyword); " + _NewLine;
-            code += "           return keywords; " + _NewLine;
-            code += "       }" + _NewLine;
-            code += "" + _NewLine;
+            code += "           List<string> keywords = _" + TableName + "Db.GetKeyWordsOneColumn(column,keyword); " +
+                    NewLine;
+            code += "           return keywords; " + NewLine;
+            code += "       }" + NewLine;
+            code += "" + NewLine;
 
             return code;
         }
 
         public string GenSearch()
         {
-            string pararmeter = "";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            var pararmeter = "";
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
-            pararmeter = "string PageIndex,string PageSize,string SortExpression,string SortDirection," + pararmeter.Trim(',');
-            string code = "";
-            code += "" + _NewLine;
-            code += "    [WebMethod]" + _NewLine;
+            pararmeter = "string PageIndex,string PageSize,string SortExpression,string SortDirection," +
+                         pararmeter.Trim(',');
+            var code = "";
+            code += "" + NewLine;
+            code += "    [WebMethod]" + NewLine;
 
-            code += $"public List<{_TableName}> Search({pararmeter})" + _NewLine;
+            code += $"public List<{TableName}> Search({pararmeter})" + NewLine;
 
-            code += "    {" + _NewLine;
+            code += "    {" + NewLine;
 
-            code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
-            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
+            code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(_ds);
+            code += MapJsonToProPerties(Ds);
 
-            code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
-            code += "int _PageIndex = Convert.ToInt32(PageIndex);" + _NewLine;
-            code += "int _PageSize = Convert.ToInt32(PageSize);" + _NewLine;
-            code += "" + _NewLine;
+            code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
+            code += "int _PageIndex = Convert.ToInt32(PageIndex);" + NewLine;
+            code += "int _PageSize = Convert.ToInt32(PageSize);" + NewLine;
+            code += "" + NewLine;
 
-            code += " if (SortExpression.Trim() != \"\")" + _NewLine;
-            code += "        {" + _NewLine;
-            code += $"            _{_TableName}Db._SortDirection = SortDirection;" + _NewLine;
-            code += "" + _NewLine;
-            code += $"            _{_TableName}Db._SortExpression = SortExpression;" + _NewLine;
-            code += "        }" + _NewLine;
+            code += " if (SortExpression.Trim() != \"\")" + NewLine;
+            code += "        {" + NewLine;
+            code += $"            _{TableName}Db._SortDirection = SortDirection;" + NewLine;
+            code += "" + NewLine;
+            code += $"            _{TableName}Db._SortExpression = SortExpression;" + NewLine;
+            code += "        }" + NewLine;
 
-            code += "return _" + _TableName + "Db.GetPageWise(_PageIndex, _PageSize);" + _NewLine;
+            code += "return _" + TableName + "Db.GetPageWise(_PageIndex, _PageSize);" + NewLine;
 
-            code += "   }" + _NewLine;
+            code += "   }" + NewLine;
 
             return code;
         }
 
         public string GenSave()
         {
-            string pararmeter = "";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            var pararmeter = "";
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
             pararmeter = pararmeter.Trim(',');
-            string code = "";
-            code += "" + _NewLine;
-            code += "    [WebMethod]" + _NewLine;
+            var code = "";
+            code += "" + NewLine;
+            code += "    [WebMethod]" + NewLine;
 
-            code += $"public string Save({pararmeter})" + _NewLine;
+            code += $"public string Save({pararmeter})" + NewLine;
 
-            code += "    {" + _NewLine;
+            code += "    {" + NewLine;
 
-            code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
-            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
+            code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(_ds, true);
+            code += MapJsonToProPerties(Ds, true);
 
-            code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
-            code += "  object result= _" + _TableName + "Db.Insert(); " + _NewLine;
-            code += "   return result.ToString();" + _NewLine;
+            code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
+            code += "  object result= _" + TableName + "Db.Insert(); " + NewLine;
+            code += "   return result.ToString();" + NewLine;
             //  txtid.Text = _modulesDb.Insert().ToString();
 
             //code += "txt" + _ds.Tables[0].PrimaryKey[0] + ".Text= _" + _TableName + "Db.Insert().ToString();; " + _NewLine;
@@ -192,7 +198,7 @@ namespace StkGenCode.Code.Template
             //code += "       _TradeFromTermDb._TradeFromTerm = _TradeFromTerm;" + _NewLine;
             //code += "       _TradeFromTermDb.Update();" + _NewLine;
 
-            code += "   }" + _NewLine;
+            code += "   }" + NewLine;
 
             return code;
         }
@@ -205,29 +211,29 @@ namespace StkGenCode.Code.Template
         //    code += "  _" + _TableName + "Db.Update(); " + _NewLine;
         public string GenUpdate()
         {
-            string pararmeter = "";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            var pararmeter = "";
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
             pararmeter = pararmeter.Trim(',');
-            string code = "";
-            code += "" + _NewLine;
-            code += "    [WebMethod]" + _NewLine;
+            var code = "";
+            code += "" + NewLine;
+            code += "    [WebMethod]" + NewLine;
 
-            code += $"public string Update({pararmeter})" + _NewLine;
+            code += $"public string Update({pararmeter})" + NewLine;
 
-            code += "    {" + _NewLine;
+            code += "    {" + NewLine;
 
-            code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
-            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
+            code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(_ds);
+            code += MapJsonToProPerties(Ds);
 
-            code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
-            code += "    _" + _TableName + "Db.Update(); " + _NewLine;
-            code += "   return \"\";" + _NewLine;
+            code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
+            code += "    _" + TableName + "Db.Update(); " + NewLine;
+            code += "   return \"\";" + NewLine;
             //  txtid.Text = _modulesDb.Insert().ToString();
 
             //code += "txt" + _ds.Tables[0].PrimaryKey[0] + ".Text= _" + _TableName + "Db.Insert().ToString();; " + _NewLine;
@@ -244,36 +250,36 @@ namespace StkGenCode.Code.Template
             //code += "       _TradeFromTermDb._TradeFromTerm = _TradeFromTerm;" + _NewLine;
             //code += "       _TradeFromTermDb.Update();" + _NewLine;
 
-            code += "   }" + _NewLine;
+            code += "   }" + NewLine;
 
             return code;
         }
 
         private string GenDelete()
         {
-            string pararmeter = "";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            var pararmeter = "";
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
             pararmeter = pararmeter.Trim(',');
-            string code = "";
-            code += "" + _NewLine;
-            code += "    [WebMethod]" + _NewLine;
+            var code = "";
+            code += "" + NewLine;
+            code += "    [WebMethod]" + NewLine;
 
-            code += $"public string Delete({pararmeter})" + _NewLine;
+            code += $"public string Delete({pararmeter})" + NewLine;
 
-            code += "    {" + _NewLine;
+            code += "    {" + NewLine;
 
-            code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
-            code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
+            code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
+            code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(_ds);
+            code += MapJsonToProPerties(Ds);
 
-            code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
-            code += "    _" + _TableName + "Db.Delete(); " + _NewLine;
-            code += "   return \"\";" + _NewLine;
+            code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
+            code += "    _" + TableName + "Db.Delete(); " + NewLine;
+            code += "   return \"\";" + NewLine;
             //  txtid.Text = _modulesDb.Insert().ToString();
 
             //code += "txt" + _ds.Tables[0].PrimaryKey[0] + ".Text= _" + _TableName + "Db.Insert().ToString();; " + _NewLine;
@@ -290,33 +296,33 @@ namespace StkGenCode.Code.Template
             //code += "       _TradeFromTermDb._TradeFromTerm = _TradeFromTerm;" + _NewLine;
             //code += "       _TradeFromTermDb.Update();" + _NewLine;
 
-            code += "   }" + _NewLine;
+            code += "   }" + NewLine;
 
             return code;
         }
 
         public string SelectAll()
         {
-            string code = "";
+            var code = "";
 
-            code += "  [WebMethod]" + _NewLine;
-            code += "    public List<SelectInputProperties> SelectAll()" + _NewLine;
-            code += "    {" + _NewLine;
-            code += $"        {_TableName}Db _{_TableName}Db = new {_TableName}Db();" + _NewLine;
-            code += $"        return _{_TableName}Db.Select();" + _NewLine;
-            code += "    }" + _NewLine;
+            code += "  [WebMethod]" + NewLine;
+            code += "    public List<SelectInputProperties> SelectAll()" + NewLine;
+            code += "    {" + NewLine;
+            code += $"        {TableName}Db _{TableName}Db = new {TableName}Db();" + NewLine;
+            code += $"        return _{TableName}Db.Select();" + NewLine;
+            code += "    }" + NewLine;
 
             return code;
         }
 
         public string Select()
         {
-            string code = " [WebMethod] " + _NewLine;
-            code += $"   public {_TableName} Select(string {_ds.Tables[0].PrimaryKey[0]})" + _NewLine;
-            code += "    {" + _NewLine;
-            code += $"        {_TableName}Db _{_TableName}Db = new {_TableName}Db();" + _NewLine;
-            code += $"        return _{_TableName}Db.Select({_ds.Tables[0].PrimaryKey[0]});" + _NewLine;
-            code += "    }" + _NewLine;
+            var code = " [WebMethod] " + NewLine;
+            code += $"   public {TableName} Select(string {Ds.Tables[0].PrimaryKey[0]})" + NewLine;
+            code += "    {" + NewLine;
+            code += $"        {TableName}Db _{TableName}Db = new {TableName}Db();" + NewLine;
+            code += $"        return _{TableName}Db.Select({Ds.Tables[0].PrimaryKey[0]});" + NewLine;
+            code += "    }" + NewLine;
             return code;
         }
 
@@ -327,7 +333,7 @@ namespace StkGenCode.Code.Template
             //_FileName._ds = _ds;
             InnitProperties();
 
-            string code = "";
+            var code = "";
             code += GenUsign();
             code += GenHeadFile();
             code += GenBeginClass();
@@ -345,7 +351,7 @@ namespace StkGenCode.Code.Template
             code += Select();
             code += GenEndClass(); //Close tag
 
-            _FileCode.WriteFile(_FileName.PageServiceCodeBehideName(), code);
+            FileCode.WriteFile(FileName.PageServiceCodeBehideName(), code);
         }
     }
 }

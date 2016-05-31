@@ -13,7 +13,7 @@ namespace StkGenCode.Code.Template
         private string GenUsign()
         {
             var code = "";
-            code += "using System;" + _NewLine;
+            code += "using System;" + NewLine;
             //_code += "using System.Collections.Generic;" + _NewLine;
             //_code += "using System.Data;" + _NewLine;
             //_code += "using System.Linq;" + _NewLine;
@@ -27,15 +27,15 @@ namespace StkGenCode.Code.Template
             var code = "";
             //_code = "namespace XXXXX.Code.Bu" + _NewLine;
             //_code += "{" + _NewLine;
-            code += "public class  " + _TableName + _NewLine + " : BaseProperties";
-            code += "{" + _NewLine;
+            code += "public class  " + TableName + NewLine + " : BaseProperties";
+            code += "{" + NewLine;
 
             return code;
         }
 
         private string GenEndNameSpaceAndClass()
         {
-            var code = "}" + _NewLine;
+            var code = "}" + NewLine;
             //_code += " }"; //End Name Space
 
             return code;
@@ -44,13 +44,13 @@ namespace StkGenCode.Code.Template
         public string GenProperties()
         {
             var code = "";
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 var nullType = dataColumn.DataType.ToString() == "System.String" ? "" : "?";
                 code += dataColumn.DataType.Name + nullType + " _" + dataColumn.ColumnName + "; \r\n";
                 code += "public " + dataColumn.DataType.Name + nullType + " " + dataColumn.ColumnName +
-                         " { get { return _" + dataColumn.ColumnName + "; } set { _" + dataColumn.ColumnName +
-                         " = value; } } \r\n \r\n";
+                        " { get { return _" + dataColumn.ColumnName + "; } set { _" + dataColumn.ColumnName +
+                        " = value; } } \r\n \r\n";
             }
 
             return code;
@@ -68,7 +68,7 @@ namespace StkGenCode.Code.Template
             //name._TableName = _TableName;
             //name._ds = _ds;
             InnitProperties();
-            _FileCode.WriteFile(_FileName.PropertiesCodeName(), code);
+            FileCode.WriteFile(FileName.PropertiesCodeName(), code);
             // _FileCode.writeFile(_TableName, _code, _fileType);
         }
     }
