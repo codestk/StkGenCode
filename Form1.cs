@@ -1,5 +1,4 @@
-﻿using CoreDb;
-using StkGenCode.Code;
+﻿using StkGenCode.Code;
 using StkGenCode.Code.Column;
 using StkGenCode.Code.Template;
 using System;
@@ -32,27 +31,29 @@ namespace StkGenCode
         /// <param name="columnDropDown">Clumn:Table;</param>
         private void Gen(DataSet _ds, string _TableName, string columnDropDown = "")
         {
-            FileCode F = new FileCode();
-            F.Path = _path;
-            //F.ClearAllFile();
+            FileCode F = new FileCode { Path = _path };
 
             List<MappingColumn> _MappingColumn = null;
             if (columnDropDown != "")
                 _MappingColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
 
-            AspxFromCode _AspxFromCodeaspx = new AspxFromCode();
-            _AspxFromCodeaspx._FileCode = F;
-            _AspxFromCodeaspx._ds = _ds;
-            _AspxFromCodeaspx._TableName = _TableName;
-            _AspxFromCodeaspx._MappingColumn = _MappingColumn;
+            AspxFromCode _AspxFromCodeaspx = new AspxFromCode
+            {
+                _FileCode = F,
+                _ds = _ds,
+                _TableName = _TableName,
+                _MappingColumn = _MappingColumn
+            };
             _AspxFromCodeaspx.Gen();
 
-            AspxFromCodeBehide _AspxFromCodeBehide = new AspxFromCodeBehide();
-            _AspxFromCodeBehide._FileCode = F;
-            _AspxFromCodeBehide._ds = _ds;
-            _AspxFromCodeBehide._TableName = _TableName;
-            _AspxFromCodeBehide._MappingColumn = _MappingColumn;
-            _AspxFromCodeBehide.Gen();
+            AspxFromCodeBehide aspxFromCodeBehide = new AspxFromCodeBehide
+            {
+                _FileCode = F,
+                _ds = _ds,
+                _TableName = _TableName,
+                _MappingColumn = _MappingColumn
+            };
+            aspxFromCodeBehide.Gen();
 
             //AspxTableCode _AspxTableCode = new AspxTableCode();
             //_AspxTableCode._FileCode = F;
@@ -61,82 +62,100 @@ namespace StkGenCode
             //_AspxTableCode._MappingColumn = _MappingColumn;
             //_AspxTableCode.Gen();
 
-            AspxTableCodeBehine _AspxTableCodeBehine = new AspxTableCodeBehine();
-            _AspxTableCodeBehine._FileCode = F;
-            _AspxTableCodeBehine._ds = _ds;
-            _AspxTableCodeBehine._TableName = _TableName;
-            _AspxTableCodeBehine._MappingColumn = _MappingColumn;
-            //_AspxTableCodeBehine.Gen();
+            //AspxTableCodeBehine aspxTableCodeBehine = new AspxTableCodeBehine
+            //{
+            //    _FileCode = F,
+            //    _ds = _ds,
+            //    _TableName = _TableName,
+            //    _MappingColumn = _MappingColumn
+            //};
 
-            AspxTableCodeFilterColumn _AspxTableCodeFilterColumn = new AspxTableCodeFilterColumn();
-            _AspxTableCodeFilterColumn._FileCode = F;
-            _AspxTableCodeFilterColumn._ds = _ds;
-            _AspxTableCodeFilterColumn._TableName = _TableName;
-            _AspxTableCodeFilterColumn._MappingColumn = _MappingColumn;
-            _AspxTableCodeFilterColumn.AspxFromCodeaspx = _AspxFromCodeaspx;
-            _AspxTableCodeFilterColumn.Gen();
+            AspxTableCodeFilterColumn aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
+            {
+                _FileCode = F,
+                _ds = _ds,
+                _TableName = _TableName,
+                _MappingColumn = _MappingColumn,
+                AspxFromCodeaspx = _AspxFromCodeaspx
+            };
+            aspxTableCodeFilterColumn.Gen();
 
-            AspxTableCodeFilterColumnCodeBehide _AspxTableCodeFilterColumnCodeBehide = new AspxTableCodeFilterColumnCodeBehide();
-            _AspxTableCodeFilterColumnCodeBehide._FileCode = F;
-            _AspxTableCodeFilterColumnCodeBehide._ds = _ds;
-            _AspxTableCodeFilterColumnCodeBehide._TableName = _TableName;
-            _AspxTableCodeFilterColumnCodeBehide._MappingColumn = _MappingColumn;
+            AspxTableCodeFilterColumnCodeBehide aspxTableCodeFilterColumnCodeBehide =
+                new AspxTableCodeFilterColumnCodeBehide
+                {
+                    _FileCode = F,
+                    _ds = _ds,
+                    _TableName = _TableName,
+                    _MappingColumn = _MappingColumn
+                };
             //_AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
-            _AspxTableCodeFilterColumnCodeBehide.Gen();
+            aspxTableCodeFilterColumnCodeBehide.Gen();
 
-            PageService _PageService = new PageService();
-            _PageService._FileCode = F;
-            _PageService._ds = _ds;
-            _PageService._TableName = _TableName;
-            _PageService.Gen();
+            PageService pageService = new PageService
+            {
+                _FileCode = F,
+                _ds = _ds,
+                _TableName = _TableName
+            };
+            pageService.Gen();
 
             string pathPageServiceCodeBehide = _path + @"App_Code\Services\";
             F.Path = pathPageServiceCodeBehide;
-            PageServiceCodeBehide _PageServiceCodeBehide = new PageServiceCodeBehide();
-            _PageServiceCodeBehide._FileCode = F;
-            _PageServiceCodeBehide._ds = _ds;
-            _PageServiceCodeBehide._TableName = _TableName;
-            _PageServiceCodeBehide.Gen();
+            PageServiceCodeBehide pageServiceCodeBehide = new PageServiceCodeBehide
+            {
+                _FileCode = F,
+                _ds = _ds,
+                _TableName = _TableName
+            };
+            pageServiceCodeBehide.Gen();
 
             string pathSQlScript = _path + @"SQL\";
             F.Path = pathSQlScript;
-            StoreProCode _StoreProCode = new StoreProCode();
-            _StoreProCode._FileCode = F;
-            _StoreProCode._ds = _ds;
-            _StoreProCode._TableName = _TableName;
-            _StoreProCode.Gen();
+            StoreProCode storeProCode = new StoreProCode
+            {
+                _FileCode = F,
+                _ds = _ds,
+                _TableName = _TableName
+            };
+            storeProCode.Gen();
 
             //Gen Javascript
 
             string pathJs_U = _path + @"Js_U\";
             F.Path = pathJs_U;
-            JsCode _JsCode = new JsCode();
-            _JsCode._FileCode = F;
-            _JsCode._ds = _ds;
-            _JsCode._TableName = _TableName;
-            _JsCode.Gen();
+            JsCode jsCode = new JsCode
+            {
+                _FileCode = F,
+                _ds = _ds,
+                _TableName = _TableName
+            };
+            jsCode.Gen();
 
             //========Folder Code
 
             string pathBuCode = _path + @"App_Code\Business\";
             F.Path = pathBuCode;
-            PropertiesCode Pcode = new PropertiesCode();
-            Pcode._FileCode = F;
-            Pcode._ds = _ds;
-            Pcode._TableName = _TableName;
+            PropertiesCode Pcode = new PropertiesCode
+            {
+                _FileCode = F,
+                _ds = _ds,
+                _TableName = _TableName
+            };
             Pcode.Gen();
 
-            DbCode _DbCode = new DbCode();
-            _DbCode._FileCode = F;
-            _DbCode._ds = _ds;
-            _DbCode._TableName = _TableName;
-            _DbCode.Gen();
+            //DbCode _DbCode = new DbCode();
+            //_DbCode._FileCode = F;
+            //_DbCode._ds = _ds;
+            //_DbCode._TableName = _TableName;
+            //_DbCode.Gen();
 
-            //DbCodeFireBird _DbCodeFireBird = new DbCodeFireBird();
-            //_DbCodeFireBird._FileCode = F;
-            //_DbCodeFireBird._ds = _ds;
-            //_DbCodeFireBird._TableName = _TableName;
-            //_DbCodeFireBird.Gen();
+            DbCodeFireBird _DbCodeFireBird = new DbCodeFireBird
+            {
+                _FileCode = F,
+                _ds = _ds,
+                _TableName = _TableName
+            };
+            _DbCodeFireBird.Gen();
         }
 
         //Delete All Find in folder
@@ -216,31 +235,36 @@ namespace StkGenCode
             //Gen("fxrates_family");
             //Db.GetData();
             //Gen("STK_USER");
-            //txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
-            //DataSet _ds = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "STK_USER");
 
-            //txtConstring.Text = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
-            //ClearFile();
-            //DataSet _ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
-            //Gen(_ds, "STK_USER");
-            //DataSet _ds_ds = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_TYPE");
-            //Gen(_ds_ds, "STK_TYPE");
-            //=================================================================================================
             ClearFile();
-            txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
 
-            string ColumnDropDown = "CategoryID:TradeFromCategory;TermId:TradeFromTerm";
+            txtConstring.Text = @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            ClearFile();
+            string ColumnDropDown = "EM_FLAG:STK_USER_FLAG;";
+            DataSet _ds_STK_USER = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
+            Gen(_ds_STK_USER, "STK_USER", ColumnDropDown);
+            //DataSet _ds_STK_TYPE = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_TYPE");
+            //Gen(_ds_STK_TYPE, "STK_TYPE", ColumnDropDown);
 
-            DataSet _dsTradeFromFile = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromFile");
-            Gen(_dsTradeFromFile, "TradeFromFile", ColumnDropDown);
+            DataSet _ds_STK_USER_FLAG = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_USER_FLAG");
+            Gen(_ds_STK_USER_FLAG, "STK_USER_FLAG", ColumnDropDown);
+            //=================================================================================================
 
-            DataSet _dsTradeFromTerm = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromTerm");
-            Gen(_dsTradeFromTerm, "TradeFromTerm");
+            //ClearFile();
+            //txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
 
-            DataSet _dsTradeFromCategory = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromCategory");
-            Gen(_dsTradeFromCategory, "TradeFromCategory");
+            //string ColumnDropDown = "CategoryID:TradeFromCategory;TermId:TradeFromTerm";
 
-            //Copy ไฟล์
+            //DataSet _dsTradeFromFile = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromFile");
+            //Gen(_dsTradeFromFile, "TradeFromFile", ColumnDropDown);
+
+            //DataSet _dsTradeFromTerm = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromTerm");
+            //Gen(_dsTradeFromTerm, "TradeFromTerm");
+
+            //DataSet _dsTradeFromCategory = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromCategory");
+            //Gen(_dsTradeFromCategory, "TradeFromCategory");
+
+            //Copy ไฟล์=================================================================================================================
             System.Diagnostics.Process.Start(@"C:\Users\Node\Desktop\copy.bat");
 
             this.Close();
@@ -248,9 +272,8 @@ namespace StkGenCode
 
         private void ClearFile()
         {
-            FileCode F = new FileCode();
-            F.Path = _path;
-            F.ClearAllFile();
+            FileCode f = new FileCode { Path = _path };
+            f.ClearAllFile();
         }
 
         private void SetDb()

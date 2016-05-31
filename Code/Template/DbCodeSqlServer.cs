@@ -3,7 +3,7 @@ using System.Data;
 
 namespace StkGenCode.Code.Template
 {
-    public class DbCode : CodeBase
+    public class DbCodeSqlServer : CodeBase
     {
         private string GenUsign()
         {
@@ -53,12 +53,23 @@ namespace StkGenCode.Code.Template
             //return code;
             string code = "";
             string sqlColumnList = GenListColumn();  //"A,B,C,D,E"
-            code += "public List<" + _TableName + "> Select()\r\n {";
-            //_code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
-            code += " string sql = \"SELECT " + sqlColumnList + "0 AS RecordCount FROM " + _TableName + "\";" + _NewLine;
-            code += " DataSet ds = Db.GetDataSet(sql);  \r\n ";
-            code += " return DataSetToList(ds);   \r\n";
-            code += "} \r\n";
+                                                     //code += "public List<" + _TableName + "> Select()\r\n {";
+                                                     ////_code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
+                                                     //code += " string sql = \"SELECT " + sqlColumnList + "0 AS RecordCount FROM " + _TableName + "\";" + _NewLine;
+                                                     //code += " DataSet ds = Db.GetDataSet(sql);  \r\n ";
+                                                     //code += " return DataSetToList(ds);   \r\n";
+                                                     //code += "} \r\n";
+
+            code += " public List<SelectInputProperties> Select()" + _NewLine;
+            code += "    {" + _NewLine;
+            code += $" string sql = \"SELECT * FROM {_TableName}\";" + _NewLine;
+            code += "        DataSet ds = Db.GetDataSet(sql);" + _NewLine;
+            code += "" + _NewLine;
+            code += "        return SelectInputProperties.DataSetToList(ds);" + _NewLine;
+            code += "		" + _NewLine;
+            code += "    }" + _NewLine;
+            code += "	" + _NewLine;
+
             return code;
         }
 
@@ -104,7 +115,7 @@ namespace StkGenCode.Code.Template
                 }
             }
 
-            sql += "  if (sortExpression == null)";
+            sql += "if (sortExpression == null)";
             sql += "{" + _NewLine;
             sql += "sql += string.Format(\" order by " + _ds.Tables[0].Columns[0].ColumnName + " \", sortExpression);";
             sql += "}" + _NewLine;

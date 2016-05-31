@@ -283,7 +283,7 @@ namespace StkGenCode.Code.Template
 
             var classTextBox = GenClassTextBoxList();
 
-            code = "function BindEditTable() {" + _NewLine;
+            code += "function BindEditTable() {" + _NewLine;
             code += "            $('" + classTextBox + "').dblclick(function () { " + _NewLine;
 
             code += " " + _NewLine;

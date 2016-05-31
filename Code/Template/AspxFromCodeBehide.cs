@@ -361,9 +361,9 @@ namespace StkGenCode.Code.Template
             string code = "";
             code += GenUsing();
             code += BeginClass();
-            code += GenPageLoad();
+            //code += GenPageLoad();
 
-            code += GenInnitDropDown();
+            //code += GenInnitDropDown();
             //code += GenBindForm();
 
             //code += GenBtnSave();

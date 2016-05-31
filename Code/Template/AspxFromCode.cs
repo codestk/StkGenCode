@@ -1,4 +1,5 @@
 ﻿using StkGenCode.Code.Column;
+using StkGenCode.Code.Name;
 using System;
 using System.Data;
 
@@ -168,28 +169,8 @@ namespace StkGenCode.Code.Template
 
             code += " if (Validate() == false) { return false; }" + _NewLine;
 
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            {
-                string columnName = dataColumn.ColumnName;
-                string propertieName = string.Format(_formatpropertieName, _TableName, dataColumn.ColumnName);
-                string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
-                string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
-                string controlDropDownName = string.Format(_formatDropDownName, dataColumn.ColumnName);
+            code += MapControlHtmlToValiable(_ds);
 
-                if (IsDropDown(dataColumn))
-                {
-                    code += $"var  {columnName} =$('#<%={controlDropDownName}.ClientID %>').val();" + _NewLine;
-                }
-                else
-                if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
-                {//chek bok
-                    code += $"var  {columnName} =$('#<%={controlChekBoxName}.ClientID %>').val();" + _NewLine;
-                }
-                else
-                {//input
-                    code += $"var  {columnName} =$('#<%={controlTextBoxName}.ClientID %>').val();" + _NewLine;
-                }
-            }
             string controlTextBoxPrimay = string.Format(_formatTextBoxName, _ds.Tables[0].PrimaryKey[0]);
             code += $"    var result = {_TableName}Service.Save({columnParameter});" + _NewLine;
             code += "" + _NewLine;
@@ -198,6 +179,11 @@ namespace StkGenCode.Code.Template
             code += "" + _NewLine;
             code += "        Materialize.toast('Your data has been saved.', 3000, 'toastCss');" + _NewLine;
             code += $" $('#<%={controlTextBoxPrimay}.ClientID %>').val(result);" + _NewLine;
+
+            code += "$('#btnSave').hide();" + _NewLine;
+
+            code += "$('#btnUpdate').show();" + _NewLine;
+            code += "$('#btnDelete').show();" + _NewLine;
             code += "    }" + _NewLine;
             code += "    else {" + _NewLine;
             code += "        Materialize.toast(MsgError, 5000, 'toastCss');" + _NewLine;
@@ -215,30 +201,29 @@ namespace StkGenCode.Code.Template
             code += "function Update() {" + _NewLine;
 
             code += " if (Validate() == false) { return false; }" + _NewLine;
+            code += MapControlHtmlToValiable(_ds);
+            //foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            //{
+            //    string columnName = dataColumn.ColumnName;
+            //    string propertieName = string.Format(_formatpropertieName, _TableName, dataColumn.ColumnName);
+            //    string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
+            //    string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
+            //    string controlDropDownName = string.Format(_formatDropDownName, dataColumn.ColumnName);
 
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            {
-                string columnName = dataColumn.ColumnName;
-                string propertieName = string.Format(_formatpropertieName, _TableName, dataColumn.ColumnName);
-                string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
-                string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
-                string controlDropDownName = string.Format(_formatDropDownName, dataColumn.ColumnName);
-
-                if (IsDropDown(dataColumn))
-                {
-                    code += $"var  {columnName} =$('#<%={controlDropDownName}.ClientID %>').val();" + _NewLine;
-                }
-                else
-                if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
-                {//chek bok
-                    code += $"var  {columnName} =$('#<%={controlChekBoxName}.ClientID %>').val();" + _NewLine;
-                }
-                else
-                {//input
-                    code += $"var  {columnName} =$('#<%={controlTextBoxName}.ClientID %>').val();" + _NewLine;
-                }
-            }
-            string controlTextBoxPrimay = string.Format(_formatTextBoxName, _ds.Tables[0].PrimaryKey[0]);
+            //    if (IsDropDown(dataColumn))
+            //    {
+            //        code += $"var  {columnName} =$('#<%={controlDropDownName}.ClientID %>').val();" + _NewLine;
+            //    }
+            //    else
+            //    if ((dataColumn.DataType.ToString() == "System.Boolean") || (dataColumn.DataType.ToString() == "System.Int16"))
+            //    {//chek bok
+            //        code += $"var  {columnName} =$('#<%={controlChekBoxName}.ClientID %>').val();" + _NewLine;
+            //    }
+            //    else
+            //    {//input
+            //        code += $"var  {columnName} =$('#<%={controlTextBoxName}.ClientID %>').val();" + _NewLine;
+            //    }
+            //}
             code += $"    var result = {_TableName}Service.Update({columnParameter});" + _NewLine;
             code += "" + _NewLine;
 
@@ -267,7 +252,6 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
                 string columnName = dataColumn.ColumnName;
-                string propertieName = string.Format(_formatpropertieName, _TableName, dataColumn.ColumnName);
                 string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
                 string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
                 string controlDropDownName = string.Format(_formatDropDownName, dataColumn.ColumnName);
@@ -286,7 +270,6 @@ namespace StkGenCode.Code.Template
                     code += $"var  {columnName} =$('#<%={controlTextBoxName}.ClientID %>').val();" + _NewLine;
                 }
             }
-            string controlTextBoxPrimay = string.Format(_formatTextBoxName, _ds.Tables[0].PrimaryKey[0]);
             code += $"    var result = {_TableName}Service.Delete({columnParameter});" + _NewLine;
             code += "" + _NewLine;
 
@@ -295,12 +278,49 @@ namespace StkGenCode.Code.Template
             code += "        Materialize.toast('Your data has been saved.', 3000, 'toastCss');" + _NewLine;
             //code += $" $('#<%={controlTextBoxPrimay}.ClientID %>').val(result);" + _NewLine;
             code += "$('#modalConfirm').closeModal();" + _NewLine;
+
+            code += "   setInterval(function () { this.close() }, 2000);" + _NewLine;
             code += "    }" + _NewLine;
             code += "    else {" + _NewLine;
             code += "        Materialize.toast(MsgError, 5000, 'toastCss');" + _NewLine;
             code += "    }" + _NewLine;
 
             code += "} " + _NewLine;
+            return code;
+        }
+
+        private string BindQueryString()
+        {
+            string code = "";
+            code += "function BindQueryString() {" + _NewLine;
+            code += "" + _NewLine;
+            code += $"var {_ds.Tables[0].PrimaryKey[0]} = GetQueryString('Q');" + _NewLine;
+            code += "if (" + _ds.Tables[0].PrimaryKey[0] + " != '') {" + _NewLine;
+            code += $"var _{_TableName} = {_TableName}Service.Select({_ds.Tables[0].PrimaryKey[0]});" + _NewLine;
+            code += "" + _NewLine;
+            code += "$('#<%=txt" + _ds.Tables[0].PrimaryKey[0] + ".ClientID %>').prop('disabled', true );" + _NewLine;
+            code += MapProPertiesToControl(_ds);
+            //foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            //{#<%={controlTextBoxName}.ClientID %>
+            //    if (IsDropDown(dataColumn))
+            //    {
+            //        code += "$('#<%=" + string.Format(_formatDropDownName, dataColumn.ColumnName) + ".ClientID %>').val(result." + dataColumn.ColumnName + "); " + _NewLine;
+            //        continue;
+            //    }
+
+            //    code += "$('#<%=txt" + dataColumn.ColumnName + ".ClientID %>').val(result." + dataColumn.ColumnName + ");" + _NewLine;
+            //}
+
+            code += "$('#btnSave').hide();" + _NewLine;
+            code += "}" + _NewLine;
+            code += "else{" + _NewLine;
+            code += "$('#btnSave').show();" + _NewLine;
+            code += "$('#btnUpdate').hide();" + _NewLine;
+            code += "$('#btnDelete').hide();" + _NewLine;
+            code += "" + _NewLine;
+            code += "}" + _NewLine;
+
+            code += "}" + _NewLine;
             return code;
         }
 
@@ -311,15 +331,37 @@ namespace StkGenCode.Code.Template
             code += "var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.';" + _NewLine;
             code += " $(document).ready(function () " + _NewLine;
             code += "{" + _NewLine;
+
             code += "$('.modal-trigger').leanModal();" + _NewLine;
 
-            code += "  ForceNumberTextBox(); " + _NewLine;
+            code += "ForceNumberTextBox(); " + _NewLine;
+
+            //Set Drop
+
             code += "//For dropdown" + _NewLine;
-            code += "$('select').material_select(); " + _NewLine;
+
+            if (HaveDropDown())
+            {
+                foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+                {
+                    foreach (MappingColumn map in _MappingColumn)
+                    {
+                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
+                        {//SetSelectCategory('#<%=drpTermId.ClientID %>');
+                            code += $"SetSelect{dataColumn.ColumnName}('#<%=drp{dataColumn.ColumnName}.ClientID %>');" + _NewLine;
+                        }
+                    }
+                }
+            }
+            code += "BindQueryString();" + _NewLine;
+            if (HaveDropDown())
+            {
+                code += "$('select').material_select(); " + _NewLine;
+            }
             code += "$('.datepicker').pickadate({" + _NewLine;
-            code += "    selectMonths: true, // Creates a dropdown to control month" + _NewLine;
-            code += "    selectYears: 15 ,// Creates a dropdown of 15 years to control year," + _NewLine;
-            code += "     format: 'd mmmm yyyy'," + _NewLine;
+            code += "selectMonths: true, // Creates a dropdown to control month" + _NewLine;
+            code += "selectYears: 15 ,// Creates a dropdown of 15 years to control year," + _NewLine;
+            code += "format: 'd mmmm yyyy'," + _NewLine;
             code += "});" + _NewLine;
 
             code += " }); " + _NewLine;
@@ -331,10 +373,16 @@ namespace StkGenCode.Code.Template
             code += Validate();
             //=============================================================================================
             code += GenJavaScriptConfirm();
-            // code += GenJavaScriptSearch();
+
             code += GenJavaScriptSave();
+
             code += GenJavaScriptUpdate();
+
             code += GenJavaScriptDelete();
+
+            code += SetSelectInput();
+
+            code += BindQueryString();
             code += "</script>" + _NewLine;
 
             return code;
@@ -396,6 +444,7 @@ namespace StkGenCode.Code.Template
         /// Refer CSS col s12  เป็น Base
         /// </summary>
         /// <param name="columnSize"></param>
+        /// <param name="chekPrimarykey"></param>
         /// <returns></returns>
         public string GenControls(int columnSize, bool chekPrimarykey = true)
         {
@@ -431,10 +480,6 @@ namespace StkGenCode.Code.Template
                     {
                         isPrimayKey = true;
                     }
-                }
-                else
-                {
-                    isPrimayKey = false;
                 }
 
                 if (isPrimayKey)
@@ -490,33 +535,19 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        //protected String GenButton()
-        //{
-        //    string code = "  ";
-
-        //    code += "<div class=\"input-field col s12\">" + _NewLine;
-
-        //    code += "<input id=\"btnSaveHtml\" type=\"button\" value=\"Save\" class=\"waves-effect waves-light btn\" onclick=\"Save();\" />";
-
-        //    code += "<input id=\"btnUpdateHtml\" type=\"button\" value=\"Save\" class=\"waves-effect waves-light btn\" onclick=\"Save();\" />";
-        //    code += "<asp:LinkButton ID =\"btnSave\" CssClass=\"waves-effect waves-light btn\" runat=\"server\" OnClientClick=\"return Save();\" OnClick=\"btnSave_Click\">Save</asp:LinkButton> " + _NewLine;
-        //    code += "<asp:LinkButton ID =\"btnUpdate\" CssClass=\"waves-effect waves-light btn\" runat= \"server\" OnClientClick=\"return Validate();\" OnClick=\"btnUpdate_Click\" >Update</asp:LinkButton> " + _NewLine;
-        //    code += "<asp:LinkButton ID=\"btnConfirm\" CssClass=\"waves-effect waves-light btn\" runat=\"server\" OnClientClick=\"javascript:return Delete();\">Delete</asp:LinkButton>" + _NewLine;
-        //    code += "</div>" + _NewLine;
-        //    code += "  " + _NewLine;
-
-        //    return code;
-        //}
-
         protected String GenButton()
         {
             string code = "  ";
 
             code += "<div class=\"input-field col s12\">" + _NewLine;
 
-            code += "<input id=\"btnSave\" type=\"button\" value=\"Save\" class=\"waves-effect waves-light btn\" onclick=\"Save();\" />";
-            code += "<input id=\"btnUpdate\" type=\"button\" value=\"Update\" class=\"waves-effect waves-light btn\" onclick=\"Update();\" />";
-            code += "<input id=\"btnDelete\" type=\"button\" value=\"Delete\" class=\"waves-effect waves-light btn\" onclick=\"javascript:return Confirm();\" />";
+            code += "<input id=\"btnSave\" type=\"button\" value=\"Save\" class=\" btn\" onclick=\"Save();\" />";
+            code += "<input id=\"btnUpdate\" type=\"button\" value=\"Update\" class=\" btn\" onclick=\"Update();\" />";
+            code += "<input id=\"btnDelete\" type=\"button\" value=\"Delete\" class=\" btn\" onclick=\"javascript:return Confirm();\" />";
+
+            //code += "<input id=\"btnSave\" type=\"button\" value=\"Save\" class=\"waves-effect waves-light btn\" onclick=\"Save();\" />";
+            //code += "<input id=\"btnUpdate\" type=\"button\" value=\"Update\" class=\"waves-effect waves-light btn\" onclick=\"Update();\" />";
+            //code += "<input id=\"btnDelete\" type=\"button\" value=\"Delete\" class=\"waves-effect waves-light btn\" onclick=\"javascript:return Confirm();\" />";
 
             //code += "<asp:LinkButton ID =\"btnSave\" CssClass=\"waves-effect waves-light btn\" runat=\"server\" OnClientClick=\"return Save();\" OnClick=\"btnSave_Click\">Save</asp:LinkButton> " + _NewLine;
             //code += "<asp:LinkButton ID =\"btnUpdate\" CssClass=\"waves-effect waves-light btn\" runat= \"server\" OnClientClick=\"return Validate();\" OnClick=\"btnUpdate_Click\" >Update</asp:LinkButton> " + _NewLine;
@@ -551,12 +582,12 @@ namespace StkGenCode.Code.Template
             string code = "";
             code += " <div id=\"modalConfirm\" class=\"modal\"> " + _NewLine;
             code += " <div class=\"modal-content\"> " + _NewLine;
-            code += "            <h4>Message</h4> " + _NewLine;
-            code += "            <p id=\"\">Are you sure?!!!</p> " + _NewLine;
+            code += "            <h5>Message</h5> " + _NewLine;
+            code += "            <h6>Are you sure?!!!</h6> " + _NewLine;
             code += "        </div> " + _NewLine;
             code += "        <div class=\"modal-footer\"> " + _NewLine;
             code += "             " + _NewLine;
-            code += "<input id=\"btnConfirm\" type=\"button\" value=\"Delete\" class=\"modal-action modal-close waves-effect waves-light btn\" onclick=\"javascript:return Delete();\" />";
+            code += "<input id=\"btnConfirm\" type=\"button\" value=\"Confirm\" class=\"modal-action modal-close waves-effect waves-light btn\" onclick=\"javascript:return Delete();\" />";
             code += "<input id=\"btnCancel\" type=\"button\" value=\"Cancel\" class=\"modal-action modal-close waves-effect waves-light btn\"  />";
 
             // code += "            <asp:LinkButton ID=\"btnDelete\" CssClass=\"waves-effect waves-light btn left\" runat=\"server\" OnClick=\"btnDelete_Click\">Delete</asp:LinkButton> " + _NewLine;
@@ -576,7 +607,57 @@ namespace StkGenCode.Code.Template
             //code += "<script src=\"Module/Pagger/jquery.simplePagination.js\"></script>" + _NewLine;
 
             code += "<script src=\"Js_U/" + _FileName.JsCodeName() + "\"></script>" + _NewLine;
+            if (HaveDropDown())
+            {
+                foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+                {
+                    foreach (MappingColumn map in _MappingColumn)
+                    {
+                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
+                        {
+                            code += "<script src=\"Js_U/" + FileName.JsCodeName(map.TableName) + "\"></script>" + _NewLine;
+                        }
+                    }
+                }
+            }
 
+            return code;
+        }
+
+        private string SetSelectInput()
+        {
+            string code = "";
+            if (HaveDropDown())
+            {
+                foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+                {
+                    foreach (MappingColumn map in _MappingColumn)
+                    {
+                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
+                        {
+                            code += "function SetSelect" + dataColumn.ColumnName + "(control) {" + _NewLine;
+                            code += "" + _NewLine;
+                            code += "var innitOption = '<option value=\"\">Please Select</option>';" + _NewLine;
+                            code += $"var result{map.TableName} = {map.TableName}Service.SelectAll();" + _NewLine;
+                            code += "$(control).append(innitOption);" + _NewLine;
+                            code += "$.each(result" + map.TableName + ", function (index, value) {" + _NewLine;
+                            code += "//Appending the json items to the dropdown (select tag)" + _NewLine;
+                            code += "//item is the id of your select tag" + _NewLine;
+                            code += "" + _NewLine;
+                            code += "var text = value.text;" + _NewLine;
+                            code += "var value = value.value;" + _NewLine;
+                            code += "" + _NewLine;
+                            code += "$(control).append('<option value=\"' + value + '\">' + text + '</option>');" + _NewLine;
+                            code += "" + _NewLine;
+                            code += "});" + _NewLine;
+                            code += "" + _NewLine;
+                            code += "" + _NewLine;
+                            code += "" + _NewLine;
+                            code += "}" + _NewLine;
+                        }
+                    }
+                }
+            }
             return code;
         }
 

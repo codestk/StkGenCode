@@ -130,7 +130,7 @@ namespace StkGenCode.Code.Template
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
 
-            code += MapJsonToProPerties(_ds, false);
+            code += MapJsonToProPerties(_ds);
 
             code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
             code += "int _PageIndex = Convert.ToInt32(PageIndex);" + _NewLine;
@@ -223,7 +223,7 @@ namespace StkGenCode.Code.Template
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
 
-            code += MapJsonToProPerties(_ds, false);
+            code += MapJsonToProPerties(_ds);
 
             code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
             code += "    _" + _TableName + "Db.Update(); " + _NewLine;
@@ -269,7 +269,7 @@ namespace StkGenCode.Code.Template
             code += " " + _TableName + " _" + _TableName + " = new " + _TableName + "(); " + _NewLine;
             code += "  " + _TableName + "Db _" + _TableName + "Db = new " + _TableName + "Db(); " + _NewLine;
 
-            code += MapJsonToProPerties(_ds, false);
+            code += MapJsonToProPerties(_ds);
 
             code += "  _" + _TableName + "Db._" + _TableName + " = _" + _TableName + ";" + _NewLine;
             code += "    _" + _TableName + "Db.Delete(); " + _NewLine;
@@ -295,6 +295,31 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        public string SelectAll()
+        {
+            string code = "";
+
+            code += "  [WebMethod]" + _NewLine;
+            code += "    public List<SelectInputProperties> SelectAll()" + _NewLine;
+            code += "    {" + _NewLine;
+            code += $"        {_TableName}Db _{_TableName}Db = new {_TableName}Db();" + _NewLine;
+            code += $"        return _{_TableName}Db.Select();" + _NewLine;
+            code += "    }" + _NewLine;
+
+            return code;
+        }
+
+        public string Select()
+        {
+            string code = " [WebMethod] " + _NewLine;
+            code += $"   public {_TableName} Select(string {_ds.Tables[0].PrimaryKey[0]})" + _NewLine;
+            code += "    {" + _NewLine;
+            code += $"        {_TableName}Db _{_TableName}Db = new {_TableName}Db();" + _NewLine;
+            code += $"        return _{_TableName}Db.Select({_ds.Tables[0].PrimaryKey[0]});" + _NewLine;
+            code += "    }" + _NewLine;
+            return code;
+        }
+
         public override void Gen()
         {
             //_FileName = new FileName();
@@ -315,7 +340,10 @@ namespace StkGenCode.Code.Template
             code += GenSave();
             code += GenUpdate();
             code += GenDelete();
-            code += GenEndClass();
+
+            code += SelectAll();
+            code += Select();
+            code += GenEndClass(); //Close tag
 
             _FileCode.WriteFile(_FileName.PageServiceCodeBehideName(), code);
         }

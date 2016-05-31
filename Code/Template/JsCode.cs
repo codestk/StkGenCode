@@ -1,5 +1,4 @@
 ﻿using StkGenCode.Code.Column;
-using System.Data;
 
 namespace StkGenCode.Code.Template
 {
@@ -7,7 +6,7 @@ namespace StkGenCode.Code.Template
     {
         private string GenJquerySaveData()
         {
-            string code = "";
+            var code = "";
 
             code += "var " + _TableName + "Service = {}; " + _NewLine;
             code += "(function () { " + _NewLine;
@@ -26,6 +25,9 @@ namespace StkGenCode.Code.Template
             code += GenUpdate();
 
             code += GenDelete();
+            code += SelectAll();
+
+            code += Select();
 
             code += "}).apply(" + _TableName + "Service); " + _NewLine;
 
@@ -34,12 +36,13 @@ namespace StkGenCode.Code.Template
 
         private string GenSaveColumn()
         {
-            string code = "";
+            var code = "";
             code += " " + _NewLine;
             code += "    this.SaveColumn =  function (id, column, value) { " + _NewLine;
             code += "            var result; " + _NewLine;
             code += "            ////data \"{ssss:1,ddddd:1}\" " + _NewLine;
-            code += "            var tag = '{id:\"' + id + '\",column:\"' + column + '\",value:\"' + value + '\"}'; " + _NewLine;
+            code += "            var tag = '{id:\"' + id + '\",column:\"' + column + '\",value:\"' + value + '\"}'; " +
+                    _NewLine;
             code += "            var F = CallServices(url + \"SaveColumn\", tag, false, function (msg) { " + _NewLine;
             code += "                result = msg.d; " + _NewLine;
             code += "            }); " + _NewLine;
@@ -51,13 +54,14 @@ namespace StkGenCode.Code.Template
 
         private string GetKeyWordsAllColumn()
         {
-            string code = "";
+            var code = "";
             code += "   " + _NewLine;
             code += " this.GetKeyWordsAllColumn = function (keyword) { " + _NewLine;
             code += "        var result; " + _NewLine;
             code += "        ////data \"{ssss:1,ddddd:1}\"   " + _NewLine;
             code += "        var tag = '{keyword:\"' + keyword + '\"}'; " + _NewLine;
-            code += "        var F = CallServices(url + \"GetKeyWordsAllColumn\", tag, false, function (msg) { " + _NewLine;
+            code += "        var F = CallServices(url + \"GetKeyWordsAllColumn\", tag, false, function (msg) { " +
+                    _NewLine;
             code += "            result = msg.d; " + _NewLine;
             code += "        }); " + _NewLine;
             code += "        return result; " + _NewLine;
@@ -68,14 +72,15 @@ namespace StkGenCode.Code.Template
 
         private string GenGetKeyWordsOneColumn()
         {
-            string code = "";
+            var code = "";
             code += "   " + _NewLine;
             code += " this.GetKeyWordsOneColumn = function (column,keyword) { " + _NewLine;
             code += "        var result; " + _NewLine;
             code += "        ////data \"{ssss:1,ddddd:1}\"   " + _NewLine;
 
             code += " var tag = '{column:\"' + column + '\",keyword:\"' + keyword + '\"}';" + _NewLine;
-            code += "        var F = CallServices(url + \"GetKeyWordsOneColumn\", tag, false, function (msg) { " + _NewLine;
+            code += "        var F = CallServices(url + \"GetKeyWordsOneColumn\", tag, false, function (msg) { " +
+                    _NewLine;
             code += "            result = msg.d; " + _NewLine;
             code += "        }); " + _NewLine;
             code += "        return result; " + _NewLine;
@@ -85,21 +90,37 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        public override void Gen()
+        {
+            //_FileName = new FileName();
+            //_FileName._TableName = _TableName;
+            //_FileName._ds = _ds;
+            InnitProperties();
+
+            var code = "";
+            code += GenJquerySaveData();
+            _FileCode.WriteFile(_FileName.JsCodeName(), code);
+            //_FileCode.writeFile(FileName, _code, _fileType);
+        }
+
         #region Search
 
         private string GenSearch()
         {
-            string ColumnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
-            ColumnsParameterFunction = "PageIndex,PageSize,SortExpression,SortDirection," + ColumnsParameterFunction.TrimEnd(',') + ",RederTable_Pagger";
+            var columnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
+            columnsParameterFunction = "PageIndex,PageSize,SortExpression,SortDirection," +
+                                       columnsParameterFunction.TrimEnd(',') + ",RederTable_Pagger";
 
-            string ColumnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
-            ColumnsParameterJson = "PageIndex:\"'+PageIndex+'\",PageSize:\"'+PageSize+'\",SortExpression:\"'+SortExpression+'\",SortDirection:\"'+SortDirection+'\"," + ColumnsParameterJson.TrimEnd(',');
-            string code = "";
+            var columnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
+            columnsParameterJson =
+                "PageIndex:\"'+PageIndex+'\",PageSize:\"'+PageSize+'\",SortExpression:\"'+SortExpression+'\",SortDirection:\"'+SortDirection+'\"," +
+                columnsParameterJson.TrimEnd(',');
+            var code = "";
 
-            code += "  this.Search = function (" + ColumnsParameterFunction + ") {" + _NewLine;
+            code += "  this.Search = function (" + columnsParameterFunction + ") {" + _NewLine;
             code += "        var result;" + _NewLine;
             code += "" + _NewLine;
-            code += "        var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
+            code += "        var tag = '{" + columnsParameterJson + "}';" + _NewLine;
             code += "        var F = CallServices(url + \"Search\", tag, true, function (msg) {" + _NewLine;
             code += "            result = msg.d;" + _NewLine;
             code += "" + _NewLine;
@@ -111,25 +132,61 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+        private string SelectAll()
+        {
+            var code = "";
+
+            code += "" + _NewLine;
+            code += "    this.SelectAll = function () {" + _NewLine;
+            code += "        var result;" + _NewLine;
+            code += "" + _NewLine;
+            code += "        var tag = '{}';" + _NewLine;
+            code += "        var F = CallServices(url + \"SelectAll\", tag, false, function (msg) {" + _NewLine;
+            code += "            result = msg.d;" + _NewLine;
+            code += "        });" + _NewLine;
+            code += "        return result;" + _NewLine;
+            code += "    };//SelectAll" + _NewLine;
+            return code;
+        }
+
+        private string Select()
+        {
+            var code = "";
+
+            code += "" + _NewLine;
+            code += "    this.Select = function (" + _ds.Tables[0].PrimaryKey[0] + ") {" + _NewLine;
+            code += "        var result;" + _NewLine;
+            code += "" + _NewLine;
+            code += " var tag = '{" + _ds.Tables[0].PrimaryKey[0] + ":\"'+" + _ds.Tables[0].PrimaryKey[0] + "+'\"}';" +
+                    _NewLine;
+
+            code += "        var F = CallServices(url + \"Select\", tag, false, function (msg) {" + _NewLine;
+            code += "            result = msg.d;" + _NewLine;
+            code += "        });" + _NewLine;
+            code += "        return result;" + _NewLine;
+            code += "    };//SelectAll" + _NewLine;
+            return code;
+        }
+
         #endregion Search
 
         #region EditData
 
         private string GenSave()
         {
-            string code = "";
-            string ColumnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
-            ColumnsParameterFunction = ColumnsParameterFunction.TrimEnd(',');
+            var code = "";
+            var columnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
+            columnsParameterFunction = columnsParameterFunction.TrimEnd(',');
 
-            string ColumnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
-            ColumnsParameterJson = ColumnsParameterJson.TrimEnd(',');
+            var columnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
+            columnsParameterJson = columnsParameterJson.TrimEnd(',');
 
-            code += $"this.Save = function({ColumnsParameterFunction})" + _NewLine;
+            code += $"this.Save = function({columnsParameterFunction})" + _NewLine;
             code += "{" + _NewLine;
             code += "" + _NewLine;
             code += "            var result;" + _NewLine;
             code += "" + _NewLine;
-            code += "            var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
+            code += "            var tag = '{" + columnsParameterJson + "}';" + _NewLine;
             code += "            var F = CallServices(url + \"Save\", tag, false, function(msg) {" + _NewLine;
             code += "                result = msg.d;" + _NewLine;
             code += "            });" + _NewLine;
@@ -140,19 +197,19 @@ namespace StkGenCode.Code.Template
 
         private string GenUpdate()
         {
-            string code = "";
-            string ColumnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
-            ColumnsParameterFunction = ColumnsParameterFunction.TrimEnd(',');
+            var code = "";
+            var columnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
+            columnsParameterFunction = columnsParameterFunction.TrimEnd(',');
 
-            string ColumnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
-            ColumnsParameterJson = ColumnsParameterJson.TrimEnd(',');
+            var columnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
+            columnsParameterJson = columnsParameterJson.TrimEnd(',');
 
-            code += $"this.Update = function({ColumnsParameterFunction})" + _NewLine;
+            code += $"this.Update = function({columnsParameterFunction})" + _NewLine;
             code += "{" + _NewLine;
             code += "" + _NewLine;
             code += "            var result;" + _NewLine;
             code += "" + _NewLine;
-            code += "            var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
+            code += "            var tag = '{" + columnsParameterJson + "}';" + _NewLine;
             code += "            var F = CallServices(url + \"Update\", tag, false, function(msg) {" + _NewLine;
             code += "                result = msg.d;" + _NewLine;
             code += "            });" + _NewLine;
@@ -163,19 +220,19 @@ namespace StkGenCode.Code.Template
 
         private string GenDelete()
         {
-            string code = "";
-            string ColumnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
-            ColumnsParameterFunction = ColumnsParameterFunction.TrimEnd(',');
+            var code = "";
+            var columnsParameterFunction = ColumnString.GenLineString(_ds, "{0},");
+            columnsParameterFunction = columnsParameterFunction.TrimEnd(',');
 
-            string ColumnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
-            ColumnsParameterJson = ColumnsParameterJson.TrimEnd(',');
+            var columnsParameterJson = ColumnString.GenLineString(_ds, "{0}:\"' + {0} + '\",");
+            columnsParameterJson = columnsParameterJson.TrimEnd(',');
 
-            code += $"this.Delete = function({ColumnsParameterFunction})" + _NewLine;
+            code += $"this.Delete = function({columnsParameterFunction})" + _NewLine;
             code += "{" + _NewLine;
             code += "" + _NewLine;
             code += "            var result;" + _NewLine;
             code += "" + _NewLine;
-            code += "            var tag = '{" + ColumnsParameterJson + "}';" + _NewLine;
+            code += "            var tag = '{" + columnsParameterJson + "}';" + _NewLine;
             code += "            var F = CallServices(url + \"Delete\", tag, false, function(msg) {" + _NewLine;
             code += "                result = msg.d;" + _NewLine;
             code += "            });" + _NewLine;
@@ -185,18 +242,5 @@ namespace StkGenCode.Code.Template
         }
 
         #endregion EditData
-
-        public override void Gen()
-        {
-            //_FileName = new FileName();
-            //_FileName._TableName = _TableName;
-            //_FileName._ds = _ds;
-            InnitProperties();
-
-            string code = "";
-            code += GenJquerySaveData();
-            _FileCode.WriteFile(_FileName.JsCodeName(), code);
-            //_FileCode.writeFile(FileName, _code, _fileType);
-        }
     }
 }

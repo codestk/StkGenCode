@@ -51,11 +51,12 @@ namespace StkGenCode.Code.Template
         {
             string code = "";
             string sqlColumnList = GenListColumn();  //"A,B,C,D,E"
-            code += "public List<" + _TableName + "> Select()\r\n {";
+            code += "public List<SelectInputProperties> Select()\r\n {";
             //_code += "string _sql1 = \"SELECT * FROM " + _TableName + "\";\r\n";
             code += " string sql = \"SELECT " + sqlColumnList + "0 AS RecordCount FROM " + _TableName + "\";" + _NewLine;
             code += " DataSet ds = Db.GetDataSet(sql);  \r\n ";
-            code += " return DataSetToList(ds);   \r\n";
+            //code += " return DataSetToList(ds);   \r\n";
+            code += " return SelectInputProperties.DataSetToList(ds);";
             code += "} \r\n";
             return code;
         }
@@ -403,37 +404,37 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string Comment()
-        {
-            string code = _NewLine + "//Trasaction User" + _NewLine;
-            code += "//bool output = false;" + _NewLine;
-            code += "//    try" + _NewLine;
-            code += "//    {" + _NewLine;
-            code += "//        Db.OpenFbData();" + _NewLine;
-            code += "//        Db.BeginTransaction();" + _NewLine;
+        //private string Comment()
+        //{
+        //    string code = _NewLine + "//Trasaction User" + _NewLine;
+        //    code += "//bool output = false;" + _NewLine;
+        //    code += "//    try" + _NewLine;
+        //    code += "//    {" + _NewLine;
+        //    code += "//        Db.OpenFbData();" + _NewLine;
+        //    code += "//        Db.BeginTransaction();" + _NewLine;
 
-            code += "//        MPO_ORDERS o1 = new MPO_ORDERS();" + _NewLine;
-            code += "//o1 = _MPO_ORDERS;" + _NewLine;
-            code += "//        int orid = o1.Save();" + _NewLine;
+        //    code += "//        MPO_ORDERS o1 = new MPO_ORDERS();" + _NewLine;
+        //    code += "//o1 = _MPO_ORDERS;" + _NewLine;
+        //    code += "//        int orid = o1.Save();" + _NewLine;
 
-            code += "//MPO_ODERDETAILS o2 = new MPO_ODERDETAILS();" + _NewLine;
-            code += "//o2.Save(orid, ODERDETAILS);" + _NewLine;
+        //    code += "//MPO_ODERDETAILS o2 = new MPO_ODERDETAILS();" + _NewLine;
+        //    code += "//o2.Save(orid, ODERDETAILS);" + _NewLine;
 
-            code += "//        Db.CommitTransaction();" + _NewLine;
-            code += "//        OR_ID = orid;" + _NewLine;
-            code += "//        output = true;" + _NewLine;
-            code += "//    }" + _NewLine;
-            code += "//    catch (System.Exception ex)" + _NewLine;
-            code += "//    {" + _NewLine;
-            code += "//        Db.RollBackTransaction();" + _NewLine;
-            code += "//        ErrorLogging.LogErrorToLogFile(ex, \"\");" + _NewLine;
-            code += "//        throw ex;" + _NewLine;
-            code += "//    }" + _NewLine;
+        //    code += "//        Db.CommitTransaction();" + _NewLine;
+        //    code += "//        OR_ID = orid;" + _NewLine;
+        //    code += "//        output = true;" + _NewLine;
+        //    code += "//    }" + _NewLine;
+        //    code += "//    catch (System.Exception ex)" + _NewLine;
+        //    code += "//    {" + _NewLine;
+        //    code += "//        Db.RollBackTransaction();" + _NewLine;
+        //    code += "//        ErrorLogging.LogErrorToLogFile(ex, \"\");" + _NewLine;
+        //    code += "//        throw ex;" + _NewLine;
+        //    code += "//    }" + _NewLine;
 
-            code += "//    return output;" + _NewLine;
+        //    code += "//    return output;" + _NewLine;
 
-            return code;
-        }
+        //    return code;
+        //}
 
         private string GenUpdateColumn()
         {
@@ -458,31 +459,31 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string GenGetKeyWordsAllColumn()
-        {
-            string code = "";
+        //private string GenGetKeyWordsAllColumn()
+        //{
+        //    string code = "";
 
-            code += " public List<string> GetKeyWordsAllColumn(string Keyword) " + _NewLine;
-            code += "    { " + _NewLine;
-            code += "        " + _NewLine;
-            //[Sp_Getfxrates_family_Autocomplete]
-            code += "        string sql = \"Sp_Get" + _TableName + "_Autocomplete\"; " + _NewLine;
-            code += "        var prset = new List<IDataParameter>(); " + _NewLine;
-            code += "        prset.Add(Db.CreateParameterDb(\"@Key_word\", Keyword)); " + _NewLine;
-            code += " " + _NewLine;
-            code += "        List<string> dataArray = new List<string>(); " + _NewLine;
-            code += " " + _NewLine;
-            code += "        DataSet ds = Db.GetDataSet(sql, prset,CommandType.StoredProcedure); " + _NewLine;
-            code += "        foreach (DataRow row in ds.Tables[0].Rows) " + _NewLine;
-            code += "        { " + _NewLine;
-            code += "            dataArray.Add(row[0].ToString()); " + _NewLine;
-            code += "        } " + _NewLine;
-            code += " " + _NewLine;
-            code += "        return dataArray; " + _NewLine;
-            code += "    }" + _NewLine;
+        //    code += " public List<string> GetKeyWordsAllColumn(string Keyword) " + _NewLine;
+        //    code += "    { " + _NewLine;
+        //    code += "        " + _NewLine;
+        //    //[Sp_Getfxrates_family_Autocomplete]
+        //    code += "        string sql = \"Sp_Get" + _TableName + "_Autocomplete\"; " + _NewLine;
+        //    code += "        var prset = new List<IDataParameter>(); " + _NewLine;
+        //    code += "        prset.Add(Db.CreateParameterDb(\"@Key_word\", Keyword)); " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "        List<string> dataArray = new List<string>(); " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "        DataSet ds = Db.GetDataSet(sql, prset,CommandType.StoredProcedure); " + _NewLine;
+        //    code += "        foreach (DataRow row in ds.Tables[0].Rows) " + _NewLine;
+        //    code += "        { " + _NewLine;
+        //    code += "            dataArray.Add(row[0].ToString()); " + _NewLine;
+        //    code += "        } " + _NewLine;
+        //    code += " " + _NewLine;
+        //    code += "        return dataArray; " + _NewLine;
+        //    code += "    }" + _NewLine;
 
-            return code;
-        }
+        //    return code;
+        //}
 
         private string GenGetKeyWordsOneColumn()
         {
@@ -519,7 +520,7 @@ namespace StkGenCode.Code.Template
             code += "   sql += \"WHERE (1=1) \"; " + _NewLine;
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
-                code += "            if ( _" + _TableName + "." + dataColumn.ColumnName + "!= null) " + _NewLine;
+                code += "            if (( _" + _TableName + "." + dataColumn.ColumnName + "!= null) )" + _NewLine;
                 code += "            { " + _NewLine;
                 if (dataColumn.DataType.ToString() == "System.DateTime")
                 {
@@ -566,8 +567,10 @@ namespace StkGenCode.Code.Template
         private string GenProperties()
         {
             string code = "";
-            code += " public SortDirection _SortDirection { get; set; }" + _NewLine;
-            code += " public string _SortExpression { get; set; }" + _NewLine;
+            //code += " public SortDirection _SortDirection { get; set; }" + _NewLine;
+            //code += " public string _SortExpression { get; set; }" + _NewLine;
+            code += "public string _SortDirection { get; set; }" + _NewLine;
+            code += "public string _SortExpression { get; set; }" + _NewLine;
             return code;
         }
 
@@ -601,7 +604,7 @@ namespace StkGenCode.Code.Template
             code += GenConvertDataList();
             code += GenUpdateColumn();
 
-            code += GenGetKeyWordsAllColumn();
+            //code += GenGetKeyWordsAllColumn();
             code += GenGetKeyWordsOneColumn();
             code += GenSql();
             code += GenWhereformProperties();
@@ -609,7 +612,7 @@ namespace StkGenCode.Code.Template
 
             code += GenEndNameSpaceAndClass();
 
-            code += Comment();
+            //code += Comment();
 
             //FileName name = new FileName();
             //name._TableName = _TableName;

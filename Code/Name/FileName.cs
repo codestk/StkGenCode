@@ -99,5 +99,11 @@ namespace StkGenCode.Code.Name
             string name = $"{_TableName}.js";
             return name;
         }
+
+        public static string JsCodeName(string JsCodeName)
+        {
+            string name = $"{JsCodeName}.js";
+            return name;
+        }
     }
 }

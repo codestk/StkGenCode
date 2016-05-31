@@ -174,7 +174,7 @@ namespace StkGenCode.Code.Template
 
             #region Where
 
-            code += $"WHERE" + _NewLine;
+            code += "WHERE" + _NewLine;
             foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
             {
                 if ((dataColumn.DataType.ToString() == "System.Int32") || (dataColumn.DataType.ToString() == "System.DateTime") || (dataColumn.DataType.ToString() == "System.Decimal"))
