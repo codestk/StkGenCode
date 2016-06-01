@@ -1,5 +1,5 @@
-﻿using System.Data;
-using StkGenCode.Code.Name;
+﻿using StkGenCode.Code.Name;
+using System.Data;
 
 namespace StkGenCode.Code.Template
 {
@@ -34,7 +34,7 @@ namespace StkGenCode.Code.Template
 
             code += SetDatepicker();
 
-            code += SetSelectInput();
+            code += SetSelect();
 
             code += ForceNumberTextBox(false);
             code += "</script>";
@@ -88,9 +88,9 @@ namespace StkGenCode.Code.Template
         private string GenHeadeFile()
         {
             var code = "<%@ Page Title=\"" + TableName +
-                       "\" Language=\"C#\" MasterPageFile=\"~/MasterPage.master\" AutoEventWireup=\"true\" CodeFile=\"" +
-                       FileName.AspxTableCodeFilterColumnBehineName() + "\" Inherits=\"" + TableName + "Filter\" %>" +
-                       NewLine;
+              "\" Language=\"C#\" MasterPageFile=\"~/MasterPage.master\" AutoEventWireup=\"true\" CodeFile=\"" +
+              FileName.AspxTableCodeFilterColumnBehineName() + "\" Inherits=\"" + TableName + "Filter\" %>" +
+              NewLine;
 
             return code;
         }
@@ -115,7 +115,7 @@ namespace StkGenCode.Code.Template
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
                         {
                             code += "<script src=\"Js_U/" + FileName.JsCodeName(map.TableName) + "\"></script>" +
-                                    NewLine;
+                           NewLine;
                         }
                     }
                 }
@@ -150,29 +150,16 @@ namespace StkGenCode.Code.Template
         private string GenDocumentReady()
         {
             var code = "";
+
             code += "$(document).ready(function () { " + NewLine;
 
             code += "ForceNumberTextBox(); " + NewLine;
+
             code += "SetDatepicker();" + NewLine;
 
             code += "//For search dropdown" + NewLine;
 
-            //if (HaveDropDown())
-            //{
-            //    foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-            //    {
-            //        foreach (MappingColumn map in _MappingColumn)
-            //        {
-            //            if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
-            //            {//SetSelectCategory('#<%=drpTermId.ClientID %>');
-            //                code += $"SetSelect{dataColumn.ColumnName}('#<%=drp{dataColumn.ColumnName}.ClientID %>');" + _NewLine;
-            //            }
-            //        }
-            //    }
-
-            //    code += "$('select').material_select(); " + _NewLine;
-            //}
-            code += SetSelect();
+            code += BindSelectOption();
 
             code += LeanModalJs(); //
 
@@ -190,23 +177,22 @@ namespace StkGenCode.Code.Template
             code += "  function SetTable() {" + NewLine;
 
             code += MapControlHtmlToValiable(Ds);
-                // var CategoryName = $('#<%=txtCategoryName.ClientID %>').val();" + _NewLine;
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 if ((dataColumn.DataType.ToString() == "System.Boolean") ||
-                    (dataColumn.DataType.ToString() == "System.Int16"))
+                 (dataColumn.DataType.ToString() == "System.Int16"))
                 {
-//chek bok
-                    code += $"   {dataColumn.ColumnName} ='';" + NewLine;
+                    //chek bok
+                    code += $"{dataColumn.ColumnName} ='';" + NewLine;
                 }
             }
 
             code += "" + NewLine;
             code += "$('#modal1').openModal();" + NewLine;
             code +=
-                $"var result = {TableName}Service.Search(PageIndex, PageSize, SortExpression, SortDirection, {GetColumnParameter()},RederTable_Pagger);" +
-                NewLine;
+             $"var result = {TableName}Service.Search(PageIndex, PageSize, SortExpression, SortDirection, {GetColumnParameter()},RederTable_Pagger);" +
+             NewLine;
             code += "" + NewLine;
             code += "}" + NewLine;
 
@@ -263,7 +249,7 @@ namespace StkGenCode.Code.Template
                     {
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
                         {
-//SetSelectCategory('#<%=drpTermId.ClientID %>');
+                            //SetSelectCategory('#<%=drpTermId');
                             //SetSelectCategoryID('.selectCategoryID');
                             code += "//Set Selectin table" + NewLine;
                             code += $"SetSelect{dataColumn.ColumnName}('.select{dataColumn.ColumnName}');" + NewLine;
@@ -290,42 +276,6 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        //private string SetSelectInput()
-        //{
-        //    string code = "";
-
-        //    foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-        //    {
-        //        foreach (MappingColumn map in _MappingColumn)
-        //        {
-        //            if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
-        //            {
-        //                code += " function SetSelect" + dataColumn.ColumnName + "(control) {" + _NewLine;
-        //                code += "" + _NewLine;
-        //                code += "var innitOption = '<option value=\"\">Please Select</option>';" + _NewLine;
-        //                code += $"var result{map.TableName} = {map.TableName}Service.SelectAll();" + _NewLine;
-        //                code += "$(control).append(innitOption);" + _NewLine;
-        //                code += "$.each(result" + map.TableName + ", function (index, value) {" + _NewLine;
-        //                code += "//Appending the json items to the dropdown (select tag)" + _NewLine;
-        //                code += "//item is the id of your select tag" + _NewLine;
-        //                code += "" + _NewLine;
-        //                code += "var text = value.text;" + _NewLine;
-        //                code += "var value = value.value;" + _NewLine;
-        //                code += "" + _NewLine;
-        //                code += "$(control).append('<option value=\"' + value + '\">' + text + '</option>');" + _NewLine;
-        //                code += "" + _NewLine;
-        //                code += "});" + _NewLine;
-        //                code += "" + _NewLine;
-        //                code += "   " + _NewLine;
-        //                code += "" + _NewLine;
-        //                code += "}" + _NewLine;
-        //            }
-        //        }
-        //    }
-
-        //    return code;
-        //}
-
         private string SetPaggerJs()
         {
             var code = "";
@@ -337,7 +287,7 @@ namespace StkGenCode.Code.Template
             code += "" + NewLine;
             code += "prevText: '<img class=\"iconDirection\" src=\"Images/1457020750_arrow-left-01.svg\" />'," + NewLine;
             code += "nextText: '<img class=\"iconDirection\" src=\"Images/1457020740_arrow-right-01.svg\" />'," +
-                    NewLine;
+              NewLine;
             code += "" + NewLine;
             code += "currentPage: PageIndex,//cssStyle: 'light-theme'," + NewLine;
             code += "onPageClick: function (event) {" + NewLine;
@@ -364,8 +314,8 @@ namespace StkGenCode.Code.Template
 
             code += "function ClearValue() {" + NewLine;
             code +=
-                "ClearInputValue(\".input-field input[type=text],.input-field  input[type=password],.input-field  input[type=checkbox],.input-field  select,.input-field  input[type=radio]\");" +
-                NewLine;
+             "ClearInputValue(\".input-field input[type=text],.input-field  input[type=password],.input-field  input[type=checkbox],.input-field  select,.input-field  input[type=radio]\");" +
+             NewLine;
             code += "return false;" + NewLine;
             code += "}" + NewLine;
 
@@ -390,8 +340,8 @@ namespace StkGenCode.Code.Template
         {
             var code = "";
             code +=
-                "var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.'; " +
-                NewLine;
+             "var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.'; " +
+             NewLine;
             code += "var PageIndex = '1';" + NewLine;
             code += "var PageSize = '10';" + NewLine;
             code += "var SortExpression = '';" + NewLine;
@@ -404,8 +354,8 @@ namespace StkGenCode.Code.Template
             var code = "";
 
             code +=
-                "//Edit table-------------------------------------------------------------------------------------------- " +
-                NewLine;
+             "//Edit table-------------------------------------------------------------------------------------------- " +
+             NewLine;
 
             //ClassSet = ColumnString.GenLineString(_ds, _TableName, ".td{0},");
             //ClassSet = ClassSet.TrimEnd(',');
@@ -443,7 +393,7 @@ namespace StkGenCode.Code.Template
             code += "//}" + NewLine;
             code += "" + NewLine;
             code += "var id = $(this).parent().parent().parent().find(\"span\")[0].outerText; //Get first Td (ID1)" +
-                    NewLine;
+              NewLine;
             code += "var column = inputBox.attributes['data-column-id'].value;" + NewLine;
             code += "var data = inputBox.value;" + NewLine;
             code += "" + NewLine;
@@ -528,13 +478,13 @@ namespace StkGenCode.Code.Template
             code += "$('" + classCheck + "').dblclick(function () { " + NewLine;
 
             code +=
-                "// <p><input name = '' type = 'radio' id = 'test1'  checked= 'true' /><label for= 'test1'></label></p> " +
-                NewLine;
+             "// <p><input name = '' type = 'radio' id = 'test1'  checked= 'true' /><label for= 'test1'></label></p> " +
+             NewLine;
             code += "var chk = $(this).find('input:radio')[0]; " + NewLine;
             code += " " + NewLine;
             code +=
-                "//  var id = $(this).parent().parent().parent().find(\"td:first\")[0].outerText; //Get first Td (ID1) " +
-                NewLine;
+             "//  var id = $(this).parent().parent().parent().find(\"td:first\")[0].outerText; //Get first Td (ID1) " +
+             NewLine;
             code += "var id = chk.attributes['data-column-key'].value; " + NewLine;
 
             code += "var column = chk.attributes['data-column-id'].value; " + NewLine;
@@ -567,8 +517,8 @@ namespace StkGenCode.Code.Template
             code += "SetDatepicker();//" + NewLine;
             code += " }" + NewLine;
             code +=
-                "//Edit table===================================================================================================================== " +
-                NewLine;
+             "//Edit table===================================================================================================================== " +
+             NewLine;
 
             return code;
         }
@@ -610,7 +560,7 @@ namespace StkGenCode.Code.Template
         }
 
         /// <summary>
-        ///     InnitModal
+        ///  InnitModal
         /// </summary>
         /// <returns></returns>
         public string LeanModalJs()
@@ -633,11 +583,11 @@ namespace StkGenCode.Code.Template
         {
             var code = "";
             code +=
-                "//For Autocomplete  ----------------------------------------------------------------------------------- " +
-                NewLine;
+             "//For Autocomplete  ----------------------------------------------------------------------------------- " +
+             NewLine;
             //code += "$(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
             //code += "  $('" + ClassTextBox + "').autocomplete({ " + _NewLine;
-            code += " $('#<%= txtSearch.ClientID%>').autocomplete({ " + NewLine;
+            code += " $('#<%= txtSearch').autocomplete({ " + NewLine;
             code += " " + NewLine;
             code += "  source: function (request, response) { " + NewLine;
             code += " " + NewLine;
@@ -670,7 +620,7 @@ namespace StkGenCode.Code.Template
             code += "minLength: 3, " + NewLine;
             code += "select: function (event, ui) { " + NewLine;
             code += "//log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " +
-                    NewLine;
+              NewLine;
             code += "}, " + NewLine;
             code += "open: function () { " + NewLine;
             code += "$(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + NewLine;
@@ -680,8 +630,8 @@ namespace StkGenCode.Code.Template
             code += "} " + NewLine;
             code += "}); " + NewLine;
             code +=
-                "//For Autocomplete================================================================================== " +
-                NewLine;
+             "//For Autocomplete================================================================================== " +
+             NewLine;
             code += " " + NewLine;
             return code;
         }
@@ -689,9 +639,6 @@ namespace StkGenCode.Code.Template
         protected string AutocompleteMutilColumnJs()
         {
             var code = "";
-            //string classIds = ColumnString.GenLineString(_ds, ".{0},");
-
-            //classIds = classIds.TrimEnd(',');
 
             var classIds = GetColumnParameter(".{0},");
             classIds = classIds.TrimEnd(',');
@@ -707,12 +654,12 @@ namespace StkGenCode.Code.Template
             code += "var data = " + TableName + "Service.GetKeyWordsOneColumn(column, request.term); " + NewLine;
             code += " " + NewLine;
             code += "response(data); " + NewLine;
-            code += "   " + NewLine;
+            code += "" + NewLine;
             code += "}, " + NewLine;
             code += "minLength: 3, " + NewLine;
             code += "select: function (event, ui) { " + NewLine;
             code += "//log(ui.item ?\"Selected: \" + ui.item.label :\"Nothing selected, input was \" + this.value); " +
-                    NewLine;
+              NewLine;
             code += "}, " + NewLine;
             code += "open: function () { " + NewLine;
             code += "$(this).removeClass(\"ui-corner-all\").addClass(\"ui-corner-top\"); " + NewLine;
@@ -725,7 +672,7 @@ namespace StkGenCode.Code.Template
         }
 
         /// <summary>
-        ///     บังคับให้กรอกได้แต่ตัวเลข
+        ///  บังคับให้กรอกได้แต่ตัวเลข
         /// </summary>
         /// <returns></returns>
         public string ForceNumberTableEditJs()
@@ -745,42 +692,42 @@ namespace StkGenCode.Code.Template
 
         //public string ForceNumberFilterJs()
         //{
-        //    string code = "";
-        //    code += "function ForceNumberTextBox() " + _NewLine;
-        //    code += "{" + _NewLine;
+        // string code = "";
+        // code += "function ForceNumberTextBox() " + _NewLine;
+        // code += "{" + _NewLine;
 
-        //    foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-        //    {
-        //        //ถ้าเป็น DropDown ไม่ต้อง Force ตัวเลข
-        //        if (IsDropDown(dataColumn))
-        //            continue;
+        // foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+        // {
+        //  //ถ้าเป็น DropDown ไม่ต้อง Force ตัวเลข
+        //  if (IsDropDown(dataColumn))
+        //continue;
 
-        //        //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-        //        string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
-        //        //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
-        //        //string controlDropDownName = string.Format(formatDropDownName , _DataColumn.ColumnName);
+        //  //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
+        //  string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
+        //  //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
+        //  //string controlDropDownName = string.Format(formatDropDownName , _DataColumn.ColumnName);
 
-        //        //if ((dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
-        //        //{
-        //        //continue;
-        //        //}
+        //  //if ((dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
+        //  //{
+        //  //continue;
+        //  //}
 
-        //        if ((dataColumn.DataType.ToString() == "System.Guid") || (dataColumn.DataType.ToString() == "System.Int16"))
-        //        { continue; }
+        //  if ((dataColumn.DataType.ToString() == "System.Guid") || (dataColumn.DataType.ToString() == "System.Int16"))
+        //  { continue; }
 
-        //        if (dataColumn.DataType.ToString() == "System.Int32")
-        //        {
-        //            code += "$(\"#<%=" + controlTextBoxName + ".ClientID %>\").ForceNumericOnly();" + _NewLine;
-        //        }
-        //        else if (dataColumn.DataType.ToString() == "System.Decimal")
-        //        {
-        //            code += "$(\"#<%=" + controlTextBoxName + ".ClientID %>\").ForceNumericOnly2Digit();" + _NewLine;
-        //        }
-        //    }
+        //  if (dataColumn.DataType.ToString() == "System.Int32")
+        //  {
+        //code += "$(\"#<%=" + controlTextBoxName + "\").ForceNumericOnly();" + _NewLine;
+        //  }
+        //  else if (dataColumn.DataType.ToString() == "System.Decimal")
+        //  {
+        //code += "$(\"#<%=" + controlTextBoxName + "\").ForceNumericOnly2Digit();" + _NewLine;
+        //  }
+        // }
 
-        //    code += "}" + _NewLine;
+        // code += "}" + _NewLine;
 
-        //    return code;
+        // return code;
         //}
 
         #endregion JavaScript
@@ -802,17 +749,17 @@ namespace StkGenCode.Code.Template
             code += "<div class=\"input-field col s12\"> " + NewLine;
             code += " " + NewLine;
             // code += "<a class=\"waves-effect waves-light btn center\">Search</a> " + _NewLine;
-            //code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\"   runat=\"server\" Text=\"Search\" />" + _NewLine;
+            //code += "<asp:Button ID =\"btnSearch\" CssClass=\"waves-effect waves-light btn center\" OnClick=\"btnSearch_Click\"runat=\"server\" Text=\"Search\" />" + _NewLine;
             //code += "<asp:Button ID=\"btnClear\" CssClass=\"waves-effect waves-light btn center\" OnClientClick=\"javascript:return ClearValue();\" runat=\"server\" Text=\"Clear\" />";
             code +=
-                "<input id=\"btnSearch\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Search\" onclick=\"Search();\" />" +
-                NewLine;
+             "<input id=\"btnSearch\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Search\" onclick=\"Search();\" />" +
+             NewLine;
             code +=
-                "<input id=\"btnClear\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Clear\" onclick=\"javascript: return ClearValue();\" />" +
-                NewLine;
+             "<input id=\"btnClear\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"Clear\" onclick=\"javascript: return ClearValue();\" />" +
+             NewLine;
             code +=
-                "<input id =\"btnNew\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"New\" onclick=\"javascript: window.open('" +
-                FileName.AspxFromCodeName() + "', '_blank');\" />" + NewLine;
+             "<input id =\"btnNew\" class=\"waves-effect waves-light btn center\" type=\"button\" value=\"New\" onclick=\"javascript: window.open('" +
+             FileName.AspxFromCodeName() + "', '_blank');\" />" + NewLine;
             code += "</div> " + NewLine;
             code += "</div> " + NewLine;
             code += "" + NewLine;
@@ -831,14 +778,14 @@ namespace StkGenCode.Code.Template
             code += "  <tr> " + NewLine;
             //code += " <th>Currency</th>  " + _NewLine;
             //code += "  <th>Description</th> " + _NewLine;
-            //code += "   <th>Bank Note</th>" + _NewLine;
+            //code += "<th>Bank Note</th>" + _NewLine;
             //code += "  <th>Buying Rates	</th> " + _NewLine;
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 //code += " <th style=\"width: 300px; \">" + dataColumn.ColumnName.ToUpper() + "</th> " + _NewLine;
                 code +=
-                    $"<th style=\"width:300px;\" data-column-id=\"{dataColumn.ColumnName}\"  onclick=\"Sort(this);\">{dataColumn.ColumnName}</th>" +
-                    NewLine;
+                 $"<th style=\"width:300px;\" data-column-id=\"{dataColumn.ColumnName}\"  onclick=\"Sort(this);\">{dataColumn.ColumnName}</th>" +
+                 NewLine;
                 // code += "<th> " + dataColumn.ColumnName + "\" CssClass=\"hrefclass\"  >" + dataColumn.ColumnName + " </th> " + _NewLine;
             }
 
@@ -860,9 +807,9 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 if ((dataColumn.DataType.ToString() == "System.Boolean") ||
-                    (dataColumn.DataType.ToString() == "System.Int16"))
+                 (dataColumn.DataType.ToString() == "System.Int16"))
                 {
-//check box
+                    //check box
                     code += " var status" + dataColumn.ColumnName + " ='' ;" + NewLine;
                     code += "if (result[key]." + dataColumn.ColumnName + " == '1')" + NewLine;
                     code += "{" + NewLine;
@@ -875,8 +822,8 @@ namespace StkGenCode.Code.Template
                     code += "TrTempplate +=\"<td class='borderRight chekBox" + dataColumn.ColumnName + "'>\";" + NewLine;
                     code += "TrTempplate +=\"<p>\";" + NewLine;
                     code += "TrTempplate +=\"<input name='' type='radio' data-column-id='" + dataColumn.ColumnName +
-                            "' data-column-key='\"+result[key]." + Ds.Tables[0].PrimaryKey[0] + "+\"' \"+status" +
-                            dataColumn.ColumnName + "+\"/><label> </label>\"; " + NewLine;
+                   "' data-column-key='\"+result[key]." + Ds.Tables[0].PrimaryKey[0] + "+\"' \"+status" +
+                   dataColumn.ColumnName + "+\"/><label> </label>\"; " + NewLine;
                     code += "TrTempplate +=\"</p>\"; ";
                     code += "TrTempplate +=\"</td> \";";
                 }
@@ -889,33 +836,33 @@ namespace StkGenCode.Code.Template
                         // code += "TrTempplate +=\"<td class='borderRight chekBox" + dataColumn.ColumnName + "'>\";" + _NewLine;
 
                         code += "TrTempplate +=\"<span class='truncate'>\"+result[key]." + dataColumn.ColumnName +
-                                "+\"</span>\";" + NewLine;
+                          "+\"</span>\";" + NewLine;
                     }
                     else if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
                     {
                         code += "TrTempplate +=\"<a id='btnShowPopup0' target='_blank' href='" + TableName +
-                                "Web.aspx?Q=\"+result[key]." + dataColumn.ColumnName + "+\"'\";" + NewLine;
+                          "Web.aspx?Q=\"+result[key]." + dataColumn.ColumnName + "+\"'\";" + NewLine;
                         code += "TrTempplate +=\"title=''>\";" + NewLine;
                         code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" +
-                                NewLine;
+                          NewLine;
                         code += "TrTempplate +=\"</a>\";" + NewLine;
                     }
                     else if (dataColumn.DataType.ToString() == "System.DateTime")
                     {
                         //dateFormat(JsonDateToDate(result[key]." + dataColumn.ColumnName + "), 'd mmm yyyy')
                         code += "TrTempplate +=\"<span>\"+dateFormat(JsonDateToDate(result[key]." +
-                                dataColumn.ColumnName + "), 'd mmm yyyy')+\"</span>\";" + NewLine;
+                          dataColumn.ColumnName + "), 'd mmm yyyy')+\"</span>\";" + NewLine;
                         //code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" + _NewLine;
                     }
                     else if (dataColumn.DataType.ToString() == "System.String")
                     {
                         code += "TrTempplate +=\"<span class=''>\"+result[key]." + dataColumn.ColumnName +
-                                "+\"</span>\";" + NewLine;
+                          "+\"</span>\";" + NewLine;
                     }
                     else
                     {
                         code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" +
-                                NewLine;
+                          NewLine;
                     }
 
                     //ตัว Edit DataTable ===========================================================================
@@ -925,37 +872,37 @@ namespace StkGenCode.Code.Template
                     {
                         //TrTempplate += "<select id='selectCategoryID' class='selectCategoryID selectInputEditMode'></select>";
                         code +=
-                            $"TrTempplate += \"<select id='select{dataColumn.ColumnName}' data-column-id='{dataColumn.ColumnName}'  data-column-value='\" + result[key].{dataColumn.ColumnName}+\"' class='select{dataColumn.ColumnName} selectInputEditMode' ></select>\";" +
-                            NewLine;
+                         $"TrTempplate += \"<select id='select{dataColumn.ColumnName}' data-column-id='{dataColumn.ColumnName}'  data-column-value='\" + result[key].{dataColumn.ColumnName}+\"' class='select{dataColumn.ColumnName} selectInputEditMode' ></select>\";" +
+                         NewLine;
                     }
                     else if (dataColumn.DataType.ToString() == "System.String")
                     {
                         code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName +
-                                "' type='text' MaxLength='" + dataColumn.MaxLength + "' length='" + dataColumn.MaxLength +
-                                "' class='validate truncate" + dataColumn.ColumnName + "' value='\"+result[key]." +
-                                dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
+                          "' type='text' MaxLength='" + dataColumn.MaxLength + "' length='" + dataColumn.MaxLength +
+                          "' class='validate truncate" + dataColumn.ColumnName + "' value='\"+result[key]." +
+                          dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
                     }
                     else if (dataColumn.DataType.ToString() == "System.Int32")
 
                     {
                         code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName +
-                                "' type='text' class='validate ForceNumber ' value='\"+result[key]." +
-                                dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
+                          "' type='text' class='validate ForceNumber ' value='\"+result[key]." +
+                          dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
                     }
                     else if (dataColumn.DataType.ToString() == "System.Decimal")
 
                     {
                         code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName +
-                                "' type='text' class='validate ForceNumber2Digit' value='\"+result[key]." +
-                                dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
+                          "' type='text' class='validate ForceNumber2Digit' value='\"+result[key]." +
+                          dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
                     }
                     else if (dataColumn.DataType.ToString() == "System.DateTime")
 
                     {
                         code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName +
-                                "'class='datepicker' type='date' value='\"+dateFormat(JsonDateToDate(result[key]." +
-                                dataColumn.ColumnName + "),'d mmm yyyy')+\"' style='height: unset; margin: 0px;'>\";" +
-                                NewLine;
+                          "'class='datepicker' type='date' value='\"+dateFormat(JsonDateToDate(result[key]." +
+                          dataColumn.ColumnName + "),'d mmm yyyy')+\"' style='height: unset; margin: 0px;'>\";" +
+                          NewLine;
                     }
 
                     code += "TrTempplate +=\"<label class='lblSave'>Save</label>\";" + NewLine;
@@ -984,7 +931,7 @@ namespace StkGenCode.Code.Template
         {
             var code = "";
             code += " " + NewLine;
-            code += "   <!-- Modal Structure --> " + NewLine;
+            code += "<!-- Modal Structure --> " + NewLine;
             code += "<div id=\"modal1\" class=\"modal\"> " + NewLine;
             code += "<div class=\"modal-content\"> " + NewLine;
             code += "<p>Loading</p> " + NewLine;
@@ -1040,7 +987,7 @@ namespace StkGenCode.Code.Template
         protected string GenContentBodyBegin()
         {
             var code = "<asp:Content ID=\"Content2\" ContentPlaceHolderID=\"ContentPlaceHolder1\" runat=\"server\" > " +
-                       NewLine;
+              NewLine;
             return code;
         }
 
@@ -1060,7 +1007,7 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 if ((dataColumn.DataType.ToString() == "System.Boolean") ||
-                    (dataColumn.DataType.ToString() == "System.Int16"))
+                 (dataColumn.DataType.ToString() == "System.Int16"))
                 {
                     code += $".chekBox{dataColumn.ColumnName},";
                 }
@@ -1082,7 +1029,7 @@ namespace StkGenCode.Code.Template
                 //code += " <td>" + _DataColumn.ColumnName.ToUpper() + "</td> " + _NewLine;
                 //code += " <td><%# Eval(\"" + _DataColumn.ColumnName + "\") %></td>";
                 if ((dataColumn.DataType.ToString() != "System.Boolean") ||
-                    (dataColumn.DataType.ToString() != "System.Int16"))
+                 (dataColumn.DataType.ToString() != "System.Int16"))
                 {
                     code += $".td{dataColumn.ColumnName},";
                     //code += "<td class=\"borderRight chekBox" + _DataColumn.ColumnName + "\"> " + _NewLine;
@@ -1094,7 +1041,7 @@ namespace StkGenCode.Code.Template
                 //else
                 //{
                 //code += " <td class=\"td"+ _DataColumn.ColumnName + "\"> " + _NewLine;
-                //code += "   <span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
+                //code += "<span><%# Eval(\"" + _DataColumn.ColumnName + "\") %> </span> " + _NewLine;
                 //code += "<div style=\"display: none\"> " + _NewLine;
                 //code += "<input data-column-id=\"" + _DataColumn.ColumnName + "\" type=\"text\" class=\"validate " + _DataColumn.ColumnName + "\" value=\"<%# Eval(\"" + _DataColumn.ColumnName + "\") %>\"> " + _NewLine;
                 //code += "<label class=\"lblSave\">Save</label> " + _NewLine;

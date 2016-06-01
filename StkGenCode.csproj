@@ -65,6 +65,7 @@
     <Compile Include="Code\Template\CodeBase.cs" />
     <Compile Include="Code\Template\DbCodeSqlServer.cs" />
     <Compile Include="Code\Template\DbCodeFireBird.cs" />
+    <Compile Include="Code\Template\Format\NameMing.cs" />
     <Compile Include="Code\Template\JsCode.cs" />
     <Compile Include="Code\Template\PageService.cs" />
     <Compile Include="Code\Template\PageServiceCodeBehide.cs" />

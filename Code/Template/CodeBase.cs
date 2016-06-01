@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using StkGenCode.Code.Column;
+﻿using StkGenCode.Code.Column;
 using StkGenCode.Code.Name;
+using StkGenCode.Code.Template.Format;
+using System.Collections.Generic;
+using System.Data;
 
 namespace StkGenCode.Code.Template
 {
@@ -11,7 +12,7 @@ namespace StkGenCode.Code.Template
         public FileCode FileCode;
         protected FileName FileName;
 
-        public string NewLine = " \r\n";
+        public string NewLine = "\r\n";
 
         public string NotImplement = "throw new Exception(\"Not implement\");";
         public string TableName;
@@ -59,10 +60,9 @@ namespace StkGenCode.Code.Template
                 }
 
                 var disabled = "";
-                //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-                var controlTextBoxName = string.Format(FormatTextBoxName, dataColumn.ColumnName);
-                var controlChekBoxName = string.Format(FormatChekBoxName, dataColumn.ColumnName);
-                //string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
+
+                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
+                var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);
 
                 string currentControl;
                 if (MappingColumn != null)
@@ -104,46 +104,60 @@ namespace StkGenCode.Code.Template
                 {
                     //CssClass = "datepicker" type = "date"
                     currentControl = controlTextBoxName;
-                    code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName +
-                            "\" CssClass=\"datepicker\" type =\"date\" runat=\"server\"></asp:TextBox>" + NewLine;
+                    //code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName +
+                    //        "\" CssClass=\"datepicker\" type =\"date\" runat=\"server\"></asp:TextBox>" + NewLine;
+
+                    code += "<input " + disabled + " id=\"" + controlTextBoxName +
+                          "\"  CssClass=\"datepicker\" type =\"date\" runat=\"server\"></asp:TextBox>" + NewLine;
                 }
                 else if ((dataColumn.DataType.ToString() == "System.Boolean") ||
                          (dataColumn.DataType.ToString() == "System.Int16"))
                 {
-                    //< asp:CheckBox ID = "chkRemittanceService" runat = "server" />
-                    //< label for= "<%= chkRemittanceService.ClientID %>" > RemittanceService </ label >
                     currentControl = controlChekBoxName;
-                    code += "<asp:CheckBox " + disabled + " ID=\"" + controlChekBoxName +
-                            "\"    runat=\"server\"></asp:CheckBox>" + NewLine;
-                    //code += "<label for=\"<%=" + controlChekBoxName + ".ClientID %>\">" + _DataColumn.ColumnName + " </label> " + _NewLine;
+                    //code += "<asp:CheckBox " + disabled + " ID=\"" + controlChekBoxName +
+                    //        "\"    runat=\"server\"></asp:CheckBox>" + NewLine;
+                    code += "<input " + disabled + " id=\"" + controlChekBoxName +
+                          "\"    type=\"checkbox\" />" + NewLine;
+                    // <input type="checkbox" id="test5" />
                 }
                 else if (dataColumn.DataType.ToString() == "System.String")
                 {
                     currentControl = controlTextBoxName;
-                    code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" +
-                            dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName +
-                            "\" MaxLength=\"" + dataColumn.MaxLength + "\" length=\"" + dataColumn.MaxLength +
-                            "\" runat=\"server\"></asp:TextBox>" + NewLine;
+                    //code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" +
+                    //        dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName +
+                    //        "\" MaxLength=\"" + dataColumn.MaxLength + "\" length=\"" + dataColumn.MaxLength +
+                    //        "\" runat=\"server\"></asp:TextBox>" + NewLine;
+
+                    code += "<input " + disabled + " id=\"" + controlTextBoxName + "\" type=\"text\" data-column-id=\"" +
+                           dataColumn.ColumnName + "\"  class=\"validate " + dataColumn.ColumnName +
+                           "\"   length=\"" + dataColumn.MaxLength +
+                           "\"  /> " + NewLine;
                 }
                 else if (dataColumn.DataType.ToString() == "System.Int32")
                 {
                     // int max = System.Int32.MaxValue.ToString().Length;
                     var max = 9;
                     currentControl = controlTextBoxName;
-                    code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" +
+                    //code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" +
+                    //        dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName +
+                    //        "\" MaxLength=\"" + max + "\" length=\"" + max + "\" runat=\"server\"></asp:TextBox>" +
+                    //        NewLine;
+                    code += "<input " + disabled + " id=\"" + controlTextBoxName + "\" type=\"text\" data-column-id=\"" +
                             dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName +
-                            "\" MaxLength=\"" + max + "\" length=\"" + max + "\" runat=\"server\"></asp:TextBox>" +
+                            "\" length=\"" + max + "\" />" +
                             NewLine;
+                    // code += "<input  id =\"" + controlTextBoxName + "\" type=\"text\" class=\"validate\"   length=\"" + max + "\" " + disabled + "   >" + NewLine;
                 }
                 else
                 {
                     currentControl = controlTextBoxName;
-                    code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName +
-                            "\" CssClass=\"validate\" runat=\"server\"></asp:TextBox>" + NewLine;
+                    //code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName +
+                    //        "\" CssClass=\"validate\" runat=\"server\"></asp:TextBox>" + NewLine;
+                    code += "<input  id =\"" + controlTextBoxName + "\" type=\"text\" class=\"validate\" " + disabled + "  >" + NewLine;
                 }
                 if (isPrimayKey == false)
                 {
-                    code += "<label for=\"<%=" + currentControl + ".ClientID %>\">" + dataColumn.ColumnName +
+                    code += "<label for=\"" + currentControl + "\">" + dataColumn.ColumnName +
                             " </label> " + NewLine;
                 }
                 code += " </div> " + NewLine;
@@ -168,7 +182,7 @@ namespace StkGenCode.Code.Template
                     continue;
 
                 //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-                var controlTextBoxName = string.Format(FormatTextBoxName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
                 //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
                 //string controlDropDownName = string.Format(formatDropDownName , _DataColumn.ColumnName);
 
@@ -189,11 +203,11 @@ namespace StkGenCode.Code.Template
 
                 if (dataColumn.DataType.ToString() == "System.Int32")
                 {
-                    code += "$(\"#<%=" + controlTextBoxName + ".ClientID %>\").ForceNumericOnly();" + NewLine;
+                    code += "$(\"#" + controlTextBoxName + "\").ForceNumericOnly();" + NewLine;
                 }
                 else if (dataColumn.DataType.ToString() == "System.Decimal")
                 {
-                    code += "$(\"#<%=" + controlTextBoxName + ".ClientID %>\").ForceNumericOnly2Digit();" + NewLine;
+                    code += "$(\"#" + controlTextBoxName + "\").ForceNumericOnly2Digit();" + NewLine;
                 }
             }
 
@@ -204,31 +218,22 @@ namespace StkGenCode.Code.Template
 
         #endregion Validate
 
-        #region Constant
-
-        public string FormatpropertieName = "_{0}.{1}";
-        public string FormatTextBoxName = "txt{0}";
-        public string FormatChekBoxName = "chk{0}";
-        public string FormatDropDownName = "drp{0}";
-
-        #endregion Constant
-
         #region Map
 
-        protected string MapControlToProPerties(DataSet _ds, bool commentKey = false)
+        protected string MapControlToProPerties(DataSet ds, bool commentKey = false)
         {
             var code = "";
 
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
-                var propertieName = string.Format(FormatpropertieName, TableName, dataColumn.ColumnName);
-                var controlTextBoxName = string.Format(FormatTextBoxName, dataColumn.ColumnName);
-                var controlChekBoxName = string.Format(FormatChekBoxName, dataColumn.ColumnName);
+                var propertieName = string.Format(NameMing.FormatpropertieName, TableName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
+                var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);
 
                 if (commentKey)
                 {
-                    var primary = (dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) &&
-                                  _ds.Tables[0].PrimaryKey[0].AutoIncrement;
+                    var primary = (dataColumn.ColumnName == ds.Tables[0].PrimaryKey[0].ToString()) &&
+                                  ds.Tables[0].PrimaryKey[0].AutoIncrement;
 
                     if (primary)
                     {
@@ -280,32 +285,32 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        protected string MapProPertiesToControl(DataSet _ds, bool commentKey = false)
+        protected string MapProPertiesToControl(DataSet ds, bool commentKey = false)
         {
             var code = "";
 
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
-                var propertieName = string.Format(FormatpropertieName, TableName, dataColumn.ColumnName);
-                var controlTextBoxName = string.Format(FormatTextBoxName, dataColumn.ColumnName);
-                var controlChekBoxName = string.Format(FormatChekBoxName, dataColumn.ColumnName);
-                var controlDropDownName = string.Format(FormatDropDownName, dataColumn.ColumnName);
+                var propertieName = string.Format(NameMing.FormatpropertieName, TableName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
+                var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);
+                var controlDropDownName = string.Format(NameMing.FormatDropDownName, dataColumn.ColumnName);
 
                 if (IsDropDown(dataColumn))
                 {
-                    code += $"$('#<%={controlDropDownName}.ClientID %>').val({propertieName});" + NewLine;
+                    code += $"$('#{controlDropDownName}').val({propertieName});" + NewLine;
                 }
                 else if ((dataColumn.DataType.ToString() == "System.Boolean") ||
                          (dataColumn.DataType.ToString() == "System.Int16"))
                 {
                     //chek bok
-                    code += $"$('#<%={controlChekBoxName}.ClientID %>').prop('checked', {propertieName}); " +
+                    code += $"$('#{controlChekBoxName}').prop('checked', {propertieName}); " +
                             NewLine;
                 }
                 else
                 {
                     //input
-                    code += $"$('#<%={controlTextBoxName}.ClientID %>').val({propertieName});" + NewLine;
+                    code += $"$('#{controlTextBoxName}').val({propertieName});" + NewLine;
                 }
             }
             return code;
@@ -320,45 +325,45 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
                 var columnName = dataColumn.ColumnName;
-                var controlTextBoxName = string.Format(FormatTextBoxName, dataColumn.ColumnName);
-                var controlChekBoxName = string.Format(FormatChekBoxName, dataColumn.ColumnName);
-                var controlDropDownName = string.Format(FormatDropDownName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
+                var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);
+                var controlDropDownName = string.Format(NameMing.FormatDropDownName, dataColumn.ColumnName);
 
                 if (IsDropDown(dataColumn))
                 {
-                    code += $"var  {columnName} =$('#<%={controlDropDownName}.ClientID %>').val();" + NewLine;
+                    code += $"var  {columnName} =$('#{controlDropDownName}').val();" + NewLine;
                 }
                 else if ((dataColumn.DataType.ToString() == "System.Boolean") ||
                          (dataColumn.DataType.ToString() == "System.Int16"))
                 {
                     //chek bok
-                    code += $"var  {columnName} =$('#<%={controlChekBoxName}.ClientID %>').prop('checked');" +
+                    code += $"var  {columnName} =$('#{controlChekBoxName}').prop('checked');" +
                             NewLine;
                 }
                 else
                 {
                     //input
-                    code += $"var  {columnName} =$('#<%={controlTextBoxName}.ClientID %>').val();" + NewLine;
+                    code += $"var  {columnName} =$('#{controlTextBoxName}').val();" + NewLine;
                 }
             }
             return code;
         }
 
-        protected string MapJsonToProPerties(DataSet _ds, bool commentKey = false)
+        protected string MapJsonToProPerties(DataSet ds, bool commentKey = false)
         {
             var code = "";
 
-            foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
+            foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
-                var propertieName = string.Format(FormatpropertieName, TableName, dataColumn.ColumnName);
+                var propertieName = string.Format(NameMing.FormatpropertieName, TableName, dataColumn.ColumnName);
                 //string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
                 //string controlChekBoxName = string.Format(_formatChekBoxName, dataColumn.ColumnName);
                 var columName = dataColumn.ColumnName;
 
                 if (commentKey)
                 {
-                    var primary = (dataColumn.ColumnName == _ds.Tables[0].PrimaryKey[0].ToString()) &&
-                                  _ds.Tables[0].PrimaryKey[0].AutoIncrement;
+                    var primary = (dataColumn.ColumnName == ds.Tables[0].PrimaryKey[0].ToString()) &&
+                                  ds.Tables[0].PrimaryKey[0].AutoIncrement;
 
                     if (primary)
                     {
@@ -412,7 +417,7 @@ namespace StkGenCode.Code.Template
 
         #region DropDown
 
-        public string SetSelect()
+        public string BindSelectOption()
         {
             var code = "";
             if (HaveDropDown())
@@ -423,23 +428,19 @@ namespace StkGenCode.Code.Template
                     {
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
                         {
-//SetSelectCategory('#<%=drpTermId.ClientID %>');
-                            code += $"SetSelect{dataColumn.ColumnName}('#<%=drp{dataColumn.ColumnName}.ClientID %>');" +
+                            //SetSelectCategory('#drpTermId');
+                            code += $"SetSelect{dataColumn.ColumnName}('#drp{dataColumn.ColumnName}');" +
                                     NewLine;
                         }
                     }
                 }
+                code += "$('select').material_select(); " + NewLine;
             }
-            ////code += "BindQueryString();" + _NewLine;
-            //if (HaveDropDown())
-            //{
-            //    code += "$('select').material_select(); " + _NewLine;
-            //}
 
             return code;
         }
 
-        public string SetSelectInput()
+        public string SetSelect()
         {
             var code = "";
             if (HaveDropDown())
@@ -483,17 +484,17 @@ namespace StkGenCode.Code.Template
 
         public string GenDropDown(string columnname, int columnSize)
         {
-            var controlDropDownName = string.Format(FormatDropDownName, columnname);
+            var controlDropDownName = string.Format(NameMing.FormatDropDownName, columnname);
             var code = "";
             foreach (var map in MappingColumn)
             {
                 if ((map.ColumnName == columnname) && (map.TableName != TableName))
                 {
                     code += "<div class=\"input-field col s" + columnSize + "\"> " + NewLine;
-                    code += "<asp:DropDownList ID =\"" + controlDropDownName + "\" runat=\"server\"> " + NewLine;
+                    code += "<select id=\"" + controlDropDownName + "\" > " + NewLine;
                     code += " " + NewLine;
-                    code += "</asp:DropDownList>" + NewLine;
-                    code += "<label for=\"<%=" + controlDropDownName + ".ClientID %>\">" + columnname + "</label>" +
+                    code += "</select>" + NewLine;
+                    code += "<label for=\"" + controlDropDownName + "\">" + columnname + "</label>" +
                             NewLine;
                     code += "</div>" + NewLine;
 
@@ -511,14 +512,6 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                //foreach (MappingColumn map in _MappingColumn)
-                //{
-                //    if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != _TableName))
-                //    {
-                //        haveDropDown = true;
-                //        break;
-                //    }
-                //}
                 var haveDropDown = IsDropDown(dataColumn);
                 if (haveDropDown)
                     return true;
@@ -558,8 +551,8 @@ namespace StkGenCode.Code.Template
             {
                 if ((map.ColumnName == columnName) && (map.TableName != TableName))
                 {
-                    var controlDropDownName = string.Format(FormatDropDownName, columnName);
-                    var propertieName = string.Format(FormatpropertieName, TableName, columnName);
+                    var controlDropDownName = string.Format(NameMing.FormatDropDownName, columnName);
+                    var propertieName = string.Format(NameMing.FormatpropertieName, TableName, columnName);
                     //code = string.Format("{0}.Items.FindByValue({1}).Selected = true; ", controlDropDownName, propertieName);
                     code +=
                         string.Format("ListItem {0}ListItem = {0}.Items.FindByValue({1}.ToString()); ",
@@ -584,8 +577,8 @@ namespace StkGenCode.Code.Template
             {
                 if ((map.ColumnName == column.ColumnName) && (map.TableName != TableName))
                 {
-                    var controlDropDownName = string.Format(FormatDropDownName, column.ColumnName);
-                    var propertieName = string.Format(FormatpropertieName, TableName, column.ColumnName);
+                    var controlDropDownName = string.Format(NameMing.FormatDropDownName, column.ColumnName);
+                    var propertieName = string.Format(NameMing.FormatpropertieName, TableName, column.ColumnName);
                     //mpoOrder.CUS_ID = drpCustomer.SelectedValue;
                     code += $"if ({controlDropDownName}.SelectedIndex > 0)" + NewLine;
 
@@ -637,7 +630,7 @@ namespace StkGenCode.Code.Template
                         {
                             //Table MAster Of Drop DownList
                             var dropDownTableName = map.TableName;
-                            var controlDropDownName = string.Format(FormatDropDownName, dataColumn.ColumnName);
+                            var controlDropDownName = string.Format(NameMing.FormatDropDownName, dataColumn.ColumnName);
                             code += string.Format("{0}Db _{0}Db = new {0}Db(); ", dropDownTableName) + NewLine;
                             code += $"{controlDropDownName}.DataSource =  _{dropDownTableName}Db.Select(); " + NewLine;
                             code += $"{controlDropDownName}.DataTextField = {dropDownTableName}Db.DataText;" + NewLine;

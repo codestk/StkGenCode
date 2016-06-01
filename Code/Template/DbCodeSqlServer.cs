@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using StkGenCode.Code.Template.Format;
+using System.Data;
 
 namespace StkGenCode.Code.Template
 {
@@ -629,7 +630,7 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                var propertieName = string.Format(FormatpropertieName, TableName, dataColumn.ColumnName);
+                var propertieName = string.Format(NameMing.FormatpropertieName, TableName, dataColumn.ColumnName);
                 code += $"if ({propertieName} != null)" + NewLine;
                 code += "            {" + NewLine;
                 code +=
