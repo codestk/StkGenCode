@@ -141,7 +141,7 @@ namespace StkGenCode.Code.Template
             code += "$('.datepicker').pickadate({ " + NewLine;
             code += "selectMonths: true, // Creates a dropdown to control month  " + NewLine;
             code += "selectYears: 15,// Creates a dropdown of 15 years to control year,  " + NewLine;
-            code += "format: 'd mmmm yyyy' " + NewLine;
+            code += "format: 'd mmm yyyy' " + NewLine;
             code += "});" + NewLine;
             code += "}" + NewLine;
             return code;
@@ -797,7 +797,7 @@ namespace StkGenCode.Code.Template
                     sortFunction = "onclick=\"Sort(this);\"";
                 }
                 code +=
-         $"<th style=\"width:300px;\" data-column-id=\"{dataColumn.ColumnName}\"  {sortFunction}>{dataColumn.ColumnName}</th>" +
+         $"<th   data-column-id=\"{dataColumn.ColumnName}\"  {sortFunction}>{dataColumn.ColumnName}</th>" +
          NewLine;
             }
 

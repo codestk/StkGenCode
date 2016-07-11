@@ -111,7 +111,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                     //        "\" CssClass=\"datepicker\" type =\"date\" runat=\"server\"></asp:TextBox>" + NewLine;
 
                     code += "<input " + disabled + " id=\"" + controlTextBoxName +
-                          "\"  Class=\"datepicker\" type =\"date\"   />" + NewLine;
+                          "\"  class=\"datepicker\" type =\"date\"   />" + NewLine;
                 }
                 else if ((dataColumn.DataType.ToString() == "System.Boolean") ||
                          (dataColumn.DataType.ToString() == "System.Int16"))
@@ -134,7 +134,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                     code += "<input " + disabled + " id=\"" + controlTextBoxName + "\" type=\"text\" data-column-id=\"" +
                            dataColumn.ColumnName + "\"  class=\"validate " + dataColumn.ColumnName +
                            "\"   length=\"" + dataColumn.MaxLength +
-                           "\"  /> " + NewLine;
+                           "\"   maxlength=\"" + dataColumn.MaxLength + "\"                /> " + NewLine;
                 }
                 else if (dataColumn.DataType.ToString() == "System.Int32")
                 {
@@ -146,8 +146,8 @@ new string[] { "System.Byte[]", "System.Guid" });
                     //        "\" MaxLength=\"" + max + "\" length=\"" + max + "\" runat=\"server\"></asp:TextBox>" +
                     //        NewLine;
                     code += "<input " + disabled + " id=\"" + controlTextBoxName + "\" type=\"text\" data-column-id=\"" +
-                            dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName +
-                            "\" length=\"" + max + "\" />" +
+                            dataColumn.ColumnName + "\"  Class=\"validate " + dataColumn.ColumnName +
+                            "\" length=\"" + max + "\"        maxlength=\"" + max + "\"     />" +
                             NewLine;
                     // code += "<input  id =\"" + controlTextBoxName + "\" type=\"text\" class=\"validate\"   length=\"" + max + "\" " + disabled + "   >" + NewLine;
                 }

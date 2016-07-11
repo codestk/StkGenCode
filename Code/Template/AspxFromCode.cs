@@ -118,6 +118,10 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
                 var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
                 //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
@@ -292,7 +296,7 @@ namespace StkGenCode.Code.Template
             var code = "";
             code += "function BindQueryString() {" + NewLine;
             code += "" + NewLine;
-            code += $"var {Ds.Tables[0].PrimaryKey[0]} = GetQueryString('Q');" + NewLine;
+            code += $"var {Ds.Tables[0].PrimaryKey[0]} = getQuerystring('Q');" + NewLine;
             code += "if (" + Ds.Tables[0].PrimaryKey[0] + " != '') {" + NewLine;
             code += $"var _{TableName} = {TableName}Service.Select({Ds.Tables[0].PrimaryKey[0]});" + NewLine;
             code += "" + NewLine;
@@ -340,7 +344,7 @@ namespace StkGenCode.Code.Template
             code += "$('.datepicker').pickadate({" + NewLine;
             code += "selectMonths: true, // Creates a dropdown to control month" + NewLine;
             code += "selectYears: 15 ,// Creates a dropdown of 15 years to control year," + NewLine;
-            code += "format: 'd mmmm yyyy'," + NewLine;
+            code += "format: 'd mmm yyyy'," + NewLine;
             code += "});" + NewLine;
 
             code += " }); " + NewLine;
