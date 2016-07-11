@@ -70,15 +70,15 @@ namespace StkGenCode
             //    _MappingColumn = _MappingColumn
             //};
 
-            var aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName,
-                MappingColumn = mappingColumn
-                //AspxFromCodeaspx = _AspxFromCodeaspx
-            };
-            aspxTableCodeFilterColumn.Gen();
+            //var aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
+            //{
+            //    FileCode = f,
+            //    Ds = _ds,
+            //    TableName = tableName,
+            //    MappingColumn = mappingColumn
+            //    //AspxFromCodeaspx = _AspxFromCodeaspx
+            //};
+            //aspxTableCodeFilterColumn.Gen();
 
             var aspxTableCodeFilterColumnCodeBehide =
                 new AspxTableCodeFilterColumnCodeBehide
@@ -156,6 +156,14 @@ namespace StkGenCode
                 TableName = tableName
             };
             dbCodeFireBird.Gen();
+
+            //var dbCodeSqlServer = new DbCodeSqlServer
+            //{
+            //    FileCode = f,
+            //    Ds = _ds,
+            //    TableName = tableName
+            //};
+            //dbCodeSqlServer.Gen();
         }
 
         private void Form1_Load(object sender, EventArgs e)

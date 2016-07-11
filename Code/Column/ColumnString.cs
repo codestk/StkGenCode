@@ -4,8 +4,6 @@ namespace StkGenCode.Code.Column
 {
     public class ColumnString
     {
-        private int a = 0;
-
         /// <summary>
         /// $('.chekBoxAtm,.chekBoxBranch,.chekBoxSubBranch,.chekBoxMicroBranch,.chekBoxInternationalBranch,.chekBoxBusinessCenter,.chekBoxFXBooth,.chekBoxBualuangExclusive,.chekBoxFCDService,.chekBoxRemittanceService
         /// ,.chekBoxWesternUnionService').dblclick(function () { " + _NewLine;
