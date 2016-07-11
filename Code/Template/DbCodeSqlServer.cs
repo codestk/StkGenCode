@@ -222,11 +222,10 @@ namespace StkGenCode.Code.Template
             // string updateCommand = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                //              insercolumn += _DataColumn.ColumnName + "," ;
-                //              inservalue += "?,";
-                //insertparameter += "new FbParameter(\":"+ _DataColumn.ColumnName+"\", _obj."+ _DataColumn.ColumnName+"),";
-
-                // updateCommand += _DataColumn.ColumnName + "=?,";
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 //=====================================================================
 
                 //ถ้า PRimary ไม่ auto ให้เลือกตัวมันเอง
@@ -239,11 +238,6 @@ namespace StkGenCode.Code.Template
                     }
                     //ถ้าไม่เป็น Auto ให้เลือกตัวมันเอง Return
                     returnPrimary = "Select @" + dataColumn.Table.PrimaryKey[0];
-                }
-
-                if (dataColumn.DataType.ToString() == "System.Guid")
-                {
-                    continue;
                 }
 
                 insercolumn += dataColumn.ColumnName + ",";
@@ -288,6 +282,11 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + dataColumn.ColumnName + "\",_" + TableName +
                                    "." + dataColumn.ColumnName + "));";
                 if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
@@ -362,12 +361,6 @@ namespace StkGenCode.Code.Template
         private string GenConvertDataList()
         {
             var code = "";
-            //_code += "private List<MPO_CUSTOMER_R2> DataSetToList(DataSet ds)" + _NewLine;
-            //_code += "{" + _NewLine;
-
-            //_code += "EnumerableRowCollection < MPO_CUSTOMER_R2 > q = (from temp in ds.Tables[0].AsEnumerable()" + _NewLine;
-            //_code += "select new MPO_CUSTOMER_R2" + _NewLine;
-            //_code += "{" + _NewLine;
 
             code += "private List<" + TableName + "> DataSetToList(DataSet ds) \r\n";
             code += "{\r\n";
@@ -379,7 +372,7 @@ namespace StkGenCode.Code.Template
             code += "RecordCount = temp.Field<Int32>(\"RecordCount\"),";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (dataColumn.DataType.ToString() == "System.Guid")
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
                 {
                     continue;
                 }
@@ -389,20 +382,33 @@ namespace StkGenCode.Code.Template
                     code += dataColumn.ColumnName + "= Convert.ToDecimal (temp.Field<Object>(\"" + dataColumn.ColumnName +
                             "\")), \r\n ";
                 }
-                else if (dataColumn.DataType.ToString() == "System.DateTime")
+                else if (dataColumn.DataType.ToString() == "System.String")
                 {
                     //  TermUpdateDate = temp.Field<DateTime?>("TermUpdateDate"),
-                    code += dataColumn.ColumnName + "= temp.Field<DateTime?>(\"" + dataColumn.ColumnName + "\"), \r\n ";
+                    code += dataColumn.ColumnName + "= temp.Field<" + dataColumn.DataType.Name + ">(\"" +
+                          dataColumn.ColumnName + "\"), \r\n ";
                 }
                 else
                 {
-                    code += dataColumn.ColumnName + "= temp.Field<" + dataColumn.DataType.Name + ">(\"" +
+                    code += dataColumn.ColumnName + "= temp.Field<" + dataColumn.DataType.Name + "?>(\"" +
                             dataColumn.ColumnName + "\"), \r\n ";
                 }
-                // Convert.ToDecimal (temp.Field<Object>("mod_id")),
 
-                // _code += "_obj." + _DataColumn.ColumnName + "= " + _DataColumn.ColumnName + "; \r\n ";
-                //  _code += "" + _DataColumn.ColumnName + "= _obj." + _DataColumn.ColumnName + "; \r\n ";
+                //if (dataColumn.DataType.ToString() == "System.Decimal")
+                //{
+                //    code += dataColumn.ColumnName + "= Convert.ToDecimal (temp.Field<Object>(\"" + dataColumn.ColumnName +
+                //            "\")), \r\n ";
+                //}
+                //else if (dataColumn.DataType.ToString() == "System.DateTime")
+                //{
+                //    //  TermUpdateDate = temp.Field<DateTime?>("TermUpdateDate"),
+                //    code += dataColumn.ColumnName + "= temp.Field<DateTime?>(\"" + dataColumn.ColumnName + "\"), \r\n ";
+                //}
+                //else
+                //{
+                //    code += dataColumn.ColumnName + "= temp.Field<" + dataColumn.DataType.Name + ">(\"" +
+                //            dataColumn.ColumnName + "\"), \r\n ";
+                //}
             }
 
             code += " });\r\n";
@@ -418,14 +424,6 @@ namespace StkGenCode.Code.Template
 
         private string GenConStance()
         {
-            //string code = "";
-            //code += "  public " + _TableName + " _" + _TableName + ";" + _NewLine;
-
-            //code += "public const string DataKey = \"" + _ds.Tables[0].PrimaryKey[0].ColumnName + "\";" + _NewLine;
-            //code += "public const string DataText = \"" + _ds.Tables[0].Columns[0].ColumnName + "\";" + _NewLine;
-            //code += "public const string DataValue = \"" + _ds.Tables[0].Columns[1].ColumnName + "\";" + _NewLine;
-            //return code;
-
             var code = "";
             code += "  public " + TableName + " _" + TableName + ";" + NewLine;
 

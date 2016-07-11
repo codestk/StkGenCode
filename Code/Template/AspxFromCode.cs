@@ -242,6 +242,11 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 var columnName = dataColumn.ColumnName;
                 var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
                 var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);

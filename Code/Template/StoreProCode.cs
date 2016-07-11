@@ -1,5 +1,5 @@
-﻿using System.Data;
-using StkGenCode.Code.Type;
+﻿using StkGenCode.Code.Type;
+using System.Data;
 
 namespace StkGenCode.Code.Template
 {
@@ -80,6 +80,11 @@ namespace StkGenCode.Code.Template
             code += "/* Optional Filters for Dynamic Search*/" + NewLine;
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 code += "@" + dataColumn.ColumnName + " " +
                         DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + NewLine;
             }
@@ -110,6 +115,11 @@ namespace StkGenCode.Code.Template
             code += "DECLARE ";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 code += "@l" + dataColumn.ColumnName + " " +
                         DbTypeConversion.CTypeNetToTypeDb(dataColumn.DataType.ToString()) + "=null," + NewLine;
             }
@@ -127,6 +137,11 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 if (dataColumn.DataType.ToString() == "System.Int32")
                 {
                     code += "SET @l" + dataColumn.ColumnName + " =@" + dataColumn.ColumnName + NewLine;
@@ -154,6 +169,11 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 //code += $"CASE WHEN (@lSortCol = '{dataColumn.ColumnName}' AND @SortOrder ='ASC')" + _NewLine;
                 //code += $"        THEN ContactID" + _NewLine;
                 //code += "END ASC," + _NewLine;
@@ -169,6 +189,11 @@ namespace StkGenCode.Code.Template
             code += "Count(*) over() AS RecordCount," + NewLine;
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 code += NewLine + $" {dataColumn.ColumnName},";
             }
             code = code.TrimEnd(',') + NewLine;
@@ -179,6 +204,11 @@ namespace StkGenCode.Code.Template
             code += "WHERE" + NewLine;
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 if ((dataColumn.DataType.ToString() == "System.Int32") ||
                     (dataColumn.DataType.ToString() == "System.DateTime") ||
                     (dataColumn.DataType.ToString() == "System.Decimal"))
@@ -203,6 +233,11 @@ namespace StkGenCode.Code.Template
             code += " ROWNUM," + NewLine;
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 code += NewLine + $"{dataColumn.ColumnName},";
             }
             code = code.TrimEnd(',');
@@ -242,7 +277,10 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 // Do Something
-
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 //  code += "[" + _DataColumn.ColumnName + "] " + DbTypeConversion.CTypeNetToTypeDB(_DataColumn.DataType.ToString()) + "," + _NewLine;
                 if (dataColumn.DataType.ToString() == "System.String")
                 {
@@ -304,6 +342,10 @@ namespace StkGenCode.Code.Template
             var sqlWhenCase = "CASE";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 // Do Something
                 sqlWhenCase +=
                     $"  WHEN (@Column = '{dataColumn.ColumnName}') THEN CONVERT(varchar, {dataColumn.ColumnName} )";
@@ -355,6 +397,11 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 if (dataColumn.ColumnName == Ds.Tables[0].PrimaryKey[0].ColumnName)
                 {
                     continue;
