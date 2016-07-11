@@ -102,9 +102,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Code\Cotrols\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Sql\Stk_User.sql" />
   </ItemGroup>
