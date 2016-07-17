@@ -64,8 +64,8 @@ new string[] { "System.Byte[]", "System.Guid" });
 
                 var disabled = "";
 
-                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
-                var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
+                var controlChekBoxName = string.Format(ControlName.FormatChekBoxName, dataColumn.ColumnName);
 
                 string currentControl;
                 if (MappingColumn != null)
@@ -185,7 +185,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                     continue;
 
                 //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
                 //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
                 //string controlDropDownName = string.Format(formatDropDownName , _DataColumn.ColumnName);
 
@@ -299,10 +299,10 @@ new string[] { "System.Byte[]", "System.Guid" });
                     continue;
                 }
 
-                var propertieName = string.Format(NameMing.FormatpropertieName, TableName, dataColumn.ColumnName);
-                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
-                var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);
-                var controlDropDownName = string.Format(NameMing.FormatDropDownName, dataColumn.ColumnName);
+                var propertieName = string.Format(ControlName.FormatpropertieName, TableName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
+                var controlChekBoxName = string.Format(ControlName.FormatChekBoxName, dataColumn.ColumnName);
+                var controlDropDownName = string.Format(ControlName.FormatDropDownName, dataColumn.ColumnName);
 
                 if (IsDropDown(dataColumn))
                 {
@@ -338,9 +338,9 @@ new string[] { "System.Byte[]", "System.Guid" });
                 }
 
                 var columnName = dataColumn.ColumnName;
-                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
-                var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);
-                var controlDropDownName = string.Format(NameMing.FormatDropDownName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
+                var controlChekBoxName = string.Format(ControlName.FormatChekBoxName, dataColumn.ColumnName);
+                var controlDropDownName = string.Format(ControlName.FormatDropDownName, dataColumn.ColumnName);
 
                 if (IsDropDown(dataColumn))
                 {
@@ -368,7 +368,7 @@ new string[] { "System.Byte[]", "System.Guid" });
 
             foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
-                var propertieName = string.Format(NameMing.FormatpropertieName, TableName, dataColumn.ColumnName);
+                var propertieName = string.Format(ControlName.FormatpropertieName, TableName, dataColumn.ColumnName);
 
                 var columName = dataColumn.ColumnName;
                 if (ExceptionType.Contains(dataColumn.DataType.ToString()))
@@ -499,7 +499,7 @@ new string[] { "System.Byte[]", "System.Guid" });
 
         public string GenDropDown(string columnname, int columnSize)
         {
-            var controlDropDownName = string.Format(NameMing.FormatDropDownName, columnname);
+            var controlDropDownName = string.Format(ControlName.FormatDropDownName, columnname);
             var code = "";
             foreach (var map in MappingColumn)
             {
@@ -566,8 +566,8 @@ new string[] { "System.Byte[]", "System.Guid" });
             {
                 if ((map.ColumnName == columnName) && (map.TableName != TableName))
                 {
-                    var controlDropDownName = string.Format(NameMing.FormatDropDownName, columnName);
-                    var propertieName = string.Format(NameMing.FormatpropertieName, TableName, columnName);
+                    var controlDropDownName = string.Format(ControlName.FormatDropDownName, columnName);
+                    var propertieName = string.Format(ControlName.FormatpropertieName, TableName, columnName);
                     //code = string.Format("{0}.Items.FindByValue({1}).Selected = true; ", controlDropDownName, propertieName);
                     code +=
                         string.Format("ListItem {0}ListItem = {0}.Items.FindByValue({1}.ToString()); ",
@@ -592,8 +592,8 @@ new string[] { "System.Byte[]", "System.Guid" });
             {
                 if ((map.ColumnName == column.ColumnName) && (map.TableName != TableName))
                 {
-                    var controlDropDownName = string.Format(NameMing.FormatDropDownName, column.ColumnName);
-                    var propertieName = string.Format(NameMing.FormatpropertieName, TableName, column.ColumnName);
+                    var controlDropDownName = string.Format(ControlName.FormatDropDownName, column.ColumnName);
+                    var propertieName = string.Format(ControlName.FormatpropertieName, TableName, column.ColumnName);
                     //mpoOrder.CUS_ID = drpCustomer.SelectedValue;
                     code += $"if ({controlDropDownName}.SelectedIndex > 0)" + NewLine;
 
@@ -645,7 +645,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                         {
                             //Table MAster Of Drop DownList
                             var dropDownTableName = map.TableName;
-                            var controlDropDownName = string.Format(NameMing.FormatDropDownName, dataColumn.ColumnName);
+                            var controlDropDownName = string.Format(ControlName.FormatDropDownName, dataColumn.ColumnName);
                             code += string.Format("{0}Db _{0}Db = new {0}Db(); ", dropDownTableName) + NewLine;
                             code += $"{controlDropDownName}.DataSource =  _{dropDownTableName}Db.Select(); " + NewLine;
                             code += $"{controlDropDownName}.DataTextField = {dropDownTableName}Db.DataText;" + NewLine;
@@ -668,5 +668,34 @@ new string[] { "System.Byte[]", "System.Guid" });
         }
 
         #endregion DropDown
+
+
+        #region Image
+        public bool HavePicture()
+        {
+           
+
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+            {
+             
+                if (dataColumn.DataType.ToString()=="System.Byte[]")
+                    return true;
+            }
+
+            return false;
+        }
+
+        public string GetColumnPicture()
+        {
+            foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+            {
+
+                if (dataColumn.DataType.ToString() == "System.Byte[]")
+                    return dataColumn.DataType.ToString();
+            }
+            return "";
+        }
+        
+        #endregion
     }
 }

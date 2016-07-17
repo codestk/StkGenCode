@@ -872,6 +872,12 @@ namespace StkGenCode.Code.Template
                         code += "TrTempplate +=\"<span class=''>\"+result[key]." + dataColumn.ColumnName +
                           "+\"</span>\";" + NewLine;
                     }
+                    else if (dataColumn.DataType.ToString() == "System.Byte[]")
+                    {
+                        code += "TrTempplate +=\"<img id='imgPreview' src='ImageHandler.ashx?Q=\" + result[key].CategoryID + \"' height='131' width='174' onerror=this.src='Images/no-image.png' alt='Image preview...'>\"" + NewLine;
+                    }
+
+                    // TrTempplate += "<img id='imgPreview' src='ImageHandler.ashx?Q=" + result[key].CategoryID + "' height='131' width='174' onerror=this.src='Images/no-image.png' alt='Image preview...'>";
                     else
                     {
                         code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" +

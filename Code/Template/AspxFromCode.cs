@@ -36,50 +36,9 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        //Method JavaScript ====================================================
-        //public string ForceNumberTextBox()
-        //{
-        //    string code = "";
-        //    code += "function ForceNumberTextBox() " + _NewLine;
-        //    code += "{" + _NewLine;
-
-        //    foreach (DataColumn dataColumn in _ds.Tables[0].Columns)
-        //    {
-        //        //ถ้าเป็น DropDown ไม่ต้อง Force ตัวเลข
-        //        if (IsDropDown(dataColumn))
-        //            continue;
-
-        //        //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-        //        string controlTextBoxName = string.Format(_formatTextBoxName, dataColumn.ColumnName);
-        //        //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
-        //        //string controlDropDownName = string.Format(formatDropDownName , _DataColumn.ColumnName);
-
-        //        if ((dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName) && (_ds.Tables[0].PrimaryKey[0].AutoIncrement))
-        //        {
-        //            continue;
-        //        }
-
-        //        if ((dataColumn.DataType.ToString() == "System.Guid") || (dataColumn.DataType.ToString() == "System.Int16"))
-        //        { continue; }
-
-        //        if (dataColumn.DataType.ToString() == "System.Int32")
-        //        {
-        //            code += "$(\"#" + controlTextBoxName + "\").ForceNumericOnly();" + _NewLine;
-        //        }
-        //        else if (dataColumn.DataType.ToString() == "System.Decimal")
-        //        {
-        //            code += "$(\"#" + controlTextBoxName + "\").ForceNumericOnly2Digit();" + _NewLine;
-        //        }
-        //    }
-
-        //    code += "}" + _NewLine;
-
-        //    return code;
-        //}
-
         private string GenValidateDropDown(string columnname)
         {
-            var controlDropDownName = string.Format(NameMing.FormatDropDownName, columnname);
+            var controlDropDownName = string.Format(ControlName.FormatDropDownName, columnname);
             var code = "";
             foreach (var map in MappingColumn)
             {
@@ -108,8 +67,6 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        //
-
         public string Validate()
         {
             var code = "";
@@ -123,7 +80,7 @@ namespace StkGenCode.Code.Template
                     continue;
                 }
                 //string propertieName = string.Format(_formatpropertieName, _TableName, _DataColumn.ColumnName);
-                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
                 //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
                 //string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
 
@@ -187,7 +144,7 @@ namespace StkGenCode.Code.Template
 
             code += MapControlHtmlToValiable(Ds);
 
-            var controlTextBoxPrimay = string.Format(NameMing.FormatTextBoxName, Ds.Tables[0].PrimaryKey[0]);
+            var controlTextBoxPrimay = string.Format(ControlName.FormatTextBoxName, Ds.Tables[0].PrimaryKey[0]);
             code += $"var result = {TableName}Service.Save({columnParameter});" + NewLine;
             code += "" + NewLine;
 
@@ -252,9 +209,9 @@ namespace StkGenCode.Code.Template
                 }
 
                 var columnName = dataColumn.ColumnName;
-                var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
-                var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);
-                var controlDropDownName = string.Format(NameMing.FormatDropDownName, dataColumn.ColumnName);
+                var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
+                var controlChekBoxName = string.Format(ControlName.FormatChekBoxName, dataColumn.ColumnName);
+                var controlDropDownName = string.Format(ControlName.FormatDropDownName, dataColumn.ColumnName);
 
                 if (IsDropDown(dataColumn))
                 {
@@ -486,6 +443,31 @@ namespace StkGenCode.Code.Template
 
             return code;
         }
+
+
+        private string DropAreaHtml()
+        {
+            string code = "";
+            code += "  <div id=\"drop-area\">";
+            code += "        <div id=\"drop-area-detail\">";
+            code += "";
+            code += "            <h3 class=\"drop-text\">Drag and Drop Images Here</h3>";
+            code += "";
+            code += "            <div class=\"progress\">";
+            code += "                <div class=\"bar\"></div>";
+            code += "                <div class=\"percent\">0%</div>";
+            code += "            </div>";
+            code += "        </div>";
+            code += "        <div id=\"drop-area-preview\">";
+            code += "            <img id=\"imgPreview\" src=\"\" height=\"131\" width=\"174\" alt=\"Image preview...\">";
+            code += "            <img id=\"imgRemove\" src=\"Images/Close.png\" />";
+            code += "        </div>";
+
+            code += "   <div id=\"status\"></div>";
+            code += "    </div>";
+            return code;
+        }
+
 
         public override void Gen()
         {

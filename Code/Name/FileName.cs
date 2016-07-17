@@ -11,6 +11,7 @@ namespace StkGenCode.Code.Name
         public DataSet Ds;
         public string TableName;
 
+        #region asp.net
         //Code
         //auth_dtWeb --------------------------------------------------------------------------------------
         public string AspxFromCodeName()
@@ -53,8 +54,36 @@ namespace StkGenCode.Code.Name
             string name = $"{TableName}ListFilter.aspx.cs";
             return name;
         }
+ 
 
-        //
+    
+        //Sp_auth_dtStore
+        public string DbCodeName()
+        {
+            string name = $"{TableName}Db.cs";
+            return name;
+        }
+
+        public string PropertiesCodeName()
+        {
+            string name = $"{TableName}.cs";
+            return name;
+        }
+        #endregion
+        #region Service
+        //var apiService = "api/CatImageController/";
+        //var handlerService = "ImageHandler.ashx";
+
+        public   string HandlerName()
+        {
+            string name = $"{TableName}ImageHandler.ashx";
+            return name;
+        }
+        public   string ControllerName()
+        {
+            string name = $"{TableName}ImageController.cs";
+            return name;
+        }
 
         //Service NAme
         public string PageServiceName()
@@ -71,19 +100,10 @@ namespace StkGenCode.Code.Name
             return name;
         }
 
-        //Sp_auth_dtStore
-        public string DbCodeName()
-        {
-            string name = $"{TableName}Db.cs";
-            return name;
-        }
 
-        public string PropertiesCodeName()
-        {
-            string name = $"{TableName}.cs";
-            return name;
-        }
+        #endregion
 
+        #region DataBase
         //=================================================================================================
         //DataBase
         //Sp_auth_dtStore
@@ -92,7 +112,9 @@ namespace StkGenCode.Code.Name
             string name = $"Store_{TableName}.sql";
             return name;
         }
+        #endregion
 
+        #region JavaScript
         //Js File
         public string JsCodeName()
         {
@@ -105,5 +127,6 @@ namespace StkGenCode.Code.Name
             string name = $"{jsCodeName}.js";
             return name;
         }
+        #endregion
     }
 }
