@@ -59,6 +59,7 @@
     <Compile Include="Code\Template\AspxFromCode.cs" />
     <Compile Include="Code\Template\AspxTableCodeFilterColumn.cs" />
     <Compile Include="Code\Template\AspxTableCodeFilterColumnCodeBehide.cs" />
+    <Compile Include="Code\Template\ImageHandler.cs" />
     <Compile Include="Code\Template\CodeBase.cs" />
     <Compile Include="Code\Template\DbCodeImage.cs" />
     <Compile Include="Code\Template\DbCodeSqlServer.cs" />

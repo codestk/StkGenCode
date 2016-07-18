@@ -55,21 +55,45 @@ namespace StkGenCode
             };
             aspxFromCodeBehide.Gen();
 
-            //AspxTableCode _AspxTableCode = new AspxTableCode();
-            //_AspxTableCode._FileCode = F;
-            //_AspxTableCode._ds = _ds;
-            //_AspxTableCode._TableName = _TableName;
-            //_AspxTableCode._MappingColumn = _MappingColumn;
-            //_AspxTableCode.Gen();
+            #region Picture Module
 
-            //AspxTableCodeBehine aspxTableCodeBehine = new AspxTableCodeBehine
-            //{
-            //    _FileCode = F,
-            //    _ds = _ds,
-            //    _TableName = _TableName,
-            //    _MappingColumn = _MappingColumn
-            //};
+            if (aspxFromCodeaspx.HavePicture())
+            {
+                var ApiControllerPath = _path + @"App_Code\Services\Api\";
+                f.Path = ApiControllerPath;
+                var ApiController = new ImageApiController
+                {
+                    FileCode = f,
+                    Ds = _ds,
+                    TableName = tableName
+                };
+                ApiController.Gen();
 
+                var HandlerPath = _path;
+                f.Path = HandlerPath;
+                var Handler = new ImageHandler
+                {
+                    FileCode = f,
+                    Ds = _ds,
+                    TableName = tableName
+                };
+                Handler.Gen();
+
+                var DbCodeImagePath = _path + @"App_Code\Business\"; ;
+                f.Path = DbCodeImagePath;
+                var _DbCodeImage = new DbCodeImage
+                {
+                    FileCode = f,
+                    Ds = _ds,
+                    TableName = tableName
+                };
+                _DbCodeImage.Gen();
+            }
+
+            #endregion Picture Module
+ 
+
+            f.Path = _path;
             var aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
             {
                 FileCode = f,

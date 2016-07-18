@@ -1,101 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StkGenCode.Code.Name;
 
 namespace StkGenCode.Code.Template
 {
-   public class DbCodeImage :CodeBase
+    public class DbCodeImage : CodeBase
     {
-
-        string Using()
+        private string Using()
         {
             string code = "";
             code += "using System.Collections.Generic;" + NewLine;
             code += "using System.Data;" + NewLine;
             return code;
         }
-        string BeginClass()
+
+        private string BeginClass()
         {
             string code = "";
-            code += "public class CategoriesImageDb : DataAccess" + NewLine;
+            code += $"public class {ClassName.ImageDbName(TableName)} : DataAccess" + NewLine;
             code += " {" + NewLine;
             return code;
         }
-        string EndClass()
+
+        private string EndClass()
         {
-            return "}"+NewLine;
+            return "}" + NewLine;
         }
 
-
-
-        string GetPicture()
+        private string GetPicture()
         {
             string code = "";
             string primaryKey = Ds.Tables[0].PrimaryKey[0].ToString();
 
             string columnPicture = GetColumnPicture();
-            code += "public IDataReader GetPicture(string id)";
-            code += "    {";
-            code += "        string sql = \"SELECT "+ columnPicture + " FROM "+TableName+" where "+ primaryKey + " = @"+ primaryKey + ";\";";
-            code += "        var prset = new List<IDataParameter>();";
-            code += "        prset.Add(Db.CreateParameterDb(\"@" + primaryKey + "\", id));";
+            code += "public IDataReader GetPicture(string id)" + NewLine;
+            code += "    {" + NewLine;
+            code += "        string sql = \"SELECT " + columnPicture + " FROM " + TableName + " where " + primaryKey + " = @" + primaryKey + ";\";" + NewLine;
+            code += "        var prset = new List<IDataParameter>();" + NewLine;
+            code += "        prset.Add(Db.CreateParameterDb(\"@" + primaryKey + "\", id));" + NewLine;
             code += "        Db.OpenFbData();";
-            code += "        return Db.FbExecuteReader(sql, prset, CommandType.Text);";
-            code += "    }";
+            code += "        return Db.FbExecuteReader(sql, prset, CommandType.Text);" + NewLine;
+            code += "    }" + NewLine;
             return code;
         }
 
-        string SavePicture()
+        private string SavePicture()
         {
             string code = "";
             string primaryKey = Ds.Tables[0].PrimaryKey[0].ToString();
             string columnPicture = GetColumnPicture();
-            code += " public bool SavePicture(string id, byte[] Picture)";
-            code += "    {";
-            code += "        string sql = \"UPDATE  " + TableName + " SET "+ columnPicture + " = @"+ primaryKey + "  WHERE " + primaryKey + " = @" + primaryKey + "\";";
-            code += "";
-            code += "        var prset = new List<IDataParameter>();";
-            code += "        prset.Add(Db.CreateParameterDb(\"@" + primaryKey + "\", id));";
-            code += "        prset.Add(Db.CreateParameterDb(\"@"+ columnPicture + "\", Picture));";
-            code += "";
-            code += "";
-            code += "        int output = Db.FbExecuteNonQuery(sql, prset);";
-            code += "        if (output != 1)";
-            code += "        {";
-            code += "            throw new System.Exception(\"Update\" + this.ToString());";
-            code += "        }";
-            code += "        return true;";
-            code += "";
-            code += "    }";
+            code += " public bool SavePicture(string id, byte[] Picture)" + NewLine;
+            code += "    {" + NewLine;
+            code += "        string sql = \"UPDATE  " + TableName + " SET " + columnPicture + " = @" + columnPicture + "  WHERE " + primaryKey + " = @" + primaryKey + "\";" + NewLine;
+            code += "" + NewLine;
+            code += "        var prset = new List<IDataParameter>();" + NewLine;
+            code += "        prset.Add(Db.CreateParameterDb(\"@" + primaryKey + "\", id));" + NewLine;
+            code += "        prset.Add(Db.CreateParameterDb(\"@" + columnPicture + "\", Picture));" + NewLine;
+            code += "" + NewLine;
+            code += "" + NewLine;
+            code += "        int output = Db.FbExecuteNonQuery(sql, prset);" + NewLine;
+            code += "        if (output != 1)" + NewLine;
+            code += "        {" + NewLine;
+            code += "            throw new System.Exception(\"Update\" + this.ToString());" + NewLine;
+            code += "        }" + NewLine;
+            code += "        return true;" + NewLine;
+            code += "" + NewLine;
+            code += "    }" + NewLine;
             return code;
         }
-        string DeletePicture()
+
+        private string DeletePicture()
         {
             string code = "";
             string primaryKey = Ds.Tables[0].PrimaryKey[0].ToString();
             string columnPicture = GetColumnPicture();
-            code += "  public bool DeletePicture(string id)";
-            code += "    {";
-            code += "        string sql = \"UPDATE " + TableName + " SET  "+ columnPicture + " =null  WHERE "+ primaryKey + "=@"+ primaryKey + "\";";
-            code += "";
-            code += "        var prset = new List<IDataParameter>();";
-            code += "        prset.Add(Db.CreateParameterDb(\"@"+ primaryKey + "\", id));";
-            code += "";
-            code += "";
-            code += "";
-            code += "        int output = Db.FbExecuteNonQuery(sql, prset);";
-            code += "        if (output != 1)";
-            code += "        {";
-            code += "            throw new System.Exception(\"Update\" + this.ToString());";
-            code += "        }";
-            code += "        return true;";
-            code += "";
-            code += "    }";
+            code += "  public bool DeletePicture(string id)" + NewLine;
+            code += "    {" + NewLine;
+            code += "        string sql = \"UPDATE " + TableName + " SET  " + columnPicture + " =null  WHERE " + primaryKey + "=@" + primaryKey + "\";" + NewLine;
+            code += "" + NewLine;
+            code += "        var prset = new List<IDataParameter>();" + NewLine;
+            code += "        prset.Add(Db.CreateParameterDb(\"@" + primaryKey + "\", id));" + NewLine;
+            code += "" + NewLine;
+
+            code += "" + NewLine;
+            code += "        int output = Db.FbExecuteNonQuery(sql, prset);" + NewLine;
+            code += "        if (output != 1)" + NewLine;
+            code += "        {" + NewLine;
+            code += "            throw new System.Exception(\"Update\" + this.ToString());" + NewLine;
+            code += "        }" + NewLine;
+            code += "        return true;" + NewLine;
+            code += "" + NewLine;
+            code += "    }" + NewLine;
             return code;
         }
-      
 
         public override void Gen()
         {
@@ -103,7 +98,7 @@ namespace StkGenCode.Code.Template
             InnitProperties();
 
             code += Using();
-            
+
             code += BeginClass();
 
             code += GetPicture();
@@ -111,12 +106,10 @@ namespace StkGenCode.Code.Template
             code += SavePicture();
 
             code += DeletePicture();
-             
+
             code += EndClass();
 
-            FileCode.WriteFile(FileName.DbCodeName(), code);
+            FileCode.WriteFile(FileName.DbCodeImageName(), code);
         }
-
-       
     }
 }

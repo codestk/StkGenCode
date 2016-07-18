@@ -8,13 +8,19 @@ namespace StkGenCode.Code.Name
 {
    public class ClassName
     {
-        public static string  Handler(string tableName)
+        public static string ImageHandlerName(string tableName)
         {
-            return "";
+         
+            return $"{tableName}ImageHandler";
         }
-        public static string ControllerName(string tableName)
+        public static string ImageControllerName(string tableName)
         {
             return $"{tableName}ImageController";
         }
+        public static string  ImageDbName(string tableName)
+        {
+            return $"{tableName}ImageDb";
+        }
+
     }
 }

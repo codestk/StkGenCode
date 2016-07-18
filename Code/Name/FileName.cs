@@ -63,6 +63,13 @@ namespace StkGenCode.Code.Name
             string name = $"{TableName}Db.cs";
             return name;
         }
+        public string DbCodeImageName()
+        {
+            //CategoriesImageDb.cs
+            string name = $"{TableName}ImageDb.cs";
+            return name;
+        }
+
 
         public string PropertiesCodeName()
         {
@@ -74,7 +81,7 @@ namespace StkGenCode.Code.Name
         //var apiService = "api/CatImageController/";
         //var handlerService = "ImageHandler.ashx";
 
-        public   string HandlerName()
+        public   string ImageHandlerName()
         {
             string name = $"{TableName}ImageHandler.ashx";
             return name;

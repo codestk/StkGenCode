@@ -144,7 +144,7 @@ namespace StkGenCode.Code.Template
 
             code += MapControlHtmlToValiable(Ds);
 
-            var controlTextBoxPrimay = string.Format(ControlName.FormatTextBoxName, Ds.Tables[0].PrimaryKey[0]);
+            var controlTextBoxPrimay = string.Format(ControlName.FormatTextBoxName, Ds.Tables[0].PrimaryKey[0].ToString());
             code += $"var result = {TableName}Service.Save({columnParameter});" + NewLine;
             code += "" + NewLine;
 
@@ -157,6 +157,14 @@ namespace StkGenCode.Code.Template
 
             code += "$('#btnUpdate').show();" + NewLine;
             code += "$('#btnDelete').show();" + NewLine;
+
+            if (HavePicture())
+            {
+                code += $" var id =  $('#{controlTextBoxPrimay}').val();" + NewLine;
+                code += "" + NewLine;
+                code += "DropArea(id, apiService, handlerService);" + NewLine;
+            }
+
             code += "}" + NewLine;
             code += "else {" + NewLine;
             code += "Materialize.toast(MsgError, 5000, 'toastCss');" + NewLine;
@@ -261,6 +269,12 @@ namespace StkGenCode.Code.Template
             code += MapProPertiesToControl(Ds);
 
             code += "$('#btnSave').hide();" + NewLine;
+
+            if (HavePicture())
+            {
+                code += " DropArea(CategoryID, apiService, handlerService);" + NewLine;
+            }
+
             code += "}" + NewLine;
             code += "else{" + NewLine;
             code += "$('#btnSave').show();" + NewLine;
@@ -280,6 +294,15 @@ namespace StkGenCode.Code.Template
             code +=
                 "var MsgError = 'UPDATE: An unexpected error has occurred. Please contact your system Administrator.';" +
                 NewLine;
+
+            if (HavePicture())
+            {
+                string ImageController = ClassName.ImageControllerName(TableName);
+                string ImageHandler = FileName.ImageHandlerName();
+                code += $"  var apiService = \"api/{ImageController}/\";";
+                code += $"        var handlerService = \"{ImageHandler}\";";
+            }
+
             code += " $(document).ready(function () " + NewLine;
             code += "{" + NewLine;
 
@@ -441,9 +464,15 @@ namespace StkGenCode.Code.Template
                 }
             }
 
+            if (HavePicture())
+            {
+                code += "    <link href=\"Module/Stk/StkImageUpload/StkImageUpload.css\" rel=\"stylesheet\" />";
+                code += "    <script src=\"Module/Stk/StkImageUpload/StkImageUpload.js\"></script>";
+                code += "    <script src=\"Module/Stk/ValidateStk.js\"></script>";
+            }  
+
             return code;
         }
-
 
         private string DropAreaHtml()
         {
@@ -468,7 +497,6 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-
         public override void Gen()
         {
             InnitProperties();
@@ -488,7 +516,7 @@ namespace StkGenCode.Code.Template
 
             code += GenDivFormBegin();
 
-            code += GenControls(12);
+            code += GenControls(9);
 
             code += GenButton();
 

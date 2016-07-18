@@ -57,7 +57,8 @@ new string[] { "System.Byte[]", "System.Guid" });
             var code = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //ยอมให้ Data Type Byte[] ผ่าน
+                if ((ExceptionType.Contains(dataColumn.DataType.ToString())) && (dataColumn.DataType.ToString() != "System.Byte[]"))
                 {
                     continue;
                 }
@@ -67,7 +68,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                 var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
                 var controlChekBoxName = string.Format(ControlName.FormatChekBoxName, dataColumn.ColumnName);
 
-                string currentControl;
+                string currentControl="";
                 if (MappingColumn != null)
                 {
                     var codedrp = GenDropDown(dataColumn.ColumnName, columnSize);
@@ -90,16 +91,20 @@ new string[] { "System.Byte[]", "System.Guid" });
                     }
                 }
 
-                if (isPrimayKey)
+                //ถ้าเป็น Byte[] เป็นรูปไม่ต้องใส่ Column
+                if (dataColumn.DataType.ToString() != "System.Byte[]")
                 {
-                    disabled = "ReadOnly=\"true\" ";
+                    if (isPrimayKey)
+                    {
+                        disabled = "ReadOnly=\"true\" ";
 
-                    code += $"<div class=\"  col s{columnSize}\"> " + NewLine;
-                    code += "<label>" + dataColumn.ColumnName + " </label> " + NewLine;
-                }
-                else
-                {
-                    code += $"<div class=\"input-field col s{columnSize}\"> " + NewLine;
+                        code += $"<div class=\"  col s{columnSize}\"> " + NewLine;
+                        code += "<label>" + dataColumn.ColumnName + " </label> " + NewLine;
+                    }
+                    else
+                    {
+                        code += $"<div class=\"input-field col s{columnSize}\"> " + NewLine;
+                    }
                 }
 
                 //CssClass = "datepicker" type = "date"
@@ -126,10 +131,6 @@ new string[] { "System.Byte[]", "System.Guid" });
                 else if (dataColumn.DataType.ToString() == "System.String")
                 {
                     currentControl = controlTextBoxName;
-                    //code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" +
-                    //        dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName +
-                    //        "\" MaxLength=\"" + dataColumn.MaxLength + "\" length=\"" + dataColumn.MaxLength +
-                    //        "\" runat=\"server\"></asp:TextBox>" + NewLine;
 
                     code += "<input " + disabled + " id=\"" + controlTextBoxName + "\" type=\"text\" data-column-id=\"" +
                            dataColumn.ColumnName + "\"  class=\"validate " + dataColumn.ColumnName +
@@ -138,33 +139,57 @@ new string[] { "System.Byte[]", "System.Guid" });
                 }
                 else if (dataColumn.DataType.ToString() == "System.Int32")
                 {
-                    // int max = System.Int32.MaxValue.ToString().Length;
                     var max = 9;
                     currentControl = controlTextBoxName;
-                    //code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName + "\" data-column-id=\"" +
-                    //        dataColumn.ColumnName + "\"  CssClass=\"validate " + dataColumn.ColumnName +
-                    //        "\" MaxLength=\"" + max + "\" length=\"" + max + "\" runat=\"server\"></asp:TextBox>" +
-                    //        NewLine;
+
                     code += "<input " + disabled + " id=\"" + controlTextBoxName + "\" type=\"text\" data-column-id=\"" +
                             dataColumn.ColumnName + "\"  Class=\"validate " + dataColumn.ColumnName +
                             "\" length=\"" + max + "\"        maxlength=\"" + max + "\"     />" +
                             NewLine;
-                    // code += "<input  id =\"" + controlTextBoxName + "\" type=\"text\" class=\"validate\"   length=\"" + max + "\" " + disabled + "   >" + NewLine;
+                }
+                else if (dataColumn.DataType.ToString() == "System.Byte[]")
+                {
+                    //กรณีที่เป็นรูป
+                    code += "" + NewLine;
+                    code += "            <div id=\"drop-area\"  style=\"display:none\">" + NewLine;
+                    code += "                <div id=\"drop-area-detail\">" + NewLine;
+                    code += "" + NewLine;
+                    code += "                    <h3 class=\"drop-text\">Drag and Drop Images Here</h3>" + NewLine;
+                    code += "" + NewLine;
+                    code += "                    <div class=\"progressUpload\">" + NewLine;
+                    code += "                        <div class=\"bar\"></div>" + NewLine;
+                    code += "                        <div class=\"percent\">0%</div>" + NewLine;
+                    code += "                    </div>" + NewLine;
+                    code += "                </div>" + NewLine;
+                    code += "                <div id=\"drop-area-preview\" style=\"display: none\">" + NewLine;
+                    code += "                    <img id=\"imgPreview\"   height=\"131\" width=\"174\" alt=\"Image preview...\">" + NewLine;
+                    code += "                    <img id=\"imgRemove\" src=\"Images/Close.png\" />" + NewLine;
+                    code += "                </div>" + NewLine;
+                    code += "                <div id=\"status\"></div>" + NewLine;
+                    code += "            </div>" + NewLine;
+
                 }
                 else
                 {
                     currentControl = controlTextBoxName;
-                    //code += "<asp:TextBox " + disabled + " ID=\"" + controlTextBoxName +
-                    //        "\" CssClass=\"validate\" runat=\"server\"></asp:TextBox>" + NewLine;
+
                     code += "<input  id =\"" + controlTextBoxName + "\" type=\"text\" class=\"validate\" " + disabled + "  >" + NewLine;
                 }
-                if (isPrimayKey == false)
+
+                //เป็นรูปไม่ต้องใส่ Label
+                if (dataColumn.DataType.ToString() != "System.Byte[]")
                 {
-                    code += "<label for=\"" + currentControl + "\">" + dataColumn.ColumnName +
-                            " </label> " + NewLine;
-                }
+                    if (isPrimayKey == false)
+                    {
+                        code += "<label for=\"" + currentControl + "\">" + dataColumn.ColumnName +
+                                " </label> " + NewLine;
+                    }
+                
                 code += " </div> " + NewLine;
+                }
             }
+
+
             return code;
         }
 
@@ -669,16 +694,13 @@ new string[] { "System.Byte[]", "System.Guid" });
 
         #endregion DropDown
 
-
         #region Image
+
         public bool HavePicture()
         {
-           
-
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-             
-                if (dataColumn.DataType.ToString()=="System.Byte[]")
+                if (dataColumn.DataType.ToString() == "System.Byte[]")
                     return true;
             }
 
@@ -689,13 +711,12 @@ new string[] { "System.Byte[]", "System.Guid" });
         {
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-
                 if (dataColumn.DataType.ToString() == "System.Byte[]")
-                    return dataColumn.DataType.ToString();
+                    return dataColumn.ColumnName.ToString();
             }
             return "";
         }
-        
-        #endregion
+
+        #endregion Image
     }
 }
