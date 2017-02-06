@@ -141,7 +141,7 @@ namespace StkGenCode.Code.Template
             code += "$('.datepicker').pickadate({ " + NewLine;
             code += "selectMonths: true, // Creates a dropdown to control month  " + NewLine;
             code += "selectYears: 15,// Creates a dropdown of 15 years to control year,  " + NewLine;
-            code += "format: 'd mmmm yyyy' " + NewLine;
+            code += "format: 'd mmm yyyy' " + NewLine;
             code += "});" + NewLine;
             code += "}" + NewLine;
             return code;
@@ -402,6 +402,11 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
+
                 if (IsDropDown(dataColumn))
                 {
                     code += "" + NewLine;
@@ -772,7 +777,7 @@ namespace StkGenCode.Code.Template
         protected string GenTableFromJson()
         {
             var code = "  ";
-
+            code += " <div style=\"overflow: auto\">" + NewLine;
             code += "<table id=tbResult class=\"  bordered  striped \"  style=\"display: none;\" > " + NewLine;
             code += "  <thead> " + NewLine;
             code += "  <tr> " + NewLine;
@@ -782,11 +787,18 @@ namespace StkGenCode.Code.Template
             //code += "  <th>Buying Rates	</th> " + _NewLine;
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                //code += " <th style=\"width: 300px; \">" + dataColumn.ColumnName.ToUpper() + "</th> " + _NewLine;
+                string sortFunction = "";
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    sortFunction = "";
+                }
+                else
+                {
+                    sortFunction = "onclick=\"Sort(this);\"";
+                }
                 code +=
-                 $"<th style=\"width:300px;\" data-column-id=\"{dataColumn.ColumnName}\"  onclick=\"Sort(this);\">{dataColumn.ColumnName}</th>" +
-                 NewLine;
-                // code += "<th> " + dataColumn.ColumnName + "\" CssClass=\"hrefclass\"  >" + dataColumn.ColumnName + " </th> " + _NewLine;
+         $"<th   data-column-id=\"{dataColumn.ColumnName}\"  {sortFunction}>{dataColumn.ColumnName}</th>" +
+         NewLine;
             }
 
             code += "</tr>" + NewLine;
@@ -794,6 +806,7 @@ namespace StkGenCode.Code.Template
             code += "<tbody>" + NewLine;
             code += "</tbody>" + NewLine;
             code += "</table>" + NewLine;
+            code += "</div>" + NewLine;
 
             return code;
         }
@@ -859,6 +872,12 @@ namespace StkGenCode.Code.Template
                         code += "TrTempplate +=\"<span class=''>\"+result[key]." + dataColumn.ColumnName +
                           "+\"</span>\";" + NewLine;
                     }
+                    else if (dataColumn.DataType.ToString() == "System.Byte[]")
+                    {
+                        code += "TrTempplate +=\"<img id='imgPreview' src='ImageHandler.ashx?Q=\" + result[key].CategoryID + \"' height='131' width='174' onerror=this.src='Images/no-image.png' alt='Image preview...'>\"" + NewLine;
+                    }
+
+                    // TrTempplate += "<img id='imgPreview' src='ImageHandler.ashx?Q=" + result[key].CategoryID + "' height='131' width='174' onerror=this.src='Images/no-image.png' alt='Image preview...'>";
                     else
                     {
                         code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" +
@@ -1022,6 +1041,10 @@ namespace StkGenCode.Code.Template
             var code = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
                 {
                     continue;

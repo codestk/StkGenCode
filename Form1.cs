@@ -55,21 +55,45 @@ namespace StkGenCode
             };
             aspxFromCodeBehide.Gen();
 
-            //AspxTableCode _AspxTableCode = new AspxTableCode();
-            //_AspxTableCode._FileCode = F;
-            //_AspxTableCode._ds = _ds;
-            //_AspxTableCode._TableName = _TableName;
-            //_AspxTableCode._MappingColumn = _MappingColumn;
-            //_AspxTableCode.Gen();
+            #region Picture Module
 
-            //AspxTableCodeBehine aspxTableCodeBehine = new AspxTableCodeBehine
-            //{
-            //    _FileCode = F,
-            //    _ds = _ds,
-            //    _TableName = _TableName,
-            //    _MappingColumn = _MappingColumn
-            //};
+            if (aspxFromCodeaspx.HavePicture())
+            {
+                var ApiControllerPath = _path + @"App_Code\Services\Api\";
+                f.Path = ApiControllerPath;
+                var ApiController = new ImageApiController
+                {
+                    FileCode = f,
+                    Ds = _ds,
+                    TableName = tableName
+                };
+                ApiController.Gen();
 
+                var HandlerPath = _path;
+                f.Path = HandlerPath;
+                var Handler = new ImageHandler
+                {
+                    FileCode = f,
+                    Ds = _ds,
+                    TableName = tableName
+                };
+                Handler.Gen();
+
+                var DbCodeImagePath = _path + @"App_Code\Business\"; ;
+                f.Path = DbCodeImagePath;
+                var _DbCodeImage = new DbCodeImage
+                {
+                    FileCode = f,
+                    Ds = _ds,
+                    TableName = tableName
+                };
+                _DbCodeImage.Gen();
+            }
+
+            #endregion Picture Module
+ 
+
+            f.Path = _path;
             var aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
             {
                 FileCode = f,
@@ -149,13 +173,21 @@ namespace StkGenCode
             //_DbCode._TableName = _TableName;
             //_DbCode.Gen();
 
-            var dbCodeFireBird = new DbCodeFireBird
+            //var dbCodeFireBird = new DbCodeFireBird
+            //{
+            //    FileCode = f,
+            //    Ds = _ds,
+            //    TableName = tableName
+            //};
+            //dbCodeFireBird.Gen();
+
+            var dbCodeSqlServer = new DbCodeSqlServer
             {
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName
             };
-            dbCodeFireBird.Gen();
+            dbCodeSqlServer.Gen();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -228,28 +260,30 @@ namespace StkGenCode
             //Db.GetData();
             //Gen("STK_USER");
 
-            ClearFile();
+            //ClearFile();
 
-            txtConstring.Text =
-                @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
-            ClearFile();
-            var columnDropDown = "EM_FLAG:STK_USER_FLAG;";
-            var dsStkUser = Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
-            Gen(dsStkUser, "STK_USER", columnDropDown);
-            //DataSet _ds_STK_TYPE = StkGenCode.Code.Db.GetSchemaFireBird(txtConstring.Text, "STK_TYPE");
-            //Gen(_ds_STK_TYPE, "STK_TYPE", ColumnDropDown);
+            //txtConstring.Text =
+            //    @"Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
+            //ClearFile();
+            //var columnDropDown = "EM_FLAG:STK_USER_FLAG;";
+            //var dsStkUser = Db.GetSchemaFireBird(txtConstring.Text, "STK_USER");
+            //Gen(dsStkUser, "STK_USER", columnDropDown);
 
-            var dsStkUserFlag = Db.GetSchemaFireBird(txtConstring.Text, "STK_USER_FLAG");
-            Gen(dsStkUserFlag, "STK_USER_FLAG", columnDropDown);
+            //var dsStkUserFlag = Db.GetSchemaFireBird(txtConstring.Text, "STK_USER_FLAG");
+            //Gen(dsStkUserFlag, "STK_USER_FLAG", columnDropDown);
             //=================================================================================================
 
-            //ClearFile();
-            //txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=WEBAPP;User ID=sa;Password=P@ssw0rd";
+            ClearFile();
+            txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=Northwind;User ID=sa;Password=P@ssw0rd";
 
             //string ColumnDropDown = "CategoryID:TradeFromCategory;TermId:TradeFromTerm";
+            string ColumnDropDown = "";
 
-            //DataSet _dsTradeFromFile = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromFile");
-            //Gen(_dsTradeFromFile, "TradeFromFile", ColumnDropDown);
+            DataSet _dsTradeFromFile = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Categories");
+            Gen(_dsTradeFromFile, "Categories", ColumnDropDown);
+
+            DataSet Employees = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Employees");
+            Gen(Employees, "Employees", ColumnDropDown);
 
             //DataSet _dsTradeFromTerm = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromTerm");
             //Gen(_dsTradeFromTerm, "TradeFromTerm");

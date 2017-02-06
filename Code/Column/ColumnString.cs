@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using StkGenCode.Code.Template;
+using System.Data;
 
 namespace StkGenCode.Code.Column
 {
@@ -18,6 +19,10 @@ namespace StkGenCode.Code.Column
 
             foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
+                if (CodeBase.ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 code += string.Format(format, dataColumn);
             }
 

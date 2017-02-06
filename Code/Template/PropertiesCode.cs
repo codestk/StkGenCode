@@ -47,6 +47,12 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 var nullType = dataColumn.DataType.ToString() == "System.String" ? "" : "?";
+
+                if (dataColumn.DataType.ToString() == "System.Byte[]")
+                {
+                    nullType = "";
+                }
+
                 code += dataColumn.DataType.Name + nullType + " _" + dataColumn.ColumnName + "; \r\n";
                 code += "public " + dataColumn.DataType.Name + nullType + " " + dataColumn.ColumnName +
                         " { get { return _" + dataColumn.ColumnName + "; } set { _" + dataColumn.ColumnName +

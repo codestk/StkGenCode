@@ -120,6 +120,10 @@ namespace StkGenCode.Code.Template
             var pararmeter = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
@@ -162,6 +166,10 @@ namespace StkGenCode.Code.Template
             var pararmeter = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
@@ -182,21 +190,6 @@ namespace StkGenCode.Code.Template
             code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
             code += "  object result= _" + TableName + "Db.Insert(); " + NewLine;
             code += "   return result.ToString();" + NewLine;
-            //  txtid.Text = _modulesDb.Insert().ToString();
-
-            //code += "txt" + _ds.Tables[0].PrimaryKey[0] + ".Text= _" + _TableName + "Db.Insert().ToString();; " + _NewLine;
-            //code += controlTextBoxName + ".Text= _" + _TableName + "Db.Insert().ToString(); " + _NewLine;
-
-            //code += "        TradeFromTerm _TradeFromTerm = new TradeFromTerm();" + _NewLine;
-            //code += "        TradeFromTermDb _TradeFromTermDb = new TradeFromTermDb();" + _NewLine;
-            //code += "        _TradeFromTerm.TermId = Convert.ToDecimal(txtTermId.Text);" + _NewLine;
-            //code += "        _TradeFromTerm.TermName = txtTermName.Text;" + _NewLine;
-            //code += "        _TradeFromTerm.TermContent = txtTermContent.Text;" + _NewLine;
-            //code += "        _TradeFromTerm.TermCreateDate = StkGlobalDate.TextEnToDate(txtTermCreateDate.Text);" + _NewLine;
-            //code += "        _TradeFromTerm.TermUpdateDate = StkGlobalDate.TextEnToDate(txtTermUpdateDate.Text);" + _NewLine;
-            //code += "        _TradeFromTerm.TermUpdateCount = Convert.ToDecimal(txtTermUpdateCount.Text);" + _NewLine;
-            //code += "       _TradeFromTermDb._TradeFromTerm = _TradeFromTerm;" + _NewLine;
-            //code += "       _TradeFromTermDb.Update();" + _NewLine;
 
             code += "   }" + NewLine;
 
@@ -214,6 +207,10 @@ namespace StkGenCode.Code.Template
             var pararmeter = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
@@ -234,21 +231,6 @@ namespace StkGenCode.Code.Template
             code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
             code += "    _" + TableName + "Db.Update(); " + NewLine;
             code += "   return \"\";" + NewLine;
-            //  txtid.Text = _modulesDb.Insert().ToString();
-
-            //code += "txt" + _ds.Tables[0].PrimaryKey[0] + ".Text= _" + _TableName + "Db.Insert().ToString();; " + _NewLine;
-            //code += controlTextBoxName + ".Text= _" + _TableName + "Db.Insert().ToString(); " + _NewLine;
-
-            //code += "        TradeFromTerm _TradeFromTerm = new TradeFromTerm();" + _NewLine;
-            //code += "        TradeFromTermDb _TradeFromTermDb = new TradeFromTermDb();" + _NewLine;
-            //code += "        _TradeFromTerm.TermId = Convert.ToDecimal(txtTermId.Text);" + _NewLine;
-            //code += "        _TradeFromTerm.TermName = txtTermName.Text;" + _NewLine;
-            //code += "        _TradeFromTerm.TermContent = txtTermContent.Text;" + _NewLine;
-            //code += "        _TradeFromTerm.TermCreateDate = StkGlobalDate.TextEnToDate(txtTermCreateDate.Text);" + _NewLine;
-            //code += "        _TradeFromTerm.TermUpdateDate = StkGlobalDate.TextEnToDate(txtTermUpdateDate.Text);" + _NewLine;
-            //code += "        _TradeFromTerm.TermUpdateCount = Convert.ToDecimal(txtTermUpdateCount.Text);" + _NewLine;
-            //code += "       _TradeFromTermDb._TradeFromTerm = _TradeFromTerm;" + _NewLine;
-            //code += "       _TradeFromTermDb.Update();" + _NewLine;
 
             code += "   }" + NewLine;
 
@@ -260,6 +242,10 @@ namespace StkGenCode.Code.Template
             var pararmeter = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                {
+                    continue;
+                }
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
@@ -280,21 +266,6 @@ namespace StkGenCode.Code.Template
             code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
             code += "    _" + TableName + "Db.Delete(); " + NewLine;
             code += "   return \"\";" + NewLine;
-            //  txtid.Text = _modulesDb.Insert().ToString();
-
-            //code += "txt" + _ds.Tables[0].PrimaryKey[0] + ".Text= _" + _TableName + "Db.Insert().ToString();; " + _NewLine;
-            //code += controlTextBoxName + ".Text= _" + _TableName + "Db.Insert().ToString(); " + _NewLine;
-
-            //code += "        TradeFromTerm _TradeFromTerm = new TradeFromTerm();" + _NewLine;
-            //code += "        TradeFromTermDb _TradeFromTermDb = new TradeFromTermDb();" + _NewLine;
-            //code += "        _TradeFromTerm.TermId = Convert.ToDecimal(txtTermId.Text);" + _NewLine;
-            //code += "        _TradeFromTerm.TermName = txtTermName.Text;" + _NewLine;
-            //code += "        _TradeFromTerm.TermContent = txtTermContent.Text;" + _NewLine;
-            //code += "        _TradeFromTerm.TermCreateDate = StkGlobalDate.TextEnToDate(txtTermCreateDate.Text);" + _NewLine;
-            //code += "        _TradeFromTerm.TermUpdateDate = StkGlobalDate.TextEnToDate(txtTermUpdateDate.Text);" + _NewLine;
-            //code += "        _TradeFromTerm.TermUpdateCount = Convert.ToDecimal(txtTermUpdateCount.Text);" + _NewLine;
-            //code += "       _TradeFromTermDb._TradeFromTerm = _TradeFromTerm;" + _NewLine;
-            //code += "       _TradeFromTermDb.Update();" + _NewLine;
 
             code += "   }" + NewLine;
 

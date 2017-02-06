@@ -33,12 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreDb, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\CoreDb\CoreDb\bin\Debug\CoreDb.dll</HintPath>
-    </Reference>
     <Reference Include="FirebirdSql.Data.FirebirdClient">
-      <HintPath>..\CoreDb\CoreDb\bin\Debug\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+      <HintPath>..\..\CoreDb\CoreDb\bin\Debug\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,15 +53,19 @@
     <Compile Include="Code\Column\MappingColumnToTable.cs" />
     <Compile Include="Code\Db.cs" />
     <Compile Include="Code\File.cs" />
+    <Compile Include="Code\Name\ClassName.cs" />
     <Compile Include="Code\Name\FileName.cs" />
     <Compile Include="Code\Template\AspxFromCodeBehide.cs" />
     <Compile Include="Code\Template\AspxFromCode.cs" />
     <Compile Include="Code\Template\AspxTableCodeFilterColumn.cs" />
     <Compile Include="Code\Template\AspxTableCodeFilterColumnCodeBehide.cs" />
+    <Compile Include="Code\Template\ImageHandler.cs" />
     <Compile Include="Code\Template\CodeBase.cs" />
+    <Compile Include="Code\Template\DbCodeImage.cs" />
     <Compile Include="Code\Template\DbCodeSqlServer.cs" />
     <Compile Include="Code\Template\DbCodeFireBird.cs" />
-    <Compile Include="Code\Template\Format\NameMing.cs" />
+    <Compile Include="Code\Name\ControlName.cs" />
+    <Compile Include="Code\Template\ImageApiController.cs" />
     <Compile Include="Code\Template\JsCode.cs" />
     <Compile Include="Code\Template\PageService.cs" />
     <Compile Include="Code\Template\PageServiceCodeBehide.cs" />
@@ -106,9 +106,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Code\Cotrols\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Sql\Stk_User.sql" />
   </ItemGroup>
