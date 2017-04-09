@@ -91,7 +91,6 @@ namespace StkGenCode
             }
 
             #endregion Picture Module
- 
 
             f.Path = _path;
             var aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
@@ -248,6 +247,7 @@ namespace StkGenCode
             _constr = txtConstring.Text;
             _path = textBox1.Text;
 
+            #region
             //SetDb();
             // string _TableName = "";
 
@@ -272,27 +272,36 @@ namespace StkGenCode
             //var dsStkUserFlag = Db.GetSchemaFireBird(txtConstring.Text, "STK_USER_FLAG");
             //Gen(dsStkUserFlag, "STK_USER_FLAG", columnDropDown);
             //=================================================================================================
+            #endregion
 
             ClearFile();
-            txtConstring.Text = @"Data Source=NODE-PC;Initial Catalog=Northwind;User ID=sa;Password=P@ssw0rd";
+            txtConstring.Text = @"Data Source=HC-LAB;Initial Catalog=Northwind;User ID=sa;Password=P@ssw0rd";
 
-            //string ColumnDropDown = "CategoryID:TradeFromCategory;TermId:TradeFromTerm";
-            string ColumnDropDown = "";
 
-            DataSet _dsTradeFromFile = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Categories");
-            Gen(_dsTradeFromFile, "Categories", ColumnDropDown);
+            string ColumnDropDown = "Status:AccountStatus;";
+            DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
+            Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
 
-            DataSet Employees = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Employees");
-            Gen(Employees, "Employees", ColumnDropDown);
+            DataSet AccountStatus = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountStatus");
+            Gen(AccountStatus, "AccountStatus", ColumnDropDown);
 
-            //DataSet _dsTradeFromTerm = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromTerm");
-            //Gen(_dsTradeFromTerm, "TradeFromTerm");
+      
 
-            //DataSet _dsTradeFromCategory = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TradeFromCategory");
-            //Gen(_dsTradeFromCategory, "TradeFromCategory");
+
+
+            //string ColumnDropDown = "SupplierID:Suppliers;CategoryID:Categories;";
+            //DataSet Categories = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Categories");
+            //Gen(Categories, "Categories", ColumnDropDown);
+
+            //DataSet Suppliers = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Suppliers");
+            //Gen(Suppliers, "Suppliers", ColumnDropDown);
+
+            //DataSet Products = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Products");
+            //Gen(Products, "Products", ColumnDropDown);
+
 
             //Copy ไฟล์=================================================================================================================
-            Process.Start(@"C:\Users\Node\Desktop\copy.bat");
+            Process.Start(@"C:\GenCode\copy.bat");
 
             Close();
         }
