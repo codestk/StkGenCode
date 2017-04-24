@@ -278,15 +278,18 @@ namespace StkGenCode
             txtConstring.Text = @"Data Source=HC-LAB;Initial Catalog=Northwind;User ID=sa;Password=P@ssw0rd";
 
 
-            string ColumnDropDown = "Status:AccountStatus;";
-            DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
-            Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
+            //Ice Work
+            //string ColumnDropDown = "Status:AccountStatus;";
+            //DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
+            //Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
 
-            DataSet AccountStatus = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountStatus");
-            Gen(AccountStatus, "AccountStatus", ColumnDropDown);
-
+            //DataSet AccountStatus = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountStatus");
+            //Gen(AccountStatus, "AccountStatus", ColumnDropDown);
+            //end  ice work
       
-
+            //location work
+            
+            //end location
 
 
             //string ColumnDropDown = "SupplierID:Suppliers;CategoryID:Categories;";
