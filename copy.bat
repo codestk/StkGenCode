@@ -1,1 +1,1 @@
-Xcopy /S C:\Code C:\WorkTest\TestWebSite\TestWebSite /y
+Xcopy /S C:\Code C:\WORK\wwwroot /y

@@ -275,20 +275,24 @@ namespace StkGenCode
             #endregion
 
             ClearFile();
-            txtConstring.Text = @"Data Source=HC-LAB;Initial Catalog=Northwind;User ID=sa;Password=P@ssw0rd";
+            txtConstring.Text = @"Data Source=.;Initial Catalog=IcewarpRegister;User ID=sa;Password=P@ssw0rd";
 
 
             //Ice Work
-            //string ColumnDropDown = "Status:AccountStatus;";
-            //DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
-            //Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
+            string ColumnDropDown = "Status:AccountStatus;Id:Department";
 
-            //DataSet AccountStatus = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountStatus");
-            //Gen(AccountStatus, "AccountStatus", ColumnDropDown);
+            DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
+            Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
+
+            DataSet Department = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Department");
+            Gen(Department, "Department", ColumnDropDown);
+
+            DataSet AccountStatus = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountStatus");
+            Gen(AccountStatus, "AccountStatus", ColumnDropDown);
             //end  ice work
-      
+
             //location work
-            
+
             //end location
 
 
@@ -304,7 +308,7 @@ namespace StkGenCode
 
 
             //Copy ไฟล์=================================================================================================================
-            Process.Start(@"C:\GenCode\copy.bat");
+            Process.Start(@"D:\GitWorkSpace\StkGenCode\copy.bat");
 
             Close();
         }
