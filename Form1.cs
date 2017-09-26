@@ -275,11 +275,12 @@ namespace StkGenCode
             #endregion
 
             ClearFile();
-            txtConstring.Text = @"Data Source=.;Initial Catalog=IcewarpRegister;User ID=sa;Password=P@ssw0rd";
+            txtConstring.Text = @"Data Source=.;Initial Catalog=Icewarp;User ID=sa;Password=P@ssw0rd";
 
 
             //Ice Work
-            string ColumnDropDown = "Status:AccountStatus;Id:Department";
+            string ColumnDropDown = "DepCode:Department;Status:AccountStatus;";
+         
 
             DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
             Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
