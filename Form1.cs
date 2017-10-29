@@ -196,7 +196,7 @@ namespace StkGenCode
             //Gen("fxrates_family");
             //this.Close();
             //button1_Click(sender, e);
-            btnGen_Click(sender, e);
+            //btnGen_Click(sender, e);
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -275,21 +275,27 @@ namespace StkGenCode
             #endregion
 
             ClearFile();
-            txtConstring.Text = @"Data Source=.;Initial Catalog=Icewarp;User ID=sa;Password=P@ssw0rd";
+            txtConstring.Text = @"Data Source=.;Initial Catalog=WebApp;User ID=sa;Password=P@ssw0rd";
 
 
             //Ice Work
-            string ColumnDropDown = "DepCode:Department;Status:AccountStatus;";
-         
+            //string ColumnDropDown = "DepCode:Department;Status:AccountStatus;";
+            string ColumnDropDown = "";
+
+            //DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
+            //Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
+
+            //DataSet Department = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Department");
+            //Gen(Department, "Department", ColumnDropDown);
+
+            //DataSet AccountStatus = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountStatus");
+            //Gen(AccountStatus, "AccountStatus", ColumnDropDown);
 
             DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
             Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
 
-            DataSet Department = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Department");
-            Gen(Department, "Department", ColumnDropDown);
+            
 
-            DataSet AccountStatus = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountStatus");
-            Gen(AccountStatus, "AccountStatus", ColumnDropDown);
             //end  ice work
 
             //location work

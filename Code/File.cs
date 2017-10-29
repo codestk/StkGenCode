@@ -46,8 +46,8 @@ namespace StkGenCode.Code
                 //{
                 //    file.Delete();
                 //}
-                foreach (var file in di.GetFiles()) file.Delete();
-                foreach (var subDirectory in di.GetDirectories()) subDirectory.Delete(true);
+                //foreach (var file in di.GetFiles()) file.Delete();
+                //foreach (var subDirectory in di.GetDirectories()) subDirectory.Delete(true);
             }
             // File.Delete(path);
         }

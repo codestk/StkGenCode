@@ -18,7 +18,7 @@ namespace StkGenCode.Code.Template
             //code += "using System.Linq;" + NewLine;
             code += "using System.Web;" + NewLine;
             code += "  using System.Data;" + NewLine;
-          
+
             //code += "using System.Web.Http;" + NewLine;
 
             return code;
@@ -70,7 +70,7 @@ namespace StkGenCode.Code.Template
             code += "                {" + NewLine;
             code += "" + NewLine;
             code += "                    string extensionName = \"jpg\";" + NewLine;
-            code += "                    if (reader[\"Picture\"] != System.DBNull.Value)" + NewLine;
+            code += "                    if (reader[\"{pictureColumn}\"] != System.DBNull.Value)" + NewLine;
             code += "                    {" + NewLine;
             code += $"                        buffer = (byte[])reader[\"{pictureColumn}\"];" + NewLine;
             code += "" + NewLine;
