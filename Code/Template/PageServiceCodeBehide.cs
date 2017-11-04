@@ -12,7 +12,10 @@ namespace StkGenCode.Code.Template
             code += "using System.Linq; " + NewLine;
             code += "using System.Web; " + NewLine;
             code += "using System.Web.Services; " + NewLine;
-
+            code +="using WebApp.Business;" + NewLine;
+            code += "using StkLib.Common;" + NewLine;
+            
+            code += "using WebApp.Code.Utility.Properties.Controls;" + NewLine;
             return code;
         }
 
@@ -33,6 +36,18 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+
+        //
+
+        private string GenBeginNameSpace()
+        {
+            var code = "";
+            code += "namespace WebApp.Services  " + NewLine;
+            code += "{" + NewLine;
+            return code;
+        }
+
+
         private string GenBeginClass()
         {
             var code = "";
@@ -44,7 +59,15 @@ namespace StkGenCode.Code.Template
         private string GenEndClass()
         {
             var code = "";
-            code += "}";
+            code += "}"; //Class
+       
+            return code;
+        }
+        private string GenEndNameSpace()
+        {
+            var code = "";
+            code += "}"; //Class
+
             return code;
         }
 
@@ -306,6 +329,8 @@ namespace StkGenCode.Code.Template
 
             var code = "";
             code += GenUsign();
+
+            code += GenBeginNameSpace();
             code += GenHeadFile();
             code += GenBeginClass();
             code += GenVersionMethod();
@@ -321,7 +346,7 @@ namespace StkGenCode.Code.Template
             code += SelectAll();
             code += Select();
             code += GenEndClass(); //Close tag
-
+            code += GenEndNameSpace(); //Close tag
             FileCode.WriteFile(FileName.PageServiceCodeBehideName(), code);
         }
     }

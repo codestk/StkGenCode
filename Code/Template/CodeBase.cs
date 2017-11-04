@@ -446,7 +446,9 @@ new string[] { "System.Byte[]", "System.Guid" });
                 else if ((dataColumn.DataType.ToString() == "System.Boolean")  
                        )
                 {
-                    convertPattern = "{string bit = (" + columName + " == \"true\" ? \"1\" : \"0\");" + NewLine;
+                    //convertPattern = "{string bit = (" + columName + " == \"1\" ? \"1\" : \"0\");" + NewLine;
+
+                    convertPattern = "{int bit = (" + columName + " == \"true\" ? 1 : 0);" + NewLine;
                     convertPattern += propertieName + " =Convert.ToBoolean(bit);}" + NewLine;
                     code += string.Format(formatChekEmtyp, convertPattern) + NewLine;
                 }
@@ -454,7 +456,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                 else if ((dataColumn.DataType.ToString() == "System.Boolean") ||
                        (dataColumn.DataType.ToString() == "System.Int16"))
                 {
-                    convertPattern = "{string bit = (" + columName + " == \"true\" ? \"1\" : \"0\");" + NewLine;
+                    convertPattern = "{int bit = (" + columName + " == \"true\" ? 1 : 0);" + NewLine;
                     convertPattern += propertieName + " =Convert.ToInt16(bit);}" + NewLine;
                     code += string.Format(formatChekEmtyp, convertPattern) + NewLine;
                 }

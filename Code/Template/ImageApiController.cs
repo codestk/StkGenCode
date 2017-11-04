@@ -10,7 +10,7 @@ namespace StkGenCode.Code.Template
             code += "using System.Linq;" + NewLine;
             code += "using System.Web;" + NewLine;
             code += "using System.Web.Http;" + NewLine;
-
+            code += "using WebApp.AppCode.Business;" + NewLine;
             return code;
         }
 

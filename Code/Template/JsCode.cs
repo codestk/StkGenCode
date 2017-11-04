@@ -10,7 +10,7 @@ namespace StkGenCode.Code.Template
 
             code += "var " + TableName + "Service = {}; " + NewLine;
             code += "(function () { " + NewLine;
-            code += "    var url = \"" + FileName.PageServiceName() + "/\"; " + NewLine;
+            code += "    var url = \"Services/" + FileName.PageServiceName() + "/\"; " + NewLine;
 
             code += GenSaveColumn();
 

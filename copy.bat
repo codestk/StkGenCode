@@ -1,1 +1,1 @@
-Xcopy /S C:\Code C:\WORK\wwwroot /y
+Xcopy /S C:\Code D:\GitWorkSpace\TestWebSite\WebApp\ /y

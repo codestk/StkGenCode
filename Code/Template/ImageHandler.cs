@@ -7,8 +7,8 @@ namespace StkGenCode.Code.Template
         private string HeadFile()
         {
             string code = "";
-            string ImageHandler = ClassName.ImageHandlerName(TableName);
-            code += $"<%@ WebHandler Language =\"C#\" Class=\"{ImageHandler}\" %>" + NewLine;
+            string imageHandler = ClassName.ImageHandlerName(TableName);
+            code += $"<%@ WebHandler Language =\"C#\" Class=\"{imageHandler}\" %>" + NewLine;
             return code;
         }
 
@@ -17,8 +17,8 @@ namespace StkGenCode.Code.Template
             string code = "";
             //code += "using System.Linq;" + NewLine;
             code += "using System.Web;" + NewLine;
-            code += "  using System.Data;" + NewLine;
-
+            code += "using System.Data;" + NewLine;
+            code += "using WebApp.AppCode.Business;" + NewLine;
             //code += "using System.Web.Http;" + NewLine;
 
             return code;
@@ -27,8 +27,8 @@ namespace StkGenCode.Code.Template
         private string BeginClass()
         {
             string code = "";
-            string ImageHandler = ClassName.ImageHandlerName(TableName);
-            code += $"public class {ImageHandler} : IHttpHandler";
+            string imageHandler = ClassName.ImageHandlerName(TableName);
+            code += $"public class {imageHandler} : IHttpHandler";
             code += "{" + NewLine;
             return code;
         }
@@ -42,7 +42,7 @@ namespace StkGenCode.Code.Template
         private string ProcessRequest()
         {
             string code = "";
-            string ImageDbName = ClassName.ImageDbName(TableName);
+            string imageDbName = ClassName.ImageDbName(TableName);
             string pictureColumn = GetColumnPicture();
             code += "  public void ProcessRequest(HttpContext context)" + NewLine;
             code += "    {" + NewLine;
@@ -59,7 +59,7 @@ namespace StkGenCode.Code.Template
             code += "        }" + NewLine;
             code += "" + NewLine;
             code += "        IDataReader reader = null;" + NewLine;
-            code += $"        {ImageDbName} ImageDb = new {ImageDbName}();" + NewLine;
+            code += $"        {imageDbName} ImageDb = new {imageDbName}();" + NewLine;
             code += "        try" + NewLine;
             code += "        {" + NewLine;
             code += "            using (reader = ImageDb.GetPicture(id))" + NewLine;
@@ -70,7 +70,7 @@ namespace StkGenCode.Code.Template
             code += "                {" + NewLine;
             code += "" + NewLine;
             code += "                    string extensionName = \"jpg\";" + NewLine;
-            code += "                    if (reader[\"{pictureColumn}\"] != System.DBNull.Value)" + NewLine;
+            code += $"                    if (reader[\"{pictureColumn}\"] != System.DBNull.Value)" + NewLine;
             code += "                    {" + NewLine;
             code += $"                        buffer = (byte[])reader[\"{pictureColumn}\"];" + NewLine;
             code += "" + NewLine;

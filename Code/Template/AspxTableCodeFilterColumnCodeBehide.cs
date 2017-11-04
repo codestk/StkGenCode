@@ -6,7 +6,8 @@
 
         private string BeginClass()
         {
-            var code = "  ";
+            var code = "   namespace WebApp ";
+                       code += " { ";
             code += "public partial class " + TableName + "Filter: System.Web.UI.Page" + NewLine;
             code += "{" + NewLine;
             return code;
@@ -14,7 +15,7 @@
 
         private string EndClass()
         {
-            return "}";
+            return "} }"; // Name Space and Class
         }
 
         public override void Gen()

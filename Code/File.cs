@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 
 namespace StkGenCode.Code
 {
@@ -24,15 +25,18 @@ namespace StkGenCode.Code
                 Directory.CreateDirectory(Path);
             }
 
+
+
+            File.WriteAllText(pathFull, content, Encoding.Unicode);
             // log the error now
-            using (var writer = File.AppendText(pathFull))
-            {
-                var error = content;
-                writer.WriteLine(error);
-                //writer.WriteLine("==========================================");
-                writer.Flush();
-                writer.Close();
-            }
+            //using (var writer = File.AppendText(pathFull))
+            //{
+
+            //    writer.WriteLine(content);
+            //    //writer.WriteLine("==========================================");
+            //    writer.Flush();
+            //    writer.Close();
+            //}
             //  return userFriendlyError;
         }
 
@@ -42,12 +46,12 @@ namespace StkGenCode.Code
 
             if (di.Exists)
             {
-                //foreach (FileInfo file in di.GetFiles())
-                //{
-                //    file.Delete();
-                //}
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
                 //foreach (var file in di.GetFiles()) file.Delete();
-                //foreach (var subDirectory in di.GetDirectories()) subDirectory.Delete(true);
+                foreach (var subDirectory in di.GetDirectories()) subDirectory.Delete(true);
             }
             // File.Delete(path);
         }

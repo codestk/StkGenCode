@@ -211,7 +211,11 @@ namespace StkGenCode.Code.Template
 
                 if ((dataColumn.DataType.ToString() == "System.Int32") ||
                     (dataColumn.DataType.ToString() == "System.DateTime") ||
-                    (dataColumn.DataType.ToString() == "System.Decimal"))
+                    (dataColumn.DataType.ToString() == "System.Decimal")||
+
+                    (dataColumn.DataType.ToString() == "System.Boolean")
+                    
+                    )
                 {
                     code +=
                         $"(@l{dataColumn.ColumnName} IS NULL OR {dataColumn.ColumnName} = @l{dataColumn.ColumnName}) AND" +

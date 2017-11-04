@@ -11,7 +11,7 @@ namespace StkGenCode.Code.Template
         {
             var code = "<%@ Page Title=\"" + TableName +
                        "\" Language=\"C#\" MasterPageFile=\"~/MasterPage.master\" AutoEventWireup=\"true\" CodeFile=\"" +
-                       TableName + "Web.aspx.cs\" Inherits=\"" + TableName + "Web\" %>" + NewLine;
+                       TableName + "Web.aspx.cs\" Inherits=\"WebApp." + TableName + "Web\" %>" + NewLine;
 
             return code;
         }
@@ -70,6 +70,7 @@ namespace StkGenCode.Code.Template
         public string Validate()
         {
             var code = "";
+            string ValidateDupplicate = "";
             code += "function Validate() {" + NewLine;
             code += "var output=true;" + NewLine;
 
@@ -83,13 +84,39 @@ namespace StkGenCode.Code.Template
                 var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
                 //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
                 //string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
+             
 
+                //Save Validate promary key
+               
                 if (dataColumn.ColumnName == Ds.Tables[0].PrimaryKey[0].ToString())
                 {
                     if (Ds.Tables[0].PrimaryKey[0].AutoIncrement)
                     {
+                        //ถ้าเป็น Auto Gen ให้ข้ามไป
                         continue;
                     }
+
+
+                    //// Check Dupclicate
+                    ////==New Validate
+
+                    //ValidateDupplicate += NewLine;
+                    //ValidateDupplicate += "// Check Duplicate =============================================" + NewLine;
+                    //ValidateDupplicate += $"var itemRow = APP_USERService.Select(($(\"#{controlTextBoxName}\").val()));" + NewLine;
+
+                    //ValidateDupplicate += "if (itemRow != null) {" + NewLine;
+
+                    //ValidateDupplicate += $"Materialize.toast('{dataColumn.ColumnName} นี้มีอยู่ในระบบแล้ว', 5000, 'toastCss');" + NewLine;
+
+                    //ValidateDupplicate += "output = false;" + NewLine;
+                    //ValidateDupplicate += "}";
+                    //ValidateDupplicate += "//==============================================================" + NewLine;
+                    //ValidateDupplicate += NewLine;
+                    //ValidateDupplicate += NewLine;
+                    ////New Validate==
+
+
+
                 }
 
                 if ((dataColumn.DataType.ToString() == "System.Guid") ||
@@ -114,8 +141,20 @@ namespace StkGenCode.Code.Template
                 code += "if (CheckEmtyp($(\"#" + controlTextBoxName + "\"))) output = false;" + NewLine;
             }
 
+
+
             code += "if (output == false)" + NewLine;
             code += "Materialize.toast('please validate your input.', 3000, 'toastCss');" + NewLine;
+
+
+
+
+            code += ValidateDupplicate;
+
+
+
+
+
             code += "return output;" + NewLine;
             code += "}" + NewLine;
             return code;
@@ -133,6 +172,43 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
+
+        private string CheckDuplicate()
+        {
+            string primaryKEy = Ds.Tables[0].PrimaryKey[0].ToString();
+            var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, primaryKEy);
+          
+                if (Ds.Tables[0].PrimaryKey[0].AutoIncrement)
+                {
+                    //ถ้าเป็น Auto Gen ไม่ต้อง Check Dup
+                    return "";
+                }
+          
+
+          
+            string code = "";
+            code += " function CheckDuplicate() {" + NewLine;
+            code += "" + NewLine;
+      
+            code += "// Check Duplicate =============================================" + NewLine;
+            //code += $"var itemRow = APP_USERService.Select(($(\"#{controlTextBoxName}\").val()));" + NewLine;
+
+            //code += $"var itemRow = {TableName}Service.Select({primaryKEy});" + NewLine;
+
+            
+            code += $"var {primaryKEy} = $(\"#{controlTextBoxName}\").val();" + NewLine;
+            code += $"var itemRow = APP_USERService.Select(({primaryKEy}));" + NewLine;
+
+
+            code += "if (itemRow != null) {" + NewLine;
+            code += "Materialize.toast('UserID นี้มีอยู่ในระบบแล้ว', 5000, 'toastCss');" + NewLine;
+            code += "return true;" + NewLine;
+            code += "}//==============================================================" + NewLine;
+            code += "return false;" + NewLine;
+            code += "}" + NewLine;
+            return code;
+        }
+
         private string GenJavaScriptSave()
         {
             var columnParameter = ColumnString.GenLineString(Ds, "{0},");
@@ -141,6 +217,13 @@ namespace StkGenCode.Code.Template
             code += "function Save() {" + NewLine;
 
             code += " if (Validate() == false) { return false; }" + NewLine;
+
+
+            if (Ds.Tables[0].PrimaryKey[0].AutoIncrement==false)
+            {
+                code += "if (CheckDuplicate() == true) { return false; }" + NewLine;
+            }
+
 
             code += MapControlHtmlToValiable(Ds);
 
@@ -272,7 +355,8 @@ namespace StkGenCode.Code.Template
 
             if (HavePicture())
             {
-                code += " DropArea(CategoryID, apiService, handlerService);" + NewLine;
+                //string pictureColumn = GetColumnPicture();
+                code += $" DropArea({Ds.Tables[0].PrimaryKey[0]}, apiService, handlerService);" + NewLine;
             }
 
             code += "}" + NewLine;
@@ -334,6 +418,8 @@ namespace StkGenCode.Code.Template
 
             //function Validate ===============================================================================================
             code += Validate();
+
+            code += CheckDuplicate();
             //=============================================================================================
             code += GenJavaScriptConfirm();
 

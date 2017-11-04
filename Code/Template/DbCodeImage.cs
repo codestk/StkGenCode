@@ -9,7 +9,32 @@ namespace StkGenCode.Code.Template
             string code = "";
             code += "using System.Collections.Generic;" + NewLine;
             code += "using System.Data;" + NewLine;
+            code += "using WebApp.Code.Utility;" + NewLine;
             return code;
+        }
+
+
+        private string BeginNameSpace()
+        {
+            string code = "";
+            code+= "namespace WebApp.AppCode.Business" + NewLine;
+            code += "{" + NewLine;
+            return code;
+
+        }
+
+
+
+
+     
+
+        private string EndNameSpace()
+        {
+            string code = "";
+            
+            code += "}" + NewLine;
+            return code;
+
         }
 
         private string BeginClass()
@@ -98,7 +123,7 @@ namespace StkGenCode.Code.Template
             InnitProperties();
 
             code += Using();
-
+            code += BeginNameSpace();
             code += BeginClass();
 
             code += GetPicture();
@@ -108,7 +133,7 @@ namespace StkGenCode.Code.Template
             code += DeletePicture();
 
             code += EndClass();
-
+            code += EndNameSpace();
             FileCode.WriteFile(FileName.DbCodeImageName(), code);
         }
     }

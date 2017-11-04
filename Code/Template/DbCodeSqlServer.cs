@@ -15,6 +15,11 @@ namespace StkGenCode.Code.Template
             code += "using System.Web;" + NewLine;
             code += "using System.Web.UI.WebControls;" + NewLine;
 
+            code += "using WebApp.Business;" + NewLine;
+            code += "using WebApp.Code.Utility;" + NewLine;
+            code += "using WebApp.Code.Utility.Properties.Controls;" + NewLine;
+
+
             return code;
         }
 
@@ -23,6 +28,10 @@ namespace StkGenCode.Code.Template
             var code = "";
             //_code = "namespace XXXXX.Code.Bu" + _NewLine;
             //_code += "{" + _NewLine;
+            code = "namespace WebApp.Business" + NewLine;
+            code += "{" + NewLine;
+
+
             code += "public class  " + TableName + "Db: DataAccess" + NewLine;
             code += "{" + NewLine;
 
@@ -31,8 +40,8 @@ namespace StkGenCode.Code.Template
 
         private string GenEndNameSpaceAndClass()
         {
-            var code = "}" + NewLine;
-            //_code += " }"; Close Name
+            var code = "} " + NewLine;   //Clos Class
+            code += " }";  // Close Name
 
             return code;
         }

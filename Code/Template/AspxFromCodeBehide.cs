@@ -28,13 +28,31 @@
             return "}";
         }
 
+        private string BeginNameSpace()
+        {
+            var code = "  ";
+            code += "namespace WebApp" + NewLine;
+            code += "{" + NewLine;
+
+            return code;
+        }
+
+        private string EndNameSpace()
+        {
+            return "}";
+        }
+
         public override void Gen()
         {
             var code = "";
             code += GenUsing();
+
+
+            code += BeginNameSpace();
             code += BeginClass();
 
             code += EndClass();
+            code += EndNameSpace();
 
             InnitProperties();
 

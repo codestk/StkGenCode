@@ -22,6 +22,9 @@ namespace StkGenCode
         public Form1()
         {
             InitializeComponent();
+
+
+            
         }
 
         /// <summary>
@@ -59,7 +62,7 @@ namespace StkGenCode
 
             if (aspxFromCodeaspx.HavePicture())
             {
-                var ApiControllerPath = _path + @"App_Code\Services\Api\";
+                var ApiControllerPath = _path + @"AppCode\Services\Api\";
                 f.Path = ApiControllerPath;
                 var ApiController = new ImageApiController
                 {
@@ -79,7 +82,7 @@ namespace StkGenCode
                 };
                 Handler.Gen();
 
-                var DbCodeImagePath = _path + @"App_Code\Business\"; ;
+                var DbCodeImagePath = _path + @"AppCode\Business\"; ;
                 f.Path = DbCodeImagePath;
                 var _DbCodeImage = new DbCodeImage
                 {
@@ -114,6 +117,9 @@ namespace StkGenCode
             //_AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
             aspxTableCodeFilterColumnCodeBehide.Gen();
 
+            //Asmx Service
+            string pathPageServiceAsmx = _path + @"\Services\";
+            f.Path = pathPageServiceAsmx;
             var pageService = new PageService
             {
                 FileCode = f,
@@ -122,8 +128,11 @@ namespace StkGenCode
             };
             pageService.Gen();
 
-            var pathPageServiceCodeBehide = _path + @"App_Code\Services\";
+            //var pathPageServiceCodeBehide = _path + @"App_Code\Services\";
+
+            var pathPageServiceCodeBehide = _path + @"\Services\";
             f.Path = pathPageServiceCodeBehide;
+            //f.Path = pathPageServiceCodeBehide;
             var pageServiceCodeBehide = new PageServiceCodeBehide
             {
                 FileCode = f,
@@ -156,7 +165,7 @@ namespace StkGenCode
 
             //========Folder Code
 
-            var pathBuCode = _path + @"App_Code\Business\";
+            var pathBuCode = _path + @"AppCode\Business\";
             f.Path = pathBuCode;
             var pcode = new PropertiesCode
             {
@@ -196,7 +205,8 @@ namespace StkGenCode
             //Gen("fxrates_family");
             //this.Close();
             //button1_Click(sender, e);
-            //btnGen_Click(sender, e);
+            btnGen_Click(sender, e);
+            //btnGen_Click()
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -276,6 +286,7 @@ namespace StkGenCode
 
             ClearFile();
             txtConstring.Text = @"Data Source=.;Initial Catalog=WebApp;User ID=sa;Password=P@ssw0rd";
+            txtConstring.Text = @"Data Source=.;Initial Catalog=App;User ID=sa;Password=P@ssw0rd";
 
 
             //Ice Work
@@ -291,10 +302,12 @@ namespace StkGenCode
             //DataSet AccountStatus = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountStatus");
             //Gen(AccountStatus, "AccountStatus", ColumnDropDown);
 
-            DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
-            Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
+            //DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
+            //Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
 
-            
+            DataSet APP_USER = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "APP_USER");
+            Gen(APP_USER, "APP_USER", ColumnDropDown);
+
 
             //end  ice work
 
@@ -316,7 +329,7 @@ namespace StkGenCode
 
             //Copy ไฟล์=================================================================================================================
             Process.Start(@"D:\GitWorkSpace\StkGenCode\copy.bat");
-
+            Console.ReadLine();
             Close();
         }
 

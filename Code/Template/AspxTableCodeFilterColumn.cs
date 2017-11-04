@@ -89,7 +89,7 @@ namespace StkGenCode.Code.Template
         {
             var code = "<%@ Page Title=\"" + TableName +
               "\" Language=\"C#\" MasterPageFile=\"~/MasterPage.master\" AutoEventWireup=\"true\" CodeFile=\"" +
-              FileName.AspxTableCodeFilterColumnBehineName() + "\" Inherits=\"" + TableName + "Filter\" %>" +
+              FileName.AspxTableCodeFilterColumnBehineName() + "\" Inherits=\"WebApp." + TableName + "Filter\" %>" +
               NewLine;
 
             return code;
@@ -183,8 +183,14 @@ namespace StkGenCode.Code.Template
                 if ((dataColumn.DataType.ToString() == "System.Boolean") ||
                  (dataColumn.DataType.ToString() == "System.Int16"))
                 {
-                    //chek bok
-                    code += $"{dataColumn.ColumnName} ='';" + NewLine;
+                    //chek bok false  == ''
+
+                    code += $" if ({dataColumn.ColumnName}== false)" + NewLine;  
+                     code += " {" + NewLine;
+                    code += $"{dataColumn.ColumnName} = ''";
+
+                    code += " }" + NewLine;
+                    //code += $"{dataColumn.ColumnName} ='';" + NewLine;
                 }
             }
 
@@ -874,7 +880,7 @@ namespace StkGenCode.Code.Template
                     }
                     else if (dataColumn.DataType.ToString() == "System.Byte[]")
                     {
-                        code += "TrTempplate +=\"<img id='imgPreview' src='ImageHandler.ashx?Q=\" + result[key].CategoryID + \"' height='131' width='174' onerror=this.src='Images/no-image.png' alt='Image preview...'>\"" + NewLine;
+                        code += $"TrTempplate +=\"<img id='imgPreview' src='{TableName}ImageHandler.ashx?Q=\" + result[key].{dataColumn.Table.PrimaryKey[0].ToString()} + \"' height='131' width='174' onerror=this.src='Images/no-image.png' alt='Image preview...'>\"" + NewLine;
                     }
 
                     // TrTempplate += "<img id='imgPreview' src='ImageHandler.ashx?Q=" + result[key].CategoryID + "' height='131' width='174' onerror=this.src='Images/no-image.png' alt='Image preview...'>";

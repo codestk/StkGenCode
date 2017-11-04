@@ -103,7 +103,7 @@ namespace StkGenCode.Code.Name
         public string PageServiceCodeBehideName()
         {
             //AutoCompleteService.asmx
-            string name = $"{TableName}Service.cs";
+            string name = $"{TableName}Service.asmx.cs";
             return name;
         }
 

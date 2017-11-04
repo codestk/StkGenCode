@@ -14,19 +14,24 @@ namespace StkGenCode.Code.Template
         {
             var code = "";
             code += "using System;" + NewLine;
+            code += "using WebApp.Code.Utility;" + NewLine;
             //_code += "using System.Collections.Generic;" + _NewLine;
             //_code += "using System.Data;" + _NewLine;
             //_code += "using System.Linq;" + _NewLine;
             //_code += "using System.Web;" + _NewLine;
-
+          
             return code;
         }
 
         private string GenBeginNameSpaceAndClass()
         {
-            var code = "";
-            //_code = "namespace XXXXX.Code.Bu" + _NewLine;
-            //_code += "{" + _NewLine;
+            
+   
+
+
+        var code = "";
+            code = "namespace WebApp.Business" + NewLine;
+            code += "{" + NewLine;
             code += "public class  " + TableName + NewLine + " : BaseProperties";
             code += "{" + NewLine;
 
@@ -35,7 +40,7 @@ namespace StkGenCode.Code.Template
 
         private string GenEndNameSpaceAndClass()
         {
-            var code = "}" + NewLine;
+            var code = "} }" + NewLine;
             //_code += " }"; //End Name Space
 
             return code;
