@@ -28,6 +28,9 @@ namespace StkGenCode.Code.Template
 
             code += RederTable_Pagger();
 
+
+            code += AutocompleteMutilColumnJs();
+
             code += BindEditTableJs();
 
             code += SetPaggerJs();
@@ -110,7 +113,7 @@ namespace StkGenCode.Code.Template
             {
                 foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
                 {
-                    foreach (var map in MappingColumn)
+                    foreach (var map in DropColumns)
                     {
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
                         {
@@ -163,7 +166,7 @@ namespace StkGenCode.Code.Template
 
             code += LeanModalJs(); //
 
-            code += AutocompleteMutilColumnJs();
+            //code += AutocompleteMutilColumnJs();
 
             code += "});//End ready " + NewLine;
 
@@ -245,13 +248,16 @@ namespace StkGenCode.Code.Template
 
             code += "SetPagger(totalRecord);" + NewLine;
 
+
+
+            code += "AutoCompleteEditMode();";
             //code += "$('select').material_select();" + _NewLine;
 
             if (HaveDropDown())
             {
                 foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
                 {
-                    foreach (var map in MappingColumn)
+                    foreach (var map in DropColumns)
                     {
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
                         {
@@ -374,6 +380,22 @@ namespace StkGenCode.Code.Template
             code += " " + NewLine;
             code += "var sp = $(this).find(\"span\"); " + NewLine;
             code += "var di = $(this).find(\"div\"); " + NewLine;
+
+
+            //สลับ Datepiker ให้ขึ้นถูกอัน
+            code += " var $input =$(this).find(\".datepicker\").pickadate();" + NewLine;
+            code += "if ($input.length != 0) {" + NewLine;
+            code += "    // Use the picker object directly." + NewLine;
+            code += "   var picker = $input.pickadate('picker');" + NewLine;
+            code += "" + NewLine;
+            code += "    picker.set('select', sp[\"0\"].innerText);" + NewLine;
+            code += " }" + NewLine;
+            //===========================================================================
+
+
+
+
+
             code += "sp.hide(); " + NewLine;
             code += "di.show(); " + NewLine;
             code += " " + NewLine;
@@ -654,6 +676,9 @@ namespace StkGenCode.Code.Template
             var classIds = GetColumnParameter(".{0},");
             classIds = classIds.TrimEnd(',');
             //code += "$(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
+
+
+            code += "function AutoCompleteEditMode() { " + NewLine;
             code += "$(\"" + classIds + "\").autocomplete({ " + NewLine;
 
             code += " " + NewLine;
@@ -679,6 +704,7 @@ namespace StkGenCode.Code.Template
             code += "$(this).removeClass(\"ui-corner-top\").addClass(\"ui-corner-all\"); " + NewLine;
             code += "} " + NewLine;
             code += "});" + NewLine;
+            code += "} " + NewLine;
             return code;
         }
 
@@ -904,7 +930,7 @@ namespace StkGenCode.Code.Template
                     {
                         code += "TrTempplate +=\"<input data-column-id='" + dataColumn.ColumnName +
                           "' type='text' MaxLength='" + dataColumn.MaxLength + "' length='" + dataColumn.MaxLength +
-                          "' class='validate truncate" + dataColumn.ColumnName + "' value='\"+result[key]." +
+                          "' class='validate truncate " + dataColumn.ColumnName + "' value='\"+result[key]." +
                           dataColumn.ColumnName + "+\"' style='height: unset; margin: 0px;'>\";" + NewLine;
                     }
                     else if (dataColumn.DataType.ToString() == "System.Int32")

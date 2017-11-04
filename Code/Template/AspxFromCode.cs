@@ -40,7 +40,7 @@ namespace StkGenCode.Code.Template
         {
             var controlDropDownName = string.Format(ControlName.FormatDropDownName, columnname);
             var code = "";
-            foreach (var map in MappingColumn)
+            foreach (var map in DropColumns)
             {
                 if ((map.ColumnName == columnname) && (map.TableName != TableName))
                 {
@@ -127,7 +127,7 @@ namespace StkGenCode.Code.Template
                 }
 
                 //For Dropw
-                if (MappingColumn != null)
+                if (DropColumns != null)
                 {
                     var codedrp = GenValidateDropDown(dataColumn.ColumnName);
                     code += codedrp;
@@ -383,8 +383,8 @@ namespace StkGenCode.Code.Template
             {
                 string ImageController = ClassName.ImageControllerName(TableName);
                 string ImageHandler = FileName.ImageHandlerName();
-                code += $"  var apiService = \"api/{ImageController}/\";";
-                code += $"        var handlerService = \"{ImageHandler}\";";
+                code += $"  var apiService = \"api/{ImageController}/\";" + NewLine;
+                code += $"        var handlerService = \"{ImageHandler}\";" + NewLine;
             }
 
             code += " $(document).ready(function () " + NewLine;
@@ -399,19 +399,27 @@ namespace StkGenCode.Code.Template
             code += "//For dropdown" + NewLine;
             code += BindSelectOption();
 
-            code += "BindQueryString();" + NewLine;
+           
             if (HaveDropDown())
             {
                 code += "$('select').material_select(); " + NewLine;
             }
 
+            //-----------------------------------------------------------------------------------
             code += "$('.datepicker').pickadate({" + NewLine;
             code += "selectMonths: true, // Creates a dropdown to control month" + NewLine;
             code += "selectYears: 15 ,// Creates a dropdown of 15 years to control year," + NewLine;
             code += "format: 'd mmm yyyy'," + NewLine;
             code += "});" + NewLine;
 
+
+            code += "BindQueryString();" + NewLine;
+
+
             code += " }); " + NewLine;
+            //------------------------------------------------------------------------------------
+           
+
 
             //ForceNumberTextBox==============================================================================================
             code += ForceNumberTextBox(true);
@@ -539,7 +547,7 @@ namespace StkGenCode.Code.Template
             {
                 foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
                 {
-                    foreach (var map in MappingColumn)
+                    foreach (var map in DropColumns)
                     {
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
                         {

@@ -33,16 +33,16 @@ namespace StkGenCode
         {
             var f = new FileCode { Path = _path };
 
-            List<MappingColumn> mappingColumn = null;
+            List<MappingColumn> dropColumnsColumn = null;
             if (columnDropDown != "")
-                mappingColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
+                dropColumnsColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
 
             var aspxFromCodeaspx = new AspxFromCode
             {
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName,
-                MappingColumn = mappingColumn
+                DropColumns = dropColumnsColumn
             };
             aspxFromCodeaspx.Gen();
 
@@ -51,7 +51,7 @@ namespace StkGenCode
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName,
-                MappingColumn = mappingColumn
+                DropColumns = dropColumnsColumn
             };
             aspxFromCodeBehide.Gen();
 
@@ -98,7 +98,7 @@ namespace StkGenCode
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName,
-                MappingColumn = mappingColumn
+                DropColumns = dropColumnsColumn
                 //AspxFromCodeaspx = _AspxFromCodeaspx
             };
             aspxTableCodeFilterColumn.Gen();
@@ -109,7 +109,7 @@ namespace StkGenCode
                     FileCode = f,
                     Ds = _ds,
                     TableName = tableName,
-                    MappingColumn = mappingColumn
+                    DropColumns = dropColumnsColumn
                 };
             //_AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
             aspxTableCodeFilterColumnCodeBehide.Gen();

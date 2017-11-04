@@ -24,7 +24,7 @@ new string[] { "System.Byte[]", "System.Guid" });
         ///     ใช้ สำหรับ Gen Code Dropdown list
         ///     ColumnName:Table
         /// </summary>
-        public List<MappingColumn> MappingColumn { get; set; }
+        public List<MappingColumn> DropColumns { get; set; }
 
         public abstract void Gen();
 
@@ -69,7 +69,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                 var controlChekBoxName = string.Format(ControlName.FormatChekBoxName, dataColumn.ColumnName);
 
                 string currentControl="";
-                if (MappingColumn != null)
+                if (DropColumns != null)
                 {
                     var codedrp = GenDropDown(dataColumn.ColumnName, columnSize);
 
@@ -248,71 +248,7 @@ new string[] { "System.Byte[]", "System.Guid" });
 
         #region Map
 
-        //protected string MapControlToProPerties(DataSet ds, bool commentKey = false)
-        //{
-        //    var code = "";
-
-        //    foreach (DataColumn dataColumn in ds.Tables[0].Columns)
-        //    {
-        //        var propertieName = string.Format(NameMing.FormatpropertieName, TableName, dataColumn.ColumnName);
-        //        var controlTextBoxName = string.Format(NameMing.FormatTextBoxName, dataColumn.ColumnName);
-        //        var controlChekBoxName = string.Format(NameMing.FormatChekBoxName, dataColumn.ColumnName);
-
-        //        if (commentKey)
-        //        {
-        //            var primary = (dataColumn.ColumnName == ds.Tables[0].PrimaryKey[0].ToString()) &&
-        //                          ds.Tables[0].PrimaryKey[0].AutoIncrement;
-
-        //            if (primary)
-        //            {
-        //                // continue;
-        //                code += "// ";
-        //            }
-        //        }
-
-        //        //For Drop Down List
-        //        if (MappingColumn != null)
-        //        {
-        //            var codedrp = MapDropDownToProPerties(dataColumn);
-        //            code += codedrp;
-        //            if (codedrp != "")
-        //            {
-        //                continue;
-        //            }
-        //        }
-
-        //        if (dataColumn.DataType.ToString() == "System.Guid")
-        //        {
-        //            continue;
-        //        }
-
-        //        if (dataColumn.DataType.ToString() == "System.Int32")
-        //        {
-        //            code += propertieName + " = Convert.ToInt32(" + controlTextBoxName + ".Text);" + NewLine;
-        //        }
-        //        else if (dataColumn.DataType.ToString() == "System.Decimal")
-        //        {
-        //            code += propertieName + " =  Convert.ToDecimal (" + controlTextBoxName + ".Text);" + NewLine;
-        //        }
-        //        else if (dataColumn.DataType.ToString() == "System.DateTime")
-        //        {
-        //            code += propertieName + " =StkGlobalDate.TextEnToDate(" + controlTextBoxName + ".Text);" + NewLine;
-        //        }
-        //        else if ((dataColumn.DataType.ToString() == "System.Boolean") ||
-        //                 (dataColumn.DataType.ToString() == "System.Int16"))
-        //        {
-        //            // code += "_" + _TableName + "." + _DataColumn.ColumnName + " =Convert.ToInt16(" + controlChekBoxName  + ".Checked);" + _NewLine;
-        //            code += propertieName + " =Convert.ToInt16(" + controlChekBoxName + ".Checked);" + NewLine;
-        //        }
-        //        else
-        //        {
-        //            code += propertieName + " =  " + controlTextBoxName + ".Text;" + NewLine;
-        //        }
-        //    }
-
-        //    return code;
-        //}
-
+      
         protected string MapProPertiesToControl(DataSet ds, bool commentKey = false)
         {
             var code = "";
@@ -340,6 +276,23 @@ new string[] { "System.Byte[]", "System.Guid" });
                     code += $"$('#{controlChekBoxName}').prop('checked', {propertieName}); " +
                             NewLine;
                 }
+                else if (dataColumn.DataType.ToString() == "System.DateTime")
+                {
+
+
+                    code += $"var $input = $('#{controlTextBoxName}').pickadate() " +
+                            NewLine;
+
+                    code += $"// Use the picker object directly. " +
+                            NewLine;
+                    code += $"var picker = $input.pickadate('picker'); " +
+                            NewLine;
+                    code += $"picker.set('select',{propertieName}) " +
+                            NewLine;
+
+                }
+
+
                 else
                 {
                     //input
@@ -482,7 +435,7 @@ new string[] { "System.Byte[]", "System.Guid" });
             {
                 foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
                 {
-                    foreach (var map in MappingColumn)
+                    foreach (var map in DropColumns)
                     {
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
                         {
@@ -505,7 +458,7 @@ new string[] { "System.Byte[]", "System.Guid" });
             {
                 foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
                 {
-                    foreach (var map in MappingColumn)
+                    foreach (var map in DropColumns)
                     {
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
                         {
@@ -544,7 +497,7 @@ new string[] { "System.Byte[]", "System.Guid" });
         {
             var controlDropDownName = string.Format(ControlName.FormatDropDownName, columnname);
             var code = "";
-            foreach (var map in MappingColumn)
+            foreach (var map in DropColumns)
             {
                 if ((map.ColumnName == columnname) && (map.TableName != TableName))
                 {
@@ -565,7 +518,7 @@ new string[] { "System.Byte[]", "System.Guid" });
 
         public bool HaveDropDown()
         {
-            if (MappingColumn == null)
+            if (DropColumns == null)
                 return false;
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
@@ -582,10 +535,10 @@ new string[] { "System.Byte[]", "System.Guid" });
         {
             var isDropDown = false;
 
-            if (MappingColumn == null)
+            if (DropColumns == null)
                 return false;
 
-            foreach (var map in MappingColumn)
+            foreach (var map in DropColumns)
             {
                 if ((map.ColumnName == column.ColumnName) && (map.TableName != TableName))
                 {
@@ -605,7 +558,7 @@ new string[] { "System.Byte[]", "System.Guid" });
         protected string DropDownFindByValue(string columnName)
         {
             var code = "";
-            foreach (var map in MappingColumn)
+            foreach (var map in DropColumns)
             {
                 if ((map.ColumnName == columnName) && (map.TableName != TableName))
                 {
@@ -631,7 +584,7 @@ new string[] { "System.Byte[]", "System.Guid" });
         public string MapDropDownToProPerties(DataColumn column)
         {
             var code = "";
-            foreach (var map in MappingColumn)
+            foreach (var map in DropColumns)
             {
                 if ((map.ColumnName == column.ColumnName) && (map.TableName != TableName))
                 {
@@ -682,7 +635,7 @@ new string[] { "System.Byte[]", "System.Guid" });
 
                 foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
                 {
-                    foreach (var map in MappingColumn)
+                    foreach (var map in DropColumns)
                     {
                         if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
                         {
