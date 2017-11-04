@@ -22,9 +22,6 @@ namespace StkGenCode
         public Form1()
         {
             InitializeComponent();
-
-
-            
         }
 
         /// <summary>
@@ -288,7 +285,6 @@ namespace StkGenCode
             txtConstring.Text = @"Data Source=.;Initial Catalog=WebApp;User ID=sa;Password=P@ssw0rd";
             txtConstring.Text = @"Data Source=.;Initial Catalog=App;User ID=sa;Password=P@ssw0rd";
 
-
             //Ice Work
             //string ColumnDropDown = "DepCode:Department;Status:AccountStatus;";
             string ColumnDropDown = "";
@@ -308,13 +304,11 @@ namespace StkGenCode
             DataSet APP_USER = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "APP_USER");
             Gen(APP_USER, "APP_USER", ColumnDropDown);
 
-
             //end  ice work
 
             //location work
 
             //end location
-
 
             //string ColumnDropDown = "SupplierID:Suppliers;CategoryID:Categories;";
             //DataSet Categories = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Categories");
@@ -325,7 +319,6 @@ namespace StkGenCode
 
             //DataSet Products = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Products");
             //Gen(Products, "Products", ColumnDropDown);
-
 
             //Copy ไฟล์=================================================================================================================
             Process.Start(@"D:\GitWorkSpace\StkGenCode\copy.bat");
