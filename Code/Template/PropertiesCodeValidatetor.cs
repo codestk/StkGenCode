@@ -6,13 +6,8 @@ namespace StkGenCode.Code.Template
     {
         private string Usign()
         {
-            var code = "//https://github.com/JeremySkinner/FluentValidation/wiki/a.-Index";
-            code += "using System;" + NewLine;
-            code += "using WebApp.Code.Utility;" + NewLine;
-            //_code += "using System.Collections.Generic;" + _NewLine;
-            //_code += "using System.Data;" + _NewLine;
-            //_code += "using System.Linq;" + _NewLine;
-            //_code += "using System.Web;" + _NewLine;
+            var code = "//https://github.com/JeremySkinner/FluentValidation/wiki/a.-Index" + NewLine;
+
             code += "using FluentValidation;" + NewLine;
             code += "using WebApp.Business;" + NewLine;
             return code;
@@ -58,7 +53,7 @@ namespace StkGenCode.Code.Template
                     Ds.Tables[0].PrimaryKey[0].AutoIncrement)
                     continue;
 
-                code += $" RuleFor({TableName} => {TableName}.{dataColumn.ColumnName}).NotEmpty();" + NewLine;
+                code += $" RuleFor({TableName.ToLowerInvariant()} => {TableName.ToLowerInvariant()}.{dataColumn.ColumnName}).NotEmpty();" + NewLine;
             }
 
             code += "" + NewLine;
