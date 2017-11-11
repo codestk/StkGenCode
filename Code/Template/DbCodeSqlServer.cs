@@ -1,5 +1,5 @@
-﻿using StkGenCode.Code.Template.Format;
-using System.Data;
+﻿using System.Data;
+using StkGenCode.Code.Name;
 
 namespace StkGenCode.Code.Template
 {

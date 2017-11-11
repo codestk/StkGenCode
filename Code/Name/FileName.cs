@@ -76,6 +76,14 @@ namespace StkGenCode.Code.Name
             string name = $"{TableName}.cs";
             return name;
         }
+
+        public string PropertiesValidateName()
+        {
+            string name = $"{TableName}Validatetor.cs";
+            return name;
+        }
+
+
         #endregion
         #region Service
         //var apiService = "api/CatImageController/";

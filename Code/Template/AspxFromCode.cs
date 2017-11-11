@@ -1,6 +1,5 @@
 ﻿using StkGenCode.Code.Column;
 using StkGenCode.Code.Name;
-using StkGenCode.Code.Template.Format;
 using System.Data;
 
 namespace StkGenCode.Code.Template

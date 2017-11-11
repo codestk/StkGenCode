@@ -70,6 +70,7 @@
     <Compile Include="Code\Template\PageService.cs" />
     <Compile Include="Code\Template\PageServiceCodeBehide.cs" />
     <Compile Include="Code\Template\PropertiesCode.cs" />
+    <Compile Include="Code\Template\PropertiesCodeValidatetor.cs" />
     <Compile Include="Code\Template\StoreProCode.cs" />
     <Compile Include="Code\Type\DbType.cs" />
     <Compile Include="Form1.cs">

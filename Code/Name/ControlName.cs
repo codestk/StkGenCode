@@ -1,4 +1,4 @@
-﻿namespace StkGenCode.Code.Template.Format
+﻿namespace StkGenCode.Code.Name
 {
     public class ControlName
     {

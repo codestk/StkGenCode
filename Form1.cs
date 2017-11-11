@@ -46,6 +46,8 @@ namespace StkGenCode
             };
             aspxFromCodeaspx.Gen();
 
+
+
             var aspxFromCodeBehide = new AspxFromCodeBehide
             {
                 FileCode = f,
@@ -172,6 +174,18 @@ namespace StkGenCode
             };
             pcode.Gen();
 
+           
+            var pathPropertiesCValidate = _path + @"AppCode\Business\";
+            f.Path = pathPropertiesCValidate;
+            var propertiesCodeValidatetor = new PropertiesCodeValidatetor() 
+            {
+                FileCode = f,
+                Ds = _ds,
+                TableName = tableName
+            };
+            propertiesCodeValidatetor.Gen();
+
+
             //DbCode _DbCode = new DbCode();
             //_DbCode._FileCode = F;
             //_DbCode._ds = _ds;
@@ -211,18 +225,7 @@ namespace StkGenCode
             //string con = @"Server=localhost;User=SYSDBA;Password=P@ssw0rd;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
             //var _ds = Db.GetDataFireBird(con, "MPO_FISH");
 
-#pragma warning disable CS0219 // The variable 'sqlServer' is assigned but its value is never used
-#pragma warning disable CS0219 // The variable 'sqlServer' is assigned but its value is never used
-            //string sqlServer = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
-#pragma warning disable CS0219 // The variable 'sqlFireBird' is assigned but its value is never used
-#pragma warning restore CS0219 // The variable 'sqlServer' is assigned but its value is never used
-
-#pragma warning disable CS0219 // The variable 'sqlFireBird' is assigned but its value is never used
-            var sqlFireBird =
-                "select rdb$relation_name as TABLE_NAME from rdb$relations where rdb$view_blr is null  and(rdb$system_flag is null or rdb$system_flag = 0);";
-#pragma warning restore CS0219 // The variable 'sqlFireBird' is assigned but its value is never used
-#pragma warning restore CS0219 // The variable 'sqlServer' is assigned but its value is never used
-#pragma warning restore CS0219 // The variable 'sqlFireBird' is assigned but its value is never used
+ 
 
             //DataAccessLayer Db = null;
             //DataSet ds = null;
@@ -301,8 +304,12 @@ namespace StkGenCode
             //DataSet AccountRegistration = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "AccountRegistration");
             //Gen(AccountRegistration, "AccountRegistration", ColumnDropDown);
 
-            DataSet APP_USER = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "APP_USER");
-            Gen(APP_USER, "APP_USER", ColumnDropDown);
+            //DataSet APP_USER = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "APP_USER");
+            //Gen(APP_USER, "APP_USER", ColumnDropDown);
+
+
+            DataSet TestValidate = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TestValidate");
+            Gen(TestValidate, "TestValidate", ColumnDropDown);
 
             //end  ice work
 

@@ -4,11 +4,7 @@ namespace StkGenCode.Code.Template
 {
     public class PropertiesCode : CodeBase
     {
-        //public FileCode _FileCode;
-        //public DataSet _ds;
-        //public string _TableName;
-
-        //private string _NewLine = " \r\n";
+       
 
         private string GenUsign()
         {
@@ -19,7 +15,8 @@ namespace StkGenCode.Code.Template
             //_code += "using System.Data;" + _NewLine;
             //_code += "using System.Linq;" + _NewLine;
             //_code += "using System.Web;" + _NewLine;
-          
+            code += "using FluentValidation;" + NewLine;
+            code += "using WebApp.Business;" + NewLine;
             return code;
         }
 

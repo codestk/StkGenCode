@@ -1,6 +1,5 @@
 ﻿using StkGenCode.Code.Column;
 using StkGenCode.Code.Name;
-using StkGenCode.Code.Template.Format;
 using System.Collections.Generic;
 using System.Data;
 
@@ -68,7 +67,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                 var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
                 var controlChekBoxName = string.Format(ControlName.FormatChekBoxName, dataColumn.ColumnName);
 
-                string currentControl="";
+                string currentControl = "";
                 if (DropColumns != null)
                 {
                     var codedrp = GenDropDown(dataColumn.ColumnName, columnSize);
@@ -167,7 +166,6 @@ new string[] { "System.Byte[]", "System.Guid" });
                     code += "                </div>" + NewLine;
                     code += "                <div id=\"status\"></div>" + NewLine;
                     code += "            </div>" + NewLine;
-
                 }
                 else
                 {
@@ -184,11 +182,10 @@ new string[] { "System.Byte[]", "System.Guid" });
                         code += "<label for=\"" + currentControl + "\">" + dataColumn.ColumnName +
                                 " </label> " + NewLine;
                     }
-                
-                code += " </div> " + NewLine;
+
+                    code += " </div> " + NewLine;
                 }
             }
-
 
             return code;
         }
@@ -248,7 +245,6 @@ new string[] { "System.Byte[]", "System.Guid" });
 
         #region Map
 
-      
         protected string MapProPertiesToControl(DataSet ds, bool commentKey = false)
         {
             var code = "";
@@ -278,8 +274,6 @@ new string[] { "System.Byte[]", "System.Guid" });
                 }
                 else if (dataColumn.DataType.ToString() == "System.DateTime")
                 {
-
-
                     code += $"var $input = $('#{controlTextBoxName}').pickadate() " +
                             NewLine;
 
@@ -289,10 +283,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                             NewLine;
                     code += $"picker.set('select',{propertieName}) " +
                             NewLine;
-
                 }
-
-
                 else
                 {
                     //input
@@ -396,7 +387,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                 //    convertPattern += propertieName + " =Convert.ToInt16(bit);}" + NewLine;
                 //    code += string.Format(formatChekEmtyp, convertPattern) + NewLine;
                 //}
-                else if ((dataColumn.DataType.ToString() == "System.Boolean")  
+                else if ((dataColumn.DataType.ToString() == "System.Boolean")
                        )
                 {
                     //convertPattern = "{string bit = (" + columName + " == \"1\" ? \"1\" : \"0\");" + NewLine;
@@ -405,7 +396,6 @@ new string[] { "System.Byte[]", "System.Guid" });
                     convertPattern += propertieName + " =Convert.ToBoolean(bit);}" + NewLine;
                     code += string.Format(formatChekEmtyp, convertPattern) + NewLine;
                 }
-
                 else if ((dataColumn.DataType.ToString() == "System.Boolean") ||
                        (dataColumn.DataType.ToString() == "System.Int16"))
                 {
@@ -413,7 +403,6 @@ new string[] { "System.Byte[]", "System.Guid" });
                     convertPattern += propertieName + " =Convert.ToInt16(bit);}" + NewLine;
                     code += string.Format(formatChekEmtyp, convertPattern) + NewLine;
                 }
-
                 else
                 {
                     convertPattern = propertieName + " =  " + columName + "; " + NewLine;
