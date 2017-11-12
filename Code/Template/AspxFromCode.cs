@@ -196,7 +196,7 @@ namespace StkGenCode.Code.Template
 
             
             code += $"var {primaryKEy} = $(\"#{controlTextBoxName}\").val();" + NewLine;
-            code += $"var itemRow = APP_USERService.Select(({primaryKEy}));" + NewLine;
+            code += $"var itemRow = {TableName}Service.Select(({primaryKEy}));" + NewLine;
 
 
             code += "if (itemRow != null) {" + NewLine;

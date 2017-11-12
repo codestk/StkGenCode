@@ -53,7 +53,21 @@ namespace StkGenCode.Code.Template
                     Ds.Tables[0].PrimaryKey[0].AutoIncrement)
                     continue;
 
-                code += $" RuleFor({TableName.ToLowerInvariant()} => {TableName.ToLowerInvariant()}.{dataColumn.ColumnName}).NotEmpty();" + NewLine;
+
+                string commentPrefix ="";
+                if (dataColumn.AllowDBNull == true)
+                {
+                    commentPrefix = "";
+                }
+
+                else
+                {
+                    commentPrefix = "//";
+
+                }
+
+
+                code += commentPrefix+$" RuleFor({TableName.ToLowerInvariant()} => {TableName.ToLowerInvariant()}.{dataColumn.ColumnName}).NotEmpty();" + NewLine;
             }
 
             code += "" + NewLine;
