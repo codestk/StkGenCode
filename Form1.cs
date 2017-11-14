@@ -311,6 +311,12 @@ namespace StkGenCode
             DataSet TestValidate = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TestValidate");
             Gen(TestValidate, "TestValidate", ColumnDropDown);
 
+
+
+            DataSet Source = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Source");
+            Gen(Source, "Source", ColumnDropDown);
+             
+
             //end  ice work
 
             //location work

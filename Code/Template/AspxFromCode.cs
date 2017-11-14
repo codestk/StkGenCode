@@ -190,18 +190,17 @@ namespace StkGenCode.Code.Template
             code += "" + NewLine;
       
             code += "// Check Duplicate =============================================" + NewLine;
-            //code += $"var itemRow = APP_USERService.Select(($(\"#{controlTextBoxName}\").val()));" + NewLine;
-
-            //code += $"var itemRow = {TableName}Service.Select({primaryKEy});" + NewLine;
-
+          
             
             code += $"var {primaryKEy} = $(\"#{controlTextBoxName}\").val();" + NewLine;
             code += $"var itemRow = {TableName}Service.Select(({primaryKEy}));" + NewLine;
 
 
             code += "if (itemRow != null) {" + NewLine;
-            code += "Materialize.toast('UserID นี้มีอยู่ในระบบแล้ว', 5000, 'toastCss');" + NewLine;
-            code += "return true;" + NewLine;
+            code += $"Materialize.toast('{primaryKEy} นี้มีอยู่ในระบบแล้ว', 5000, 'toastCss');" + NewLine;
+            code += $"AddInvalidControl($(\"#{controlTextBoxName}\"));";
+
+                             code += "return true;" + NewLine;
             code += "}//==============================================================" + NewLine;
             code += "return false;" + NewLine;
             code += "}" + NewLine;
