@@ -315,8 +315,11 @@ namespace StkGenCode
 
             DataSet Source = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Source");
             Gen(Source, "Source", ColumnDropDown);
-             
 
+            DataSet Category = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Category");
+            Gen(Category, "Category", ColumnDropDown);
+
+         
             //end  ice work
 
             //location work
