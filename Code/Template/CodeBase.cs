@@ -85,11 +85,12 @@ new string[] { "System.Byte[]", "System.Guid" });
                 //ยอมให้ Data Type Byte[] ผ่าน
                 //ไม่ต้อง AddControl ที่เป็น column ยกเว้น
 
-                //if ((ExceptionType.Contains(dataColumn.DataType.ToString())) && (dataColumn.DataType.ToString() != "System.Byte[]"))
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
+                //ไม่ใช้ Exception Tableเพราะใช้ในการ ค้นหา
+                if ((ExceptionType.Contains(dataColumn.DataType.ToString())) && (dataColumn.DataType.ToString() != "System.Byte[]"))
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
 
                 {
-                    continue;
+                   continue;
                 }
 
                 var disabled = "";
@@ -285,7 +286,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                 //{
                 //    continue;
                 //}
-                if (IsExceptionColumn(dataColumn))
+                if (IsExceptionColumn(dataColumn,true))
                 {
                     continue;
 
@@ -328,7 +329,7 @@ new string[] { "System.Byte[]", "System.Guid" });
             return code;
         }
 
-        protected string MapControlHtmlToValiable(DataSet ds)
+        protected string MapControlHtmlToValiable(DataSet ds,bool useExcptionColumn)
         {
             
             var code = "";
@@ -336,7 +337,7 @@ new string[] { "System.Byte[]", "System.Guid" });
             foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
                 //ไม่ต้อง Add Mapp ถ้าเป็น Type ต้องห้ามกับ Column ที่เป็น Auto
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()) || (ExceptionColumn.Contains(dataColumn.ColumnName))&&(useExcptionColumn))
                 {
                     continue;
                 }
@@ -366,7 +367,7 @@ new string[] { "System.Byte[]", "System.Guid" });
             return code;
         }
 
-        protected string MapJsonToProPerties(DataSet ds, bool commentKey = false)
+        protected string MapJsonToProPerties(DataSet ds, bool commentKey ,bool ExceptionColumn)
         {
             var code = "";
 
@@ -379,7 +380,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                 //{
                 //    continue;
                 //}
-                if (IsExceptionColumn(dataColumn))
+                if (IsExceptionColumn(dataColumn, ExceptionColumn))
                 {
                     continue;
 
@@ -720,9 +721,9 @@ new string[] { "System.Byte[]", "System.Guid" });
         #endregion Image
 
 
-       public bool IsExceptionColumn(DataColumn dataColumn)
+       public bool IsExceptionColumn(DataColumn dataColumn,bool exColumnDisplay)
         {
-              if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
+              if (ExceptionType.Contains(dataColumn.DataType.ToString()) ||( ExceptionColumn.Contains(dataColumn.ColumnName))&& exColumnDisplay)
               {
                   return true;
               }

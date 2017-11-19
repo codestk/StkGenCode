@@ -201,7 +201,7 @@ namespace StkGenCode.Code.Template
                 code += "if (CheckDuplicate() == true) { return false; }" + NewLine;
             }
 
-            code += MapControlHtmlToValiable(Ds);
+            code += MapControlHtmlToValiable(Ds,false);
 
             var controlTextBoxPrimay = string.Format(ControlName.FormatTextBoxName, Ds.Tables[0].PrimaryKey[0].ToString());
             code += $"var result = {TableName}Service.Save({columnParameter});" + NewLine;
@@ -241,7 +241,7 @@ namespace StkGenCode.Code.Template
             code += "function Update() {" + NewLine;
 
             code += " if (Validate() == false) { return false; }" + NewLine;
-            code += MapControlHtmlToValiable(Ds);
+            code += MapControlHtmlToValiable(Ds,false);
 
             code += $"var result = {TableName}Service.Update({columnParameter});" + NewLine;
             code += "" + NewLine;

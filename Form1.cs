@@ -78,6 +78,8 @@ namespace StkGenCode
                     FileCode = f,
                     Ds = _ds,
                     TableName = tableName
+                    ,
+                    ExceptionColumn = exceptionColumnX
                 };
                 ApiController.Gen();
 
@@ -88,6 +90,8 @@ namespace StkGenCode
                     FileCode = f,
                     Ds = _ds,
                     TableName = tableName
+                    ,
+                    ExceptionColumn = exceptionColumnX
                 };
                 Handler.Gen();
 
@@ -98,6 +102,8 @@ namespace StkGenCode
                     FileCode = f,
                     Ds = _ds,
                     TableName = tableName
+                    ,
+                    ExceptionColumn = exceptionColumnX
                 };
                 _DbCodeImage.Gen();
             }
@@ -122,6 +128,8 @@ namespace StkGenCode
                     Ds = _ds,
                     TableName = tableName,
                     DropColumns = dropColumnsColumn
+                    ,
+                    ExceptionColumn = exceptionColumnX
                 };
             //_AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
             aspxTableCodeFilterColumnCodeBehide.Gen();
@@ -134,6 +142,8 @@ namespace StkGenCode
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName
+                ,
+                ExceptionColumn = exceptionColumnX
             };
             pageService.Gen();
 
@@ -158,6 +168,8 @@ namespace StkGenCode
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName
+                ,
+                ExceptionColumn = exceptionColumnX
             };
             storeProCode.Gen();
 
@@ -170,6 +182,8 @@ namespace StkGenCode
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName
+                ,
+                ExceptionColumn = exceptionColumnX
             };
             jsCode.Gen();
 
@@ -182,6 +196,8 @@ namespace StkGenCode
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName
+                ,
+                ExceptionColumn = exceptionColumnX
             };
             pcode.Gen();
 
@@ -193,6 +209,8 @@ namespace StkGenCode
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName
+                ,
+                ExceptionColumn = exceptionColumnX
             };
             propertiesCodeValidatetor.Gen();
 
@@ -218,6 +236,7 @@ namespace StkGenCode
                 TableName = tableName
                 ,
                 ExceptionColumn = exceptionColumnX
+              
             };
             dbCodeSqlServer.Gen();
         }

@@ -28,7 +28,6 @@ namespace StkGenCode.Code.Template
 
             code += RederTable_Pagger();
 
-
             code += AutocompleteMutilColumnJs();
 
             code += BindEditTableJs();
@@ -164,6 +163,11 @@ namespace StkGenCode.Code.Template
 
             code += BindSelectOption();
 
+                if (HaveDropDown())
+                {
+                code += "$('select').material_select(); " + NewLine;
+                }
+
             code += LeanModalJs(); //
 
             //code += AutocompleteMutilColumnJs();
@@ -179,7 +183,9 @@ namespace StkGenCode.Code.Template
 
             code += "  function SetTable() {" + NewLine;
 
-            code += MapControlHtmlToValiable(Ds);
+
+            //ไม่ใช่้ EXcepcomunl เพราะใช้ในการ Search
+            code += MapControlHtmlToValiable(Ds,false);
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
@@ -188,7 +194,7 @@ namespace StkGenCode.Code.Template
                 {
                     //chek bok false  == ''
 
-                    code += $" if ({dataColumn.ColumnName}== false)" + NewLine;  
+                    code += $" if ({dataColumn.ColumnName}== false)" + NewLine;
                      code += " {" + NewLine;
                     code += $"{dataColumn.ColumnName} = ''";
 
@@ -247,8 +253,6 @@ namespace StkGenCode.Code.Template
             code += "BindEditTable();" + NewLine;
 
             code += "SetPagger(totalRecord);" + NewLine;
-
-
 
             code += "AutoCompleteEditMode();";
             //code += "$('select').material_select();" + _NewLine;
@@ -381,7 +385,6 @@ namespace StkGenCode.Code.Template
             code += "var sp = $(this).find(\"span\"); " + NewLine;
             code += "var di = $(this).find(\"div\"); " + NewLine;
 
-
             //สลับ Datepiker ให้ขึ้นถูกอัน
             code += " var $input =$(this).find(\".datepicker\").pickadate();" + NewLine;
             code += "if ($input.length != 0) {" + NewLine;
@@ -391,10 +394,6 @@ namespace StkGenCode.Code.Template
             code += "    picker.set('select', sp[\"0\"].innerText);" + NewLine;
             code += " }" + NewLine;
             //===========================================================================
-
-
-
-
 
             code += "sp.hide(); " + NewLine;
             code += "di.show(); " + NewLine;
@@ -429,10 +428,9 @@ namespace StkGenCode.Code.Template
             //validate
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
-            {    if (IsExceptionColumn(dataColumn))
+            {    if (IsExceptionColumn(dataColumn,false))
                 {
                     continue;
-
                 }
                 //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
                 //{
@@ -680,7 +678,6 @@ namespace StkGenCode.Code.Template
             var classIds = GetColumnParameter(".{0},");
             classIds = classIds.TrimEnd(',');
             //code += "$(\".ThaiAddress2,.ThaiAddress3,.ThaiProvince,.EnglishAddress2,.EnglishAddress3,.EnglishProvince\").autocomplete({ " + _NewLine;
-
 
             code += "function AutoCompleteEditMode() { " + NewLine;
             code += "$(\"" + classIds + "\").autocomplete({ " + NewLine;
@@ -1077,10 +1074,9 @@ namespace StkGenCode.Code.Template
             var code = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (IsExceptionColumn(dataColumn))
+                if (IsExceptionColumn(dataColumn,true))
                 {
                     continue;
-
                 }
                 //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
                 //{

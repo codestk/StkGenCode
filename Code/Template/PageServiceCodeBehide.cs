@@ -162,7 +162,7 @@ namespace StkGenCode.Code.Template
             code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
             code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(Ds);
+            code += MapJsonToProPerties(Ds,false,false);
 
             code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
             code += "int _PageIndex = Convert.ToInt32(PageIndex);" + NewLine;
@@ -189,7 +189,7 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
 
             {
-                if (IsExceptionColumn(dataColumn))
+                if (IsExceptionColumn(dataColumn,true))
                 {
                     continue;
                 }
@@ -216,7 +216,7 @@ namespace StkGenCode.Code.Template
             code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
             code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(Ds, true);
+            code += MapJsonToProPerties(Ds, true,true);
 
             code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
             code += "  object result= _" + TableName + "Db.Insert(); " + NewLine;
@@ -243,7 +243,7 @@ namespace StkGenCode.Code.Template
                 //    continue;
                 //}
 
-                if (IsExceptionColumn(dataColumn))
+                if (IsExceptionColumn(dataColumn,true))
                 {
                     continue;
                 }
@@ -263,7 +263,7 @@ namespace StkGenCode.Code.Template
             code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
             code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(Ds);
+            code += MapJsonToProPerties(Ds,false,true);
 
             code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
             code += "    _" + TableName + "Db.Update(); " + NewLine;
@@ -298,7 +298,7 @@ namespace StkGenCode.Code.Template
             code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
             code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(Ds);
+            code += MapJsonToProPerties(Ds,false,true);
 
             code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
             code += "    _" + TableName + "Db.Delete(); " + NewLine;

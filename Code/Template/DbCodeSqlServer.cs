@@ -178,7 +178,7 @@ namespace StkGenCode.Code.Template
             // string updateCommand = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (IsExceptionColumn( dataColumn))
+                if (IsExceptionColumn( dataColumn,true))
                 {
                     continue;
                 }
@@ -244,7 +244,7 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
 
-                if (IsExceptionColumn( dataColumn))
+                if (IsExceptionColumn( dataColumn,true))
                 {
                     continue;
                 }
