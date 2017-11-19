@@ -75,7 +75,8 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //ไม่ต้อง Add Validate ถ้าเป็น Type ต้องห้ามกับ Column ที่เป็น Auto
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
                 {
                     continue;
                 }
@@ -83,10 +84,9 @@ namespace StkGenCode.Code.Template
                 var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, dataColumn.ColumnName);
                 //string controlChekBoxName = string.Format(_formatChekBoxName, _DataColumn.ColumnName);
                 //string controlDropDownName = string.Format(_formatDropDownName, _DataColumn.ColumnName);
-             
 
                 //Save Validate promary key
-               
+
                 if (dataColumn.ColumnName == Ds.Tables[0].PrimaryKey[0].ToString())
                 {
                     if (Ds.Tables[0].PrimaryKey[0].AutoIncrement)
@@ -94,10 +94,6 @@ namespace StkGenCode.Code.Template
                         //ถ้าเป็น Auto Gen ให้ข้ามไป
                         continue;
                     }
-
-
-                    //// Check Dupclicate
-                    ////==New Validate
 
                     //ValidateDupplicate += NewLine;
                     //ValidateDupplicate += "// Check Duplicate =============================================" + NewLine;
@@ -113,9 +109,6 @@ namespace StkGenCode.Code.Template
                     //ValidateDupplicate += NewLine;
                     //ValidateDupplicate += NewLine;
                     ////New Validate==
-
-
-
                 }
 
                 if ((dataColumn.DataType.ToString() == "System.Guid") ||
@@ -140,19 +133,10 @@ namespace StkGenCode.Code.Template
                 code += "if (CheckEmtyp($(\"#" + controlTextBoxName + "\"))) output = false;" + NewLine;
             }
 
-
-
             code += "if (output == false)" + NewLine;
             code += "Materialize.toast('please validate your input.', 3000, 'toastCss');" + NewLine;
 
-
-
-
             code += ValidateDupplicate;
-
-
-
-
 
             code += "return output;" + NewLine;
             code += "}" + NewLine;
@@ -171,36 +155,31 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-
         private string CheckDuplicate()
         {
             string primaryKEy = Ds.Tables[0].PrimaryKey[0].ToString();
             var controlTextBoxName = string.Format(ControlName.FormatTextBoxName, primaryKEy);
-          
-                if (Ds.Tables[0].PrimaryKey[0].AutoIncrement)
-                {
-                    //ถ้าเป็น Auto Gen ไม่ต้อง Check Dup
-                    return "";
-                }
-          
 
-          
+            if (Ds.Tables[0].PrimaryKey[0].AutoIncrement)
+            {
+                //ถ้าเป็น Auto Gen ไม่ต้อง Check Dup
+                return "";
+            }
+
             string code = "";
             code += " function CheckDuplicate() {" + NewLine;
             code += "" + NewLine;
-      
+
             code += "// Check Duplicate =============================================" + NewLine;
-          
-            
+
             code += $"var {primaryKEy} = $(\"#{controlTextBoxName}\").val();" + NewLine;
             code += $"var itemRow = {TableName}Service.Select(({primaryKEy}));" + NewLine;
-
 
             code += "if (itemRow != null) {" + NewLine;
             code += $"Materialize.toast('{primaryKEy} นี้มีอยู่ในระบบแล้ว', 5000, 'toastCss');" + NewLine;
             code += $"AddInvalidControl($(\"#{controlTextBoxName}\"));";
 
-                             code += "return true;" + NewLine;
+            code += "return true;" + NewLine;
             code += "}//==============================================================" + NewLine;
             code += "return false;" + NewLine;
             code += "}" + NewLine;
@@ -209,19 +188,18 @@ namespace StkGenCode.Code.Template
 
         private string GenJavaScriptSave()
         {
-            var columnParameter = ColumnString.GenLineString(Ds, "{0},");
+            //ไม่เอา Column ที่เป็น auto
+            var columnParameter = ColumnString.GenLineString(Ds, "{0},", ExceptionColumn);
             columnParameter = columnParameter.TrimEnd(',');
             var code = "";
             code += "function Save() {" + NewLine;
 
             code += " if (Validate() == false) { return false; }" + NewLine;
 
-
-            if (Ds.Tables[0].PrimaryKey[0].AutoIncrement==false)
+            if (Ds.Tables[0].PrimaryKey[0].AutoIncrement == false)
             {
                 code += "if (CheckDuplicate() == true) { return false; }" + NewLine;
             }
-
 
             code += MapControlHtmlToValiable(Ds);
 
@@ -257,7 +235,7 @@ namespace StkGenCode.Code.Template
 
         private string GenJavaScriptUpdate()
         {
-            var columnParameter = ColumnString.GenLineString(Ds, "{0},");
+            var columnParameter = ColumnString.GenLineString(Ds, "{0},", ExceptionColumn);
             columnParameter = columnParameter.TrimEnd(',');
             var code = "";
             code += "function Update() {" + NewLine;
@@ -288,7 +266,7 @@ namespace StkGenCode.Code.Template
             var code = "";
             code += "function Delete() {" + NewLine;
 
-            code += " if (Validate() == false) { return false; }" + NewLine;
+           // code += " if (Validate() == false) { return false; }" + NewLine;
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
@@ -347,6 +325,7 @@ namespace StkGenCode.Code.Template
             code += $"var _{TableName} = {TableName}Service.Select({Ds.Tables[0].PrimaryKey[0]});" + NewLine;
             code += "" + NewLine;
             code += "$('#txt" + Ds.Tables[0].PrimaryKey[0] + "').prop('disabled', true );" + NewLine;
+
             code += MapProPertiesToControl(Ds);
 
             code += "$('#btnSave').hide();" + NewLine;
@@ -392,12 +371,6 @@ namespace StkGenCode.Code.Template
 
             code += "ForceNumberTextBox(); " + NewLine;
 
-            //Set Drop
-
-            code += "//For dropdown" + NewLine;
-            code += BindSelectOption();
-
-           
             if (HaveDropDown())
             {
                 code += "$('select').material_select(); " + NewLine;
@@ -410,14 +383,20 @@ namespace StkGenCode.Code.Template
             code += "format: 'd mmm yyyy'," + NewLine;
             code += "});" + NewLine;
 
+            //Set Drop
+            code += "//For dropdown" + NewLine;
+            code += BindSelectOption();
 
+            //Set Data
             code += "BindQueryString();" + NewLine;
 
+            if (HaveDropDown())
+            {
+                code += "$('select').material_select(); " + NewLine;
+            }
 
             code += " }); " + NewLine;
             //------------------------------------------------------------------------------------
-           
-
 
             //ForceNumberTextBox==============================================================================================
             code += ForceNumberTextBox(true);
@@ -561,7 +540,7 @@ namespace StkGenCode.Code.Template
                 code += "    <link href=\"Module/Stk/StkImageUpload/StkImageUpload.css\" rel=\"stylesheet\" />";
                 code += "    <script src=\"Module/Stk/StkImageUpload/StkImageUpload.js\"></script>";
                 code += "    <script src=\"Module/Stk/ValidateStk.js\"></script>";
-            }  
+            }
 
             return code;
         }

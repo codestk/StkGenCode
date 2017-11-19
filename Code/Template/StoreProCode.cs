@@ -71,9 +71,10 @@ namespace StkGenCode.Code.Template
 
         private string GenSp_GetPageWise()
         {
+         
             var code = "";
             var stroeName = "Sp_Get" + TableName + "PageWise";
-            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + NewLine;
+            code += "   DROP PROCEDURE   [dbo].[" + stroeName + "];" + NewLine;
             code += "go" + NewLine;
             code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + NewLine;
 
@@ -263,7 +264,7 @@ namespace StkGenCode.Code.Template
             var code = "";
 
             var stroeName = "Sp_Get" + TableName + "_Autocomplete";
-            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + NewLine;
+            code += "DROP PROCEDURE   [dbo].[" + stroeName + "];" + NewLine;
             code += "go" + NewLine;
             code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + NewLine;
             //code += "create PROCEDURE [dbo].[Sp_Getfxrates_family_Autocomplete]  " + _NewLine;
@@ -325,7 +326,7 @@ namespace StkGenCode.Code.Template
             var code = "";
 
             var stroeName = "Sp_Get" + TableName + "_Autocomplete";
-            code += "DROP PROCEDURE [dbo].[" + stroeName + "];" + NewLine;
+            code += "DROP PROCEDURE   [dbo].[" + stroeName + "];" + NewLine;
             code += "go" + NewLine;
             code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + NewLine;
             //code += "create PROCEDURE [dbo].[Sp_Getfxrates_family_Autocomplete]  " + _NewLine;
@@ -385,7 +386,7 @@ namespace StkGenCode.Code.Template
         private string GenSp_GetTradeFromCategory_UpdateColumn()
         {
             var code = "";
-            code += $"DROP PROCEDURE [dbo].[Sp_Get{TableName}_UpdateColumn];" + NewLine;
+            code += $"DROP PROCEDURE   [dbo].[Sp_Get{TableName}_UpdateColumn];" + NewLine;
             code += GenGoSplitBatch();
             code += "  " + NewLine;
             code += "       " + NewLine;

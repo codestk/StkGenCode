@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace StkGenCode
@@ -29,7 +30,8 @@ namespace StkGenCode
         /// <param name="_ds"></param>
         /// <param name="tableName"></param>
         /// <param name="columnDropDown">Clumn:Table;</param>
-        private void Gen(DataSet _ds, string tableName, string columnDropDown = "")
+        /// <param name="exceptionColumn">Column;Column</param>
+        private void Gen(DataSet _ds, string tableName, string columnDropDown = "", string exceptionColumn = "")
         {
             var f = new FileCode { Path = _path };
 
@@ -37,12 +39,18 @@ namespace StkGenCode
             if (columnDropDown != "")
                 dropColumnsColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
 
+
+            List<string> exceptionColumnX = null;
+            exceptionColumnX = exceptionColumn.Split(';').ToList();
+
+
             var aspxFromCodeaspx = new AspxFromCode
             {
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName,
                 DropColumns = dropColumnsColumn
+               ,ExceptionColumn = exceptionColumnX
             };
             aspxFromCodeaspx.Gen();
 
@@ -54,6 +62,8 @@ namespace StkGenCode
                 Ds = _ds,
                 TableName = tableName,
                 DropColumns = dropColumnsColumn
+                ,
+                ExceptionColumn = exceptionColumnX
             };
             aspxFromCodeBehide.Gen();
 
@@ -100,8 +110,8 @@ namespace StkGenCode
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName,
-                DropColumns = dropColumnsColumn
-                //AspxFromCodeaspx = _AspxFromCodeaspx
+                DropColumns = dropColumnsColumn,
+                ExceptionColumn = exceptionColumnX
             };
             aspxTableCodeFilterColumn.Gen();
 
@@ -136,7 +146,8 @@ namespace StkGenCode
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName
+                TableName = tableName,
+                ExceptionColumn = exceptionColumnX
             };
             pageServiceCodeBehide.Gen();
 
@@ -205,6 +216,8 @@ namespace StkGenCode
                 FileCode = f,
                 Ds = _ds,
                 TableName = tableName
+                ,
+                ExceptionColumn = exceptionColumnX
             };
             dbCodeSqlServer.Gen();
         }
@@ -308,8 +321,8 @@ namespace StkGenCode
             //Gen(APP_USER, "APP_USER", ColumnDropDown);
 
 
-            DataSet TestValidate = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TestValidate");
-            Gen(TestValidate, "TestValidate", ColumnDropDown);
+            //DataSet TestValidate = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TestValidate");
+            //Gen(TestValidate, "TestValidate", ColumnDropDown);
 
 
 
@@ -319,25 +332,62 @@ namespace StkGenCode
             DataSet Category = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Category");
             Gen(Category, "Category", ColumnDropDown);
 
-         
-            //end  ice work
 
-            //location work
+            DataSet TestFormula = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TestFormula");
+            Gen(TestFormula, "TestFormula", ColumnDropDown);
 
-            //end location
 
-            //string ColumnDropDown = "SupplierID:Suppliers;CategoryID:Categories;";
-            //DataSet Categories = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Categories");
-            //Gen(Categories, "Categories", ColumnDropDown);
 
-            //DataSet Suppliers = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Suppliers");
-            //Gen(Suppliers, "Suppliers", ColumnDropDown);
+            
+            DataSet Line = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Line");
+            Gen(Line, "Line", ColumnDropDown);
 
-            //DataSet Products = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Products");
-            //Gen(Products, "Products", ColumnDropDown);
+            DataSet LineSize = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "LineSize");
+            Gen(LineSize, "LineSize", ColumnDropDown);
 
-            //Copy ไฟล์=================================================================================================================
-            Process.Start(@"D:\GitWorkSpace\StkGenCode\copy.bat");
+
+
+            DataSet CustomerBrand = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "CustomerBrand");
+            Gen(CustomerBrand, "CustomerBrand", ColumnDropDown);
+
+
+
+            DataSet Contain = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Contain");
+            Gen(Contain, "Contain", ColumnDropDown);
+
+
+            DataSet ProductLine = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "ProductLine");
+            Gen(ProductLine, "ProductLine", "SourceID:Source;LineID:Line;ContainID:Contain;LineSizeID:LineSize;CustomerBrandID:CustomerBrand;TestFormulaID:TestFormula;", "CreateDate;");
+            
+
+                //,[SourceID]
+                //,[LineID]
+                //,[TestFormulaID]
+                //,[ContainID]
+                //,[LineSizeID]
+                //,[CustomerBrandID]
+                //,[ManufacturingDate]
+                //,[ExpectItems]
+                //,[ProcessItems]
+
+        //end  ice work
+
+        //location work
+
+        //end location
+
+        //string ColumnDropDown = "SupplierID:Suppliers;CategoryID:Categories;";
+        //DataSet Categories = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Categories");
+        //Gen(Categories, "Categories", ColumnDropDown);
+
+        //DataSet Suppliers = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Suppliers");
+        //Gen(Suppliers, "Suppliers", ColumnDropDown);
+
+        //DataSet Products = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Products");
+        //Gen(Products, "Products", ColumnDropDown);
+
+        //Copy ไฟล์=================================================================================================================
+        Process.Start(@"D:\GitWorkSpace\StkGenCode\copy.bat");
             Console.ReadLine();
             Close();
         }

@@ -178,10 +178,15 @@ namespace StkGenCode.Code.Template
             // string updateCommand = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                if (IsExceptionColumn( dataColumn))
                 {
                     continue;
                 }
+
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //{
+                //    continue;
+                //}
                 //=====================================================================
 
                 //ถ้า PRimary ไม่ auto ให้เลือกตัวมันเอง
@@ -238,10 +243,17 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+
+                if (IsExceptionColumn( dataColumn))
                 {
                     continue;
                 }
+
+
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //{
+                //    continue;
+                //}
 
                 insertparameter += " prset.Add(Db.CreateParameterDb(\"@" + dataColumn.ColumnName + "\",_" + TableName +
                                    "." + dataColumn.ColumnName + "));";

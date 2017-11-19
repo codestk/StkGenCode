@@ -2,6 +2,7 @@
 using StkGenCode.Code.Name;
 using System.Collections.Generic;
 using System.Data;
+using System.Windows.Forms;
 
 namespace StkGenCode.Code.Template
 {
@@ -19,6 +20,31 @@ namespace StkGenCode.Code.Template
         public static List<string> ExceptionType = new List<string>(
 new string[] { "System.Byte[]", "System.Guid" });
 
+
+        /// <summary>
+        /// ใช้ไม่ให้แสดงบาง Column
+        /// </summary>
+        /// 
+        ///  int _number;
+        private  List<string> _ExceptionColumn;
+        public  List<string> ExceptionColumn
+        {
+            get
+            {
+                if (_ExceptionColumn==null)
+                {     _ExceptionColumn =new List<string>();
+                _ExceptionColumn.Add("");
+                   
+                }
+
+                return _ExceptionColumn;
+            }
+            set
+            {
+                _ExceptionColumn = value;
+            }
+        }
+ 
         /// <summary>
         ///     ใช้ สำหรับ Gen Code Dropdown list
         ///     ColumnName:Table
@@ -57,7 +83,11 @@ new string[] { "System.Byte[]", "System.Guid" });
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 //ยอมให้ Data Type Byte[] ผ่าน
-                if ((ExceptionType.Contains(dataColumn.DataType.ToString())) && (dataColumn.DataType.ToString() != "System.Byte[]"))
+                //ไม่ต้อง AddControl ที่เป็น column ยกเว้น
+
+                //if ((ExceptionType.Contains(dataColumn.DataType.ToString())) && (dataColumn.DataType.ToString() != "System.Byte[]"))
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
+
                 {
                     continue;
                 }
@@ -251,9 +281,14 @@ new string[] { "System.Byte[]", "System.Guid" });
 
             foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //{
+                //    continue;
+                //}
+                if (IsExceptionColumn(dataColumn))
                 {
                     continue;
+
                 }
 
                 var propertieName = string.Format(ControlName.FormatpropertieName, TableName, dataColumn.ColumnName);
@@ -295,13 +330,13 @@ new string[] { "System.Byte[]", "System.Guid" });
 
         protected string MapControlHtmlToValiable(DataSet ds)
         {
-            //var columnParameter = ColumnString.GenLineString(_ds, "{0},");
-            //columnParameter = columnParameter.TrimEnd(',');
+            
             var code = "";
 
             foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //ไม่ต้อง Add Mapp ถ้าเป็น Type ต้องห้ามกับ Column ที่เป็น Auto
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
                 {
                     continue;
                 }
@@ -340,9 +375,14 @@ new string[] { "System.Byte[]", "System.Guid" });
                 var propertieName = string.Format(ControlName.FormatpropertieName, TableName, dataColumn.ColumnName);
 
                 var columName = dataColumn.ColumnName;
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
+                //{
+                //    continue;
+                //}
+                if (IsExceptionColumn(dataColumn))
                 {
                     continue;
+
                 }
                 if (commentKey)
                 {
@@ -434,7 +474,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                         }
                     }
                 }
-                code += "$('select').material_select(); " + NewLine;
+                //code += "$('select').material_select(); " + NewLine;
             }
 
             return code;
@@ -678,5 +718,20 @@ new string[] { "System.Byte[]", "System.Guid" });
         }
 
         #endregion Image
+
+
+       public bool IsExceptionColumn(DataColumn dataColumn)
+        {
+              if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
+              {
+                  return true;
+              }
+
+            return false;
+
+        }
+
+
+
     }
 }

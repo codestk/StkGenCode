@@ -12,9 +12,9 @@ namespace StkGenCode.Code.Template
             code += "using System.Linq; " + NewLine;
             code += "using System.Web; " + NewLine;
             code += "using System.Web.Services; " + NewLine;
-            code +="using WebApp.Business;" + NewLine;
+            code += "using WebApp.Business;" + NewLine;
             code += "using StkLib.Common;" + NewLine;
-            
+
             code += "using WebApp.Code.Utility.Properties.Controls;" + NewLine;
             return code;
         }
@@ -36,7 +36,6 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-
         //
 
         private string GenBeginNameSpace()
@@ -46,7 +45,6 @@ namespace StkGenCode.Code.Template
             code += "{" + NewLine;
             return code;
         }
-
 
         private string GenBeginClass()
         {
@@ -60,9 +58,10 @@ namespace StkGenCode.Code.Template
         {
             var code = "";
             code += "}"; //Class
-       
+
             return code;
         }
+
         private string GenEndNameSpace()
         {
             var code = "";
@@ -188,11 +187,20 @@ namespace StkGenCode.Code.Template
         {
             var pararmeter = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                if (IsExceptionColumn(dataColumn))
                 {
                     continue;
                 }
+                //{  if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
+                //    {
+                //        continue;
+                //    }
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //{
+                //    continue;
+                //}
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
@@ -230,10 +238,16 @@ namespace StkGenCode.Code.Template
             var pararmeter = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //{
+                //    continue;
+                //}
+
+                if (IsExceptionColumn(dataColumn))
                 {
                     continue;
                 }
+
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }

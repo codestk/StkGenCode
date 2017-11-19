@@ -429,11 +429,15 @@ namespace StkGenCode.Code.Template
             //validate
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
-            {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+            {    if (IsExceptionColumn(dataColumn))
                 {
                     continue;
+
                 }
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //{
+                //    continue;
+                //}
 
                 if (IsDropDown(dataColumn))
                 {
@@ -1073,10 +1077,15 @@ namespace StkGenCode.Code.Template
             var code = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                if (IsExceptionColumn(dataColumn))
                 {
                     continue;
+
                 }
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //{
+                //    continue;
+                //}
                 if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
                 {
                     continue;
