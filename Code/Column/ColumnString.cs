@@ -12,6 +12,7 @@ namespace StkGenCode.Code.Column
         /// </summary>
         /// <param name="ds"></param>
         /// <param name="format">".chekBox{0},"</param>
+        /// <param name="expColumnList"></param>
         /// <returns></returns>
         public static string GenLineString(DataSet ds, string format, List<string> expColumnList = null)
         {

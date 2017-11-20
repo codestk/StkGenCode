@@ -587,7 +587,7 @@ namespace StkGenCode.Code.Template
 
             code += GenDivFormBegin();
 
-            code += GenControls(9);
+            code += GenControls(9,true,true);
 
             code += GenButton();
 

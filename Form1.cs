@@ -7,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
+using StkGenCode.Code.Label;
 
 namespace StkGenCode
 {
@@ -35,6 +36,11 @@ namespace StkGenCode
         {
             var f = new FileCode { Path = _path };
 
+
+            //ใช้สำหรับ ระบุแหล่งที่มากับ Source
+            var textTemplate = new TextTemplate();
+            textTemplate.ColumnSet = "ProductLineId:แหล่งที่มา;";
+
             List<MappingColumn> dropColumnsColumn = null;
             if (columnDropDown != "")
                 dropColumnsColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
@@ -50,7 +56,9 @@ namespace StkGenCode
                 Ds = _ds,
                 TableName = tableName,
                 DropColumns = dropColumnsColumn
-               ,ExceptionColumn = exceptionColumnX
+               ,ExceptionColumn = exceptionColumnX,
+                LabelTemplate = textTemplate
+
             };
             aspxFromCodeaspx.Gen();
 

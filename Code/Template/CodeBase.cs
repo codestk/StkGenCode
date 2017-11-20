@@ -2,7 +2,7 @@
 using StkGenCode.Code.Name;
 using System.Collections.Generic;
 using System.Data;
-using System.Windows.Forms;
+using StkGenCode.Code.Label;
 
 namespace StkGenCode.Code.Template
 {
@@ -18,33 +18,37 @@ namespace StkGenCode.Code.Template
         public string TableName;
 
         public static List<string> ExceptionType = new List<string>(
-new string[] { "System.Byte[]", "System.Guid" });
+new[] { "System.Byte[]", "System.Guid" });
 
+         
+
+        public TextTemplate LabelTemplate { get; set; }
 
         /// <summary>
         /// ใช้ไม่ให้แสดงบาง Column
         /// </summary>
-        /// 
+        ///
         ///  int _number;
-        private  List<string> _ExceptionColumn;
-        public  List<string> ExceptionColumn
+        private List<string> _exceptionColumn;
+
+        public List<string> ExceptionColumn
         {
             get
             {
-                if (_ExceptionColumn==null)
-                {     _ExceptionColumn =new List<string>();
-                _ExceptionColumn.Add("");
-                   
+                if (_exceptionColumn == null)
+                {
+                    _exceptionColumn = new List<string>();
+                    _exceptionColumn.Add("");
                 }
 
-                return _ExceptionColumn;
+                return _exceptionColumn;
             }
             set
             {
-                _ExceptionColumn = value;
+                _exceptionColumn = value;
             }
         }
- 
+
         /// <summary>
         ///     ใช้ สำหรับ Gen Code Dropdown list
         ///     ColumnName:Table
@@ -76,8 +80,9 @@ new string[] { "System.Byte[]", "System.Guid" });
         /// </summary>
         /// <param name="columnSize"></param>
         /// <param name="chekPrimarykey"></param>
+        /// <param name="exceptionColumne"></param>
         /// <returns></returns>
-        public string GenControls(int columnSize, bool chekPrimarykey = true)
+        public string GenControls(int columnSize, bool chekPrimarykey, bool exceptionColumne)
         {
             var code = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
@@ -86,11 +91,15 @@ new string[] { "System.Byte[]", "System.Guid" });
                 //ไม่ต้อง AddControl ที่เป็น column ยกเว้น
 
                 //ไม่ใช้ Exception Tableเพราะใช้ในการ ค้นหา
-                if ((ExceptionType.Contains(dataColumn.DataType.ToString())) && (dataColumn.DataType.ToString() != "System.Byte[]"))
+                // if ((ExceptionType.Contains(dataColumn.DataType.ToString())) && (dataColumn.DataType.ToString() != "System.Byte[]"))
                 //if (ExceptionType.Contains(dataColumn.DataType.ToString()) || ExceptionColumn.Contains(dataColumn.ColumnName))
 
+                //{
+                //   continue;
+                //}
+                if (IsExceptionColumn(dataColumn, exceptionColumne))
                 {
-                   continue;
+                    continue;
                 }
 
                 var disabled = "";
@@ -129,7 +138,7 @@ new string[] { "System.Byte[]", "System.Guid" });
                         disabled = "ReadOnly=\"true\" ";
 
                         code += $"<div class=\"  col s{columnSize}\"> " + NewLine;
-                        code += "<label>" + dataColumn.ColumnName + " </label> " + NewLine;
+                        code += "<label>" +   LabelTemplate.GetLabel( dataColumn.ColumnName) + " </label> " + NewLine;
                     }
                     else
                     {
@@ -286,10 +295,9 @@ new string[] { "System.Byte[]", "System.Guid" });
                 //{
                 //    continue;
                 //}
-                if (IsExceptionColumn(dataColumn,true))
+                if (IsExceptionColumn(dataColumn, true))
                 {
                     continue;
-
                 }
 
                 var propertieName = string.Format(ControlName.FormatpropertieName, TableName, dataColumn.ColumnName);
@@ -329,15 +337,14 @@ new string[] { "System.Byte[]", "System.Guid" });
             return code;
         }
 
-        protected string MapControlHtmlToValiable(DataSet ds,bool useExcptionColumn)
+        protected string MapControlHtmlToValiable(DataSet ds, bool useExcptionColumn)
         {
-            
             var code = "";
 
             foreach (DataColumn dataColumn in ds.Tables[0].Columns)
             {
                 //ไม่ต้อง Add Mapp ถ้าเป็น Type ต้องห้ามกับ Column ที่เป็น Auto
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()) || (ExceptionColumn.Contains(dataColumn.ColumnName))&&(useExcptionColumn))
+                if (ExceptionType.Contains(dataColumn.DataType.ToString()) || (ExceptionColumn.Contains(dataColumn.ColumnName)) && (useExcptionColumn))
                 {
                     continue;
                 }
@@ -367,7 +374,7 @@ new string[] { "System.Byte[]", "System.Guid" });
             return code;
         }
 
-        protected string MapJsonToProPerties(DataSet ds, bool commentKey ,bool ExceptionColumn)
+        protected string MapJsonToProPerties(DataSet ds, bool commentKey, bool ExceptionColumn)
         {
             var code = "";
 
@@ -383,7 +390,6 @@ new string[] { "System.Byte[]", "System.Guid" });
                 if (IsExceptionColumn(dataColumn, ExceptionColumn))
                 {
                     continue;
-
                 }
                 if (commentKey)
                 {
@@ -720,19 +726,14 @@ new string[] { "System.Byte[]", "System.Guid" });
 
         #endregion Image
 
-
-       public bool IsExceptionColumn(DataColumn dataColumn,bool exColumnDisplay)
+        public bool IsExceptionColumn(DataColumn dataColumn, bool exColumnDisplay)
         {
-              if (ExceptionType.Contains(dataColumn.DataType.ToString()) ||( ExceptionColumn.Contains(dataColumn.ColumnName))&& exColumnDisplay)
-              {
-                  return true;
-              }
+            if (ExceptionType.Contains(dataColumn.DataType.ToString()) || (ExceptionColumn.Contains(dataColumn.ColumnName)) && exColumnDisplay)
+            {
+                return true;
+            }
 
             return false;
-
         }
-
-
-
     }
 }

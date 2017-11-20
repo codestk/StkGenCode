@@ -1,5 +1,6 @@
 ﻿using StkGenCode.Code.Name;
 using System.Data;
+using System.Drawing;
 
 namespace StkGenCode.Code.Template
 {
@@ -163,10 +164,10 @@ namespace StkGenCode.Code.Template
 
             code += BindSelectOption();
 
-                if (HaveDropDown())
-                {
+            if (HaveDropDown())
+            {
                 code += "$('select').material_select(); " + NewLine;
-                }
+            }
 
             code += LeanModalJs(); //
 
@@ -183,9 +184,8 @@ namespace StkGenCode.Code.Template
 
             code += "  function SetTable() {" + NewLine;
 
-
             //ไม่ใช่้ EXcepcomunl เพราะใช้ในการ Search
-            code += MapControlHtmlToValiable(Ds,false);
+            code += MapControlHtmlToValiable(Ds, false);
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
@@ -195,7 +195,7 @@ namespace StkGenCode.Code.Template
                     //chek bok false  == ''
 
                     code += $" if ({dataColumn.ColumnName}== false)" + NewLine;
-                     code += " {" + NewLine;
+                    code += " {" + NewLine;
                     code += $"{dataColumn.ColumnName} = ''";
 
                     code += " }" + NewLine;
@@ -428,7 +428,8 @@ namespace StkGenCode.Code.Template
             //validate
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
-            {    if (IsExceptionColumn(dataColumn,false))
+            {
+                if (IsExceptionColumn(dataColumn, false))
                 {
                     continue;
                 }
@@ -780,7 +781,7 @@ namespace StkGenCode.Code.Template
 
             //Usign Gen Text Box
             code += "<div class=\"row\"> " + NewLine;
-            var txtBoxSet = GenControls(6, false);
+            var txtBoxSet = GenControls(6, false, false);
             //txtBoxSet = txtBoxSet.Replace("s12", "s3");
             //txtBoxSet = "";
             code += txtBoxSet;
@@ -818,6 +819,7 @@ namespace StkGenCode.Code.Template
             //code += "  <th>Description</th> " + _NewLine;
             //code += "<th>Bank Note</th>" + _NewLine;
             //code += "  <th>Buying Rates	</th> " + _NewLine;
+
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
                 string sortFunction = "";
@@ -832,6 +834,9 @@ namespace StkGenCode.Code.Template
                 code +=
          $"<th   data-column-id=\"{dataColumn.ColumnName}\"  {sortFunction}>{dataColumn.ColumnName}</th>" +
          NewLine;
+                
+
+
             }
 
             code += "</tr>" + NewLine;
@@ -849,9 +854,28 @@ namespace StkGenCode.Code.Template
             var code = "";
 
             code += "var TrTempplate =\"<tr>\";" + NewLine;
-
+            //style = "text-align: center"
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+
+                //if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
+                //{
+                //    //primary key ให้อยู่ตรงกลาง
+                //    code += "var TrTempplate =\"<tr style = \"text-align:center\" >" + NewLine;
+                //}
+                //else
+                //{
+                //    //ไม่ใช่ primary key อยู่ซ้าย
+                //    code += "var TrTempplate =\"<tr>\";" + NewLine;
+
+                //}
+
+            
+
+              
+
+
+
                 if ((dataColumn.DataType.ToString() == "System.Boolean") ||
                  (dataColumn.DataType.ToString() == "System.Int16"))
                 {
@@ -875,7 +899,27 @@ namespace StkGenCode.Code.Template
                 }
                 else
                 {
-                    code += "TrTempplate +=\"<td class='td" + dataColumn.ColumnName + "'>\";" + NewLine;
+
+                    string stlyeCenter = "";
+                    //Set Center ให้ Primary Key
+                    if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
+                    {
+                        //primary key ให้อยู่ตรงกลาง
+                          stlyeCenter = "style = 'text-align:center'";
+
+                    }
+                    else
+                    {
+                        //ไม่ใช่ primary key อยู่ซ้าย
+                        stlyeCenter = "";
+
+
+
+                    }
+
+
+
+                    code += "TrTempplate +=\"<td class='td" + dataColumn.ColumnName + "'  "+stlyeCenter+"  >\";" + NewLine;
                     //ใช้สำหรับทำ Drop down ตอน Display ก่อน Edit
                     if (IsDropDown(dataColumn))
                     {
@@ -886,12 +930,59 @@ namespace StkGenCode.Code.Template
                     }
                     else if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
                     {
+
+                   
+                        //ImageEdit
                         code += "TrTempplate +=\"<a id='btnShowPopup0' target='_blank' href='" + TableName +
                           "Web.aspx?Q=\"+result[key]." + dataColumn.ColumnName + "+\"'\";" + NewLine;
                         code += "TrTempplate +=\"title=''>\";" + NewLine;
+
+                        //-->เป็นตัวหนังสือ
                         code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" +
-                          NewLine;
+                        NewLine;
+
+
+                        //code += "TrTempplate +=\"<span><img src ='Images/v1/edit.png' /></span>\";" +
+                        //NewLine;
+
+
+
                         code += "TrTempplate +=\"</a>\";" + NewLine;
+                        //==========================================================================
+
+
+
+                        //ID
+                        code += "TrTempplate +=\"<a id='btnShowPopup0' target='_blank' href='" + TableName +
+                                "Web.aspx?Q=\"+result[key]." + dataColumn.ColumnName + "+\"'\";" + NewLine;
+                        code += "TrTempplate +=\"title=''>\";" + NewLine;
+
+                        //-->เป็นตัวหนังสือ
+                        code += "TrTempplate +=\"<span>\"+result[key]." + dataColumn.ColumnName + "+\"</span>\";" +
+                        NewLine;
+
+
+                        //code += "TrTempplate +=\"<span><img src ='Images/v1/edit.png' /></span>\";" +
+                        //        NewLine;
+
+
+
+                        code += "TrTempplate +=\"</a>\";" + NewLine;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     }
                     else if (dataColumn.DataType.ToString() == "System.DateTime")
                     {
@@ -1074,7 +1165,7 @@ namespace StkGenCode.Code.Template
             var code = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (IsExceptionColumn(dataColumn,true))
+                if (IsExceptionColumn(dataColumn, true))
                 {
                     continue;
                 }
