@@ -97,6 +97,14 @@ new[] { "System.Byte[]", "System.Guid" });
                 //{
                 //   continue;
                 //}
+
+                var label =  dataColumn.ColumnName;
+                if (LabelTemplate != null)
+                {
+                    label = LabelTemplate.GetLabel(dataColumn.ColumnName);
+
+                }
+
                 if (IsExceptionColumn(dataColumn, exceptionColumne))
                 {
                     continue;
@@ -138,7 +146,10 @@ new[] { "System.Byte[]", "System.Guid" });
                         disabled = "ReadOnly=\"true\" ";
 
                         code += $"<div class=\"  col s{columnSize}\"> " + NewLine;
-                        code += "<label>" +   LabelTemplate.GetLabel( dataColumn.ColumnName) + " </label> " + NewLine;
+                        code += "<label>" + label + " </label> " + NewLine;
+                        //code += "<label>" +   LabelTemplate.GetLabel( dataColumn.ColumnName) + " </label> " + NewLine;
+                         
+
                     }
                     else
                     {
@@ -219,8 +230,11 @@ new[] { "System.Byte[]", "System.Guid" });
                 {
                     if (isPrimayKey == false)
                     {
-                        code += "<label for=\"" + currentControl + "\">" + dataColumn.ColumnName +
+                        
+                        code += "<label for=\"" + currentControl + "\">" + label +
                                 " </label> " + NewLine;
+                        //code += "<label for=\"" + currentControl + "\">" + dataColumn.ColumnName +
+                        //     " </label> " + NewLine;
                     }
 
                     code += " </div> " + NewLine;
@@ -529,9 +543,22 @@ new[] { "System.Byte[]", "System.Guid" });
             return code;
         }
 
+
+        private string  GetLabel(string columnName)
+        {
+
+            string label = columnName;
+            if (LabelTemplate != null)
+            { label = LabelTemplate.GetLabel(columnName);}
+
+            return label;
+
+        }
+
         public string GenDropDown(string columnname, int columnSize)
         {
             var controlDropDownName = string.Format(ControlName.FormatDropDownName, columnname);
+
             var code = "";
             foreach (var map in DropColumns)
             {
@@ -541,8 +568,11 @@ new[] { "System.Byte[]", "System.Guid" });
                     code += "<select id=\"" + controlDropDownName + "\" > " + NewLine;
                     code += " " + NewLine;
                     code += "</select>" + NewLine;
-                    code += "<label for=\"" + controlDropDownName + "\">" + columnname + "</label>" +
+                    code += "<label for=\"" + controlDropDownName + "\">" + GetLabel(columnname) + "</label>" +
                             NewLine;
+
+                    //code += "<label for=\"" + controlDropDownName + "\">" + columnname + "</label>" +
+                    //        NewLine;
                     code += "</div>" + NewLine;
 
                     break;
@@ -591,113 +621,113 @@ new[] { "System.Byte[]", "System.Guid" });
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected string DropDownFindByValue(string columnName)
-        {
-            var code = "";
-            foreach (var map in DropColumns)
-            {
-                if ((map.ColumnName == columnName) && (map.TableName != TableName))
-                {
-                    var controlDropDownName = string.Format(ControlName.FormatDropDownName, columnName);
-                    var propertieName = string.Format(ControlName.FormatpropertieName, TableName, columnName);
-                    //code = string.Format("{0}.Items.FindByValue({1}).Selected = true; ", controlDropDownName, propertieName);
-                    code +=
-                        string.Format("ListItem {0}ListItem = {0}.Items.FindByValue({1}.ToString()); ",
-                            controlDropDownName, propertieName) + NewLine;
-                    code += " " + NewLine;
-                    code += $"if ({controlDropDownName}ListItem != null) " + NewLine;
-                    code += "{" + NewLine;
-                    code += $"{controlDropDownName}ListItem.Selected = true; " + NewLine;
-                    code += "};" + NewLine;
-                    code += " " + NewLine;
-                    break;
-                }
-            }
+        //protected string DropDownFindByValue(string columnName)
+        //{
+        //    var code = "";
+        //    foreach (var map in DropColumns)
+        //    {
+        //        if ((map.ColumnName == columnName) && (map.TableName != TableName))
+        //        {
+        //            var controlDropDownName = string.Format(ControlName.FormatDropDownName, columnName);
+        //            var propertieName = string.Format(ControlName.FormatpropertieName, TableName, columnName);
+        //            //code = string.Format("{0}.Items.FindByValue({1}).Selected = true; ", controlDropDownName, propertieName);
+        //            code +=
+        //                string.Format("ListItem {0}ListItem = {0}.Items.FindByValue({1}.ToString()); ",
+        //                    controlDropDownName, propertieName) + NewLine;
+        //            code += " " + NewLine;
+        //            code += $"if ({controlDropDownName}ListItem != null) " + NewLine;
+        //            code += "{" + NewLine;
+        //            code += $"{controlDropDownName}ListItem.Selected = true; " + NewLine;
+        //            code += "};" + NewLine;
+        //            code += " " + NewLine;
+        //            break;
+        //        }
+        //    }
 
-            return code;
-        }
+        //    return code;
+        //}
 
-        public string MapDropDownToProPerties(DataColumn column)
-        {
-            var code = "";
-            foreach (var map in DropColumns)
-            {
-                if ((map.ColumnName == column.ColumnName) && (map.TableName != TableName))
-                {
-                    var controlDropDownName = string.Format(ControlName.FormatDropDownName, column.ColumnName);
-                    var propertieName = string.Format(ControlName.FormatpropertieName, TableName, column.ColumnName);
-                    //mpoOrder.CUS_ID = drpCustomer.SelectedValue;
-                    code += $"if ({controlDropDownName}.SelectedIndex > 0)" + NewLine;
+        //public string MapDropDownToProPerties(DataColumn column)
+        //{
+        //    var code = "";
+        //    foreach (var map in DropColumns)
+        //    {
+        //        if ((map.ColumnName == column.ColumnName) && (map.TableName != TableName))
+        //        {
+        //            var controlDropDownName = string.Format(ControlName.FormatDropDownName, column.ColumnName);
+        //            var propertieName = string.Format(ControlName.FormatpropertieName, TableName, column.ColumnName);
+        //            //mpoOrder.CUS_ID = drpCustomer.SelectedValue;
+        //            code += $"if ({controlDropDownName}.SelectedIndex > 0)" + NewLine;
 
-                    code += "{" + NewLine;
-                    if (column.DataType.ToString() == "System.Decimal")
-                    {
-                        code += $"{propertieName} = Convert.ToDecimal({controlDropDownName}.SelectedValue); " + NewLine;
-                    }
-                    else if (column.DataType.ToString() == "System.Int32")
-                    {
-                        //Convert.ToInt32
-                        code += $"{propertieName} = Convert.ToInt32({controlDropDownName}.SelectedValue); " + NewLine;
-                    }
-                    else if (column.DataType.ToString() == "System.Int16")
-                    {
-                        //Convert.ToInt32
-                        code += $"{propertieName} = Convert.ToInt16({controlDropDownName}.SelectedValue); " + NewLine;
-                    }
-                    else
-                    {
-                        code += $"{propertieName} = {controlDropDownName}.SelectedValue; " + NewLine;
-                    }
+        //            code += "{" + NewLine;
+        //            if (column.DataType.ToString() == "System.Decimal")
+        //            {
+        //                code += $"{propertieName} = Convert.ToDecimal({controlDropDownName}.SelectedValue); " + NewLine;
+        //            }
+        //            else if (column.DataType.ToString() == "System.Int32")
+        //            {
+        //                //Convert.ToInt32
+        //                code += $"{propertieName} = Convert.ToInt32({controlDropDownName}.SelectedValue); " + NewLine;
+        //            }
+        //            else if (column.DataType.ToString() == "System.Int16")
+        //            {
+        //                //Convert.ToInt32
+        //                code += $"{propertieName} = Convert.ToInt16({controlDropDownName}.SelectedValue); " + NewLine;
+        //            }
+        //            else
+        //            {
+        //                code += $"{propertieName} = {controlDropDownName}.SelectedValue; " + NewLine;
+        //            }
 
-                    code += "}" + NewLine;
+        //            code += "}" + NewLine;
 
-                    //code = string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;
+        //            //code = string.Format("{0} = {1}.SelectedValue; ", propertieName, controlDropDownName) + _NewLine;
 
-                    break;
-                }
-            }
+        //            break;
+        //        }
+        //    }
 
-            return code;
-        }
+        //    return code;
+        //}
 
-        protected string GenInnitDropDown()
-        {
-            var code = "";
+        //protected string GenInnitDropDown()
+        //{
+        //    var code = "";
 
-            if (HaveDropDown())
-            {
-                code += "private void BindDropDown() " + NewLine;
-                code += "{ " + NewLine;
+        //    if (HaveDropDown())
+        //    {
+        //        code += "private void BindDropDown() " + NewLine;
+        //        code += "{ " + NewLine;
 
-                foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
-                {
-                    foreach (var map in DropColumns)
-                    {
-                        if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
-                        {
-                            //Table MAster Of Drop DownList
-                            var dropDownTableName = map.TableName;
-                            var controlDropDownName = string.Format(ControlName.FormatDropDownName, dataColumn.ColumnName);
-                            code += string.Format("{0}Db _{0}Db = new {0}Db(); ", dropDownTableName) + NewLine;
-                            code += $"{controlDropDownName}.DataSource =  _{dropDownTableName}Db.Select(); " + NewLine;
-                            code += $"{controlDropDownName}.DataTextField = {dropDownTableName}Db.DataText;" + NewLine;
-                            code += $"{controlDropDownName}.DataValueField = {dropDownTableName}Db.DataValue;" +
-                                    NewLine;
+        //        foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
+        //        {
+        //            foreach (var map in DropColumns)
+        //            {
+        //                if ((map.ColumnName == dataColumn.ColumnName) && (map.TableName != TableName))
+        //                {
+        //                    //Table MAster Of Drop DownList
+        //                    var dropDownTableName = map.TableName;
+        //                    var controlDropDownName = string.Format(ControlName.FormatDropDownName, dataColumn.ColumnName);
+        //                    code += string.Format("{0}Db _{0}Db = new {0}Db(); ", dropDownTableName) + NewLine;
+        //                    code += $"{controlDropDownName}.DataSource =  _{dropDownTableName}Db.Select(); " + NewLine;
+        //                    code += $"{controlDropDownName}.DataTextField = {dropDownTableName}Db.DataText;" + NewLine;
+        //                    code += $"{controlDropDownName}.DataValueField = {dropDownTableName}Db.DataValue;" +
+        //                            NewLine;
 
-                            code += $"{controlDropDownName}.DataBind();" + NewLine;
+        //                    code += $"{controlDropDownName}.DataBind();" + NewLine;
 
-                            code += $"var {controlDropDownName}lt = new ListItem(\"please select\", \"0\"); " + NewLine;
-                            code += string.Format("{0}.Items.Insert(0, {0}lt);", controlDropDownName) + NewLine;
+        //                    code += $"var {controlDropDownName}lt = new ListItem(\"please select\", \"0\"); " + NewLine;
+        //                    code += string.Format("{0}.Items.Insert(0, {0}lt);", controlDropDownName) + NewLine;
 
-                            code += " " + NewLine;
-                        }
-                    }
-                }
-                code += "}" + NewLine;
-            }
+        //                    code += " " + NewLine;
+        //                }
+        //            }
+        //        }
+        //        code += "}" + NewLine;
+        //    }
 
-            return code;
-        }
+        //    return code;
+        //}
 
         #endregion DropDown
 

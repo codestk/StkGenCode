@@ -265,7 +265,7 @@ namespace StkGenCode.Code.Template
 
             var stroeName = "Sp_Get" + TableName + "_Autocomplete";
             code += "DROP PROCEDURE   [dbo].[" + stroeName + "];" + NewLine;
-            code += "go" + NewLine;
+            code += GenGoSplitBatch();
             code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + NewLine;
             //code += "create PROCEDURE [dbo].[Sp_Getfxrates_family_Autocomplete]  " + _NewLine;
             code += "     @Key_word    nvarchar(50) " + NewLine;
@@ -315,9 +315,7 @@ namespace StkGenCode.Code.Template
             code += "END    " + NewLine;
             code += "   " + NewLine;
 
-            code += "" + NewLine;
-            code += "" + NewLine;
-            code += "" + NewLine;
+            code += GenGoSplitBatch();
             return code;
         }
 
@@ -327,7 +325,7 @@ namespace StkGenCode.Code.Template
 
             var stroeName = "Sp_Get" + TableName + "_Autocomplete";
             code += "DROP PROCEDURE   [dbo].[" + stroeName + "];" + NewLine;
-            code += "go" + NewLine;
+            code += GenGoSplitBatch();
             code += "CREATE PROCEDURE [dbo].[" + stroeName + "]" + NewLine;
             //code += "create PROCEDURE [dbo].[Sp_Getfxrates_family_Autocomplete]  " + _NewLine;
             //code += "     @Key_word    nvarchar(50) " + _NewLine;
@@ -377,9 +375,8 @@ namespace StkGenCode.Code.Template
             code += "END    " + NewLine;
             code += "   " + NewLine;
 
-            code += "" + NewLine;
-            code += "" + NewLine;
-            code += "" + NewLine;
+            code += GenGoSplitBatch();
+
             return code;
         }
 
@@ -427,6 +424,8 @@ namespace StkGenCode.Code.Template
             //code += "         END " + _NewLine;
 
             code += "       END     " + NewLine;
+        
+       
             code += GenGoSplitBatch();
             return code;
         }

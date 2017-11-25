@@ -564,7 +564,7 @@ namespace StkGenCode.Code.Template
             var code = "";
             code += "function ClearSort() {" + NewLine;
             code += "$('#tbResult').find('th').each(function() {" + NewLine;
-            code += "var columnName = $(this).attr(\"data-column-id\");" + NewLine;
+            code += "var columnName = $(this).attr(\"data-column-name\");" + NewLine;
             code += "$(this).html(columnName);" + NewLine;
             code += "});" + NewLine;
             code += "}" + NewLine;
@@ -576,9 +576,13 @@ namespace StkGenCode.Code.Template
             var code = "";
             code += "function Sort(th) {" + NewLine;
             code += "" + NewLine;
-            code += "var ColumnSortName = th.attributes['data-column-id'].value;" + NewLine;
+            //code += "var ColumnSortName = th.attributes['data-column-id'].value;" + NewLine;
+
+            code += "var ColumnSortid = th.attributes['data-column-id'].value;" + NewLine;
+            code += "var ColumnSortName = th.attributes['data-column-name'].value;" + NewLine;
+
             code += "ClearSort();" + NewLine;
-            code += "SortExpression = ColumnSortName;" + NewLine;
+            code += "SortExpression = ColumnSortid;" + NewLine;
             code += "if (SortDirection == 'DESC') {" + NewLine;
             code += "SortDirection = 'ASC';" + NewLine;
             code += "" + NewLine;
@@ -822,6 +826,8 @@ namespace StkGenCode.Code.Template
 
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
+
+                string label = LabelTemplate.GetLabel(dataColumn.ColumnName);
                 string sortFunction = "";
                 if (ExceptionType.Contains(dataColumn.DataType.ToString()))
                 {
@@ -831,10 +837,14 @@ namespace StkGenCode.Code.Template
                 {
                     sortFunction = "onclick=\"Sort(this);\"";
                 }
+
+
                 code +=
-         $"<th   data-column-id=\"{dataColumn.ColumnName}\"  {sortFunction}>{dataColumn.ColumnName}</th>" +
-         NewLine;
-                
+                    $"<th   data-column-id=\"{dataColumn.ColumnName}\"   data-column-name=\"{label}\" {sortFunction}>{label}</th>" + NewLine;
+                //       code +=
+                //$"<th   data-column-id=\"{dataColumn.ColumnName}\"  {sortFunction}>{dataColumn.ColumnName}</th>" +
+                //NewLine;
+
 
 
             }
@@ -857,7 +867,7 @@ namespace StkGenCode.Code.Template
             //style = "text-align: center"
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-
+                //string label = LabelTemplate.GetLabel(dataColumn.ColumnName);
                 //if (dataColumn.Table.PrimaryKey[0].ToString() == dataColumn.ColumnName)
                 //{
                 //    //primary key ให้อยู่ตรงกลาง
@@ -870,15 +880,17 @@ namespace StkGenCode.Code.Template
 
                 //}
 
-            
 
-              
+
+
 
 
 
                 if ((dataColumn.DataType.ToString() == "System.Boolean") ||
                  (dataColumn.DataType.ToString() == "System.Int16"))
                 {
+
+                   
                     //check box
                     code += " var status" + dataColumn.ColumnName + " ='' ;" + NewLine;
                     code += "if (result[key]." + dataColumn.ColumnName + " == '1')" + NewLine;

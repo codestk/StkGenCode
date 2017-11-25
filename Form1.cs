@@ -17,9 +17,9 @@ namespace StkGenCode
         //List All Table to display
 
         //Write file by path
-        private string _constr;
+        //private string _constr;
 
-        private string _path;
+        //private string _path;
 
         public Form1()
         {
@@ -28,226 +28,228 @@ namespace StkGenCode
 
         /// <summary>
         /// </summary>
-        /// <param name="_ds"></param>
+        /// <param name="_ds">dataset</param>
         /// <param name="tableName"></param>
         /// <param name="columnDropDown">Clumn:Table;</param>
-        /// <param name="exceptionColumn">Column;Column</param>
-        private void Gen(DataSet _ds, string tableName, string columnDropDown = "", string exceptionColumn = "")
-        {
-            var f = new FileCode { Path = _path };
+        /// <param name="exceptionColumn">Column;Column;Column;</param>
+        /// <param name="columnAndLabelSet">ProductLineId:แหล่งที่มา; </param>
+        //private void Gen(DataSet _ds, string tableName, string columnDropDown = "", string exceptionColumn = "",string columnAndLabelSet="")
+        //{
+        //    var f = new FileCode { Path = _path };
 
 
-            //ใช้สำหรับ ระบุแหล่งที่มากับ Source
-            var textTemplate = new TextTemplate();
-            textTemplate.ColumnSet = "ProductLineId:แหล่งที่มา;";
+        //    //ใช้สำหรับทำ  Label
+        //    var textTemplate = new TextTemplate();
+        //    textTemplate.ColumnAndLabelSet = columnAndLabelSet;
 
-            List<MappingColumn> dropColumnsColumn = null;
-            if (columnDropDown != "")
-                dropColumnsColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
-
-
-            List<string> exceptionColumnX = null;
-            exceptionColumnX = exceptionColumn.Split(';').ToList();
+        //    //Drop Down List
+        //    List<MappingColumn> dropColumnsColumn = null;
+        //    if (columnDropDown != "")
+        //        dropColumnsColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
 
 
-            var aspxFromCodeaspx = new AspxFromCode
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName,
-                DropColumns = dropColumnsColumn
-               ,ExceptionColumn = exceptionColumnX,
-                LabelTemplate = textTemplate
-
-            };
-            aspxFromCodeaspx.Gen();
+        //    List<string> exceptionColumnX = null;
+        //    exceptionColumnX = exceptionColumn.Split(';').ToList();
 
 
+        //    var aspxFromCodeaspx = new AspxFromCode
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName,
+        //        DropColumns = dropColumnsColumn
+        //       ,ExceptionColumn = exceptionColumnX,
+        //        LabelTemplate = textTemplate
 
-            var aspxFromCodeBehide = new AspxFromCodeBehide
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName,
-                DropColumns = dropColumnsColumn
-                ,
-                ExceptionColumn = exceptionColumnX
-            };
-            aspxFromCodeBehide.Gen();
+        //    };
+        //    aspxFromCodeaspx.Gen();
 
-            #region Picture Module
 
-            if (aspxFromCodeaspx.HavePicture())
-            {
-                var ApiControllerPath = _path + @"AppCode\Services\Api\";
-                f.Path = ApiControllerPath;
-                var ApiController = new ImageApiController
-                {
-                    FileCode = f,
-                    Ds = _ds,
-                    TableName = tableName
-                    ,
-                    ExceptionColumn = exceptionColumnX
-                };
-                ApiController.Gen();
 
-                var HandlerPath = _path;
-                f.Path = HandlerPath;
-                var Handler = new ImageHandler
-                {
-                    FileCode = f,
-                    Ds = _ds,
-                    TableName = tableName
-                    ,
-                    ExceptionColumn = exceptionColumnX
-                };
-                Handler.Gen();
+        //    var aspxFromCodeBehide = new AspxFromCodeBehide
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName,
+        //        DropColumns = dropColumnsColumn
+        //        ,
+        //        ExceptionColumn = exceptionColumnX
+        //    };
+        //    aspxFromCodeBehide.Gen();
 
-                var DbCodeImagePath = _path + @"AppCode\Business\"; ;
-                f.Path = DbCodeImagePath;
-                var _DbCodeImage = new DbCodeImage
-                {
-                    FileCode = f,
-                    Ds = _ds,
-                    TableName = tableName
-                    ,
-                    ExceptionColumn = exceptionColumnX
-                };
-                _DbCodeImage.Gen();
-            }
+        //    #region Picture Module
 
-            #endregion Picture Module
+        //    if (aspxFromCodeaspx.HavePicture())
+        //    {
+        //        var ApiControllerPath = _path + @"AppCode\Services\Api\";
+        //        f.Path = ApiControllerPath;
+        //        var ApiController = new ImageApiController
+        //        {
+        //            FileCode = f,
+        //            Ds = _ds,
+        //            TableName = tableName
+        //            ,
+        //            ExceptionColumn = exceptionColumnX
+        //        };
+        //        ApiController.Gen();
 
-            f.Path = _path;
-            var aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName,
-                DropColumns = dropColumnsColumn,
-                ExceptionColumn = exceptionColumnX
-            };
-            aspxTableCodeFilterColumn.Gen();
+        //        var HandlerPath = _path;
+        //        f.Path = HandlerPath;
+        //        var Handler = new ImageHandler
+        //        {
+        //            FileCode = f,
+        //            Ds = _ds,
+        //            TableName = tableName
+        //            ,
+        //            ExceptionColumn = exceptionColumnX
+        //        };
+        //        Handler.Gen();
 
-            var aspxTableCodeFilterColumnCodeBehide =
-                new AspxTableCodeFilterColumnCodeBehide
-                {
-                    FileCode = f,
-                    Ds = _ds,
-                    TableName = tableName,
-                    DropColumns = dropColumnsColumn
-                    ,
-                    ExceptionColumn = exceptionColumnX
-                };
-            //_AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
-            aspxTableCodeFilterColumnCodeBehide.Gen();
+        //        var DbCodeImagePath = _path + @"AppCode\Business\"; ;
+        //        f.Path = DbCodeImagePath;
+        //        var _DbCodeImage = new DbCodeImage
+        //        {
+        //            FileCode = f,
+        //            Ds = _ds,
+        //            TableName = tableName
+        //            ,
+        //            ExceptionColumn = exceptionColumnX
+        //        };
+        //        _DbCodeImage.Gen();
+        //    }
 
-            //Asmx Service
-            string pathPageServiceAsmx = _path + @"\Services\";
-            f.Path = pathPageServiceAsmx;
-            var pageService = new PageService
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName
-                ,
-                ExceptionColumn = exceptionColumnX
-            };
-            pageService.Gen();
+        //    #endregion Picture Module
 
-            //var pathPageServiceCodeBehide = _path + @"App_Code\Services\";
+        //    f.Path = _path;
+        //    var aspxTableCodeFilterColumn = new AspxTableCodeFilterColumn
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName,
+        //        DropColumns = dropColumnsColumn,
+        //        ExceptionColumn = exceptionColumnX
+        //    };
+        //    aspxTableCodeFilterColumn.Gen();
 
-            var pathPageServiceCodeBehide = _path + @"\Services\";
-            f.Path = pathPageServiceCodeBehide;
-            //f.Path = pathPageServiceCodeBehide;
-            var pageServiceCodeBehide = new PageServiceCodeBehide
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName,
-                ExceptionColumn = exceptionColumnX
-            };
-            pageServiceCodeBehide.Gen();
+        //    var aspxTableCodeFilterColumnCodeBehide =
+        //        new AspxTableCodeFilterColumnCodeBehide
+        //        {
+        //            FileCode = f,
+        //            Ds = _ds,
+        //            TableName = tableName,
+        //            DropColumns = dropColumnsColumn
+        //            ,
+        //            ExceptionColumn = exceptionColumnX
+        //        };
+        //    //_AspxTableCodeFilterColumnCodeBehide.AspxFromCodeBehide = _AspxFromCodeBehide;
+        //    aspxTableCodeFilterColumnCodeBehide.Gen();
 
-            var pathSQlScript = _path + @"SQL\";
-            f.Path = pathSQlScript;
-            var storeProCode = new StoreProCode
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName
-                ,
-                ExceptionColumn = exceptionColumnX
-            };
-            storeProCode.Gen();
+        //    //Asmx Service
+        //    string pathPageServiceAsmx = _path + @"\Services\";
+        //    f.Path = pathPageServiceAsmx;
+        //    var pageService = new PageService
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName
+        //        ,
+        //        ExceptionColumn = exceptionColumnX
+        //    };
+        //    pageService.Gen();
 
-            //Gen Javascript
+        //    //var pathPageServiceCodeBehide = _path + @"App_Code\Services\";
 
-            var pathJsU = _path + @"Js_U\";
-            f.Path = pathJsU;
-            var jsCode = new JsCode
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName
-                ,
-                ExceptionColumn = exceptionColumnX
-            };
-            jsCode.Gen();
+        //    var pathPageServiceCodeBehide = _path + @"\Services\";
+        //    f.Path = pathPageServiceCodeBehide;
+        //    //f.Path = pathPageServiceCodeBehide;
+        //    var pageServiceCodeBehide = new PageServiceCodeBehide
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName,
+        //        ExceptionColumn = exceptionColumnX
+        //    };
+        //    pageServiceCodeBehide.Gen();
 
-            //========Folder Code
+        //    var pathSQlScript = _path + @"SQL\";
+        //    f.Path = pathSQlScript;
+        //    var storeProCode = new StoreProCode
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName
+        //        ,
+        //        ExceptionColumn = exceptionColumnX
+        //    };
+        //    storeProCode.Gen();
 
-            var pathBuCode = _path + @"AppCode\Business\";
-            f.Path = pathBuCode;
-            var pcode = new PropertiesCode
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName
-                ,
-                ExceptionColumn = exceptionColumnX
-            };
-            pcode.Gen();
+        //    //Gen Javascript
+
+        //    var pathJsU = _path + @"Js_U\";
+        //    f.Path = pathJsU;
+        //    var jsCode = new JsCode
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName
+        //        ,
+        //        ExceptionColumn = exceptionColumnX
+        //    };
+        //    jsCode.Gen();
+
+        //    //========Folder Code
+
+        //    var pathBuCode = _path + @"AppCode\Business\";
+        //    f.Path = pathBuCode;
+        //    var pcode = new PropertiesCode
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName
+        //        ,
+        //        ExceptionColumn = exceptionColumnX
+        //    };
+        //    pcode.Gen();
 
            
-            var pathPropertiesCValidate = _path + @"AppCode\Business\";
-            f.Path = pathPropertiesCValidate;
-            var propertiesCodeValidatetor = new PropertiesCodeValidatetor() 
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName
-                ,
-                ExceptionColumn = exceptionColumnX
-            };
-            propertiesCodeValidatetor.Gen();
+        //    var pathPropertiesCValidate = _path + @"AppCode\Business\";
+        //    f.Path = pathPropertiesCValidate;
+        //    var propertiesCodeValidatetor = new PropertiesCodeValidatetor() 
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName
+        //        ,
+        //        ExceptionColumn = exceptionColumnX
+        //    };
+        //    propertiesCodeValidatetor.Gen();
 
 
-            //DbCode _DbCode = new DbCode();
-            //_DbCode._FileCode = F;
-            //_DbCode._ds = _ds;
-            //_DbCode._TableName = _TableName;
-            //_DbCode.Gen();
+        //    //DbCode _DbCode = new DbCode();
+        //    //_DbCode._FileCode = F;
+        //    //_DbCode._ds = _ds;
+        //    //_DbCode._TableName = _TableName;
+        //    //_DbCode.Gen();
 
-            //var dbCodeFireBird = new DbCodeFireBird
-            //{
-            //    FileCode = f,
-            //    Ds = _ds,
-            //    TableName = tableName
-            //};
-            //dbCodeFireBird.Gen();
+        //    //var dbCodeFireBird = new DbCodeFireBird
+        //    //{
+        //    //    FileCode = f,
+        //    //    Ds = _ds,
+        //    //    TableName = tableName
+        //    //};
+        //    //dbCodeFireBird.Gen();
 
-            var dbCodeSqlServer = new DbCodeSqlServer
-            {
-                FileCode = f,
-                Ds = _ds,
-                TableName = tableName
-                ,
-                ExceptionColumn = exceptionColumnX
+        //    var dbCodeSqlServer = new DbCodeSqlServer
+        //    {
+        //        FileCode = f,
+        //        Ds = _ds,
+        //        TableName = tableName
+        //        ,
+        //        ExceptionColumn = exceptionColumnX
               
-            };
-            dbCodeSqlServer.Gen();
-        }
+        //    };
+        //    dbCodeSqlServer.Gen();
+        //}
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -294,8 +296,12 @@ namespace StkGenCode
 
         private void btnGen_Click(object sender, EventArgs e)
         {
-            _constr = txtConstring.Text;
-            _path = textBox1.Text;
+
+            Generator generator = new Generator();
+            generator.Constr = txtConstring.Text;
+            generator.Path = textBox1.Text;
+
+            string connectionstring = "";
 
             #region
             //SetDb();
@@ -324,10 +330,10 @@ namespace StkGenCode
             //=================================================================================================
             #endregion
 
-            ClearFile();
+            //ClearFile();
             txtConstring.Text = @"Data Source=.;Initial Catalog=WebApp;User ID=sa;Password=P@ssw0rd";
             txtConstring.Text = @"Data Source=.;Initial Catalog=App;User ID=sa;Password=P@ssw0rd";
-
+            connectionstring = txtConstring.Text;
             //Ice Work
             //string ColumnDropDown = "DepCode:Department;Status:AccountStatus;";
             string ColumnDropDown = "";
@@ -352,77 +358,91 @@ namespace StkGenCode
             //Gen(TestValidate, "TestValidate", ColumnDropDown);
 
 
+            //===================================================================================================
+            //DataSet Source = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Source");
+            //Gen(Source, "Source", ColumnDropDown);
 
-            DataSet Source = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Source");
-            Gen(Source, "Source", ColumnDropDown);
-
-            DataSet Category = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Category");
-            Gen(Category, "Category", ColumnDropDown);
-
-
-            DataSet TestFormula = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TestFormula");
-            Gen(TestFormula, "TestFormula", ColumnDropDown);
+            //DataSet Category = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Category");
+            //Gen(Category, "Category", ColumnDropDown);
 
 
-
-            
-            DataSet Line = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Line");
-            Gen(Line, "Line", ColumnDropDown);
-
-            DataSet LineSize = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "LineSize");
-            Gen(LineSize, "LineSize", ColumnDropDown);
+            //DataSet TestFormula = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TestFormula");
+            //Gen(TestFormula, "TestFormula", ColumnDropDown);
 
 
 
-            DataSet CustomerBrand = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "CustomerBrand");
-            Gen(CustomerBrand, "CustomerBrand", ColumnDropDown);
+
+            //DataSet Line = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Line");
+            //Gen(Line, "Line", ColumnDropDown);
+
+            //DataSet LineSize = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "LineSize");
+            //Gen(LineSize, "LineSize", ColumnDropDown);
 
 
 
-            DataSet Contain = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Contain");
-            Gen(Contain, "Contain", ColumnDropDown);
+            //DataSet CustomerBrand = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "CustomerBrand");
+            //Gen(CustomerBrand, "CustomerBrand", ColumnDropDown);
 
 
-            DataSet ProductLine = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "ProductLine");
-            Gen(ProductLine, "ProductLine", "SourceID:Source;LineID:Line;ContainID:Contain;LineSizeID:LineSize;CustomerBrandID:CustomerBrand;TestFormulaID:TestFormula;", "CreateDate;");
-            
+            generator.ClearFile();
+            DataSet Contain = Db.GetSchemaSqlServer(connectionstring, "Contain");
+            generator.Gen(Contain, "Contain", ColumnDropDown);
 
-                //,[SourceID]
-                //,[LineID]
-                //,[TestFormulaID]
-                //,[ContainID]
-                //,[LineSizeID]
-                //,[CustomerBrandID]
-                //,[ManufacturingDate]
-                //,[ExpectItems]
-                //,[ProcessItems]
 
-        //end  ice work
+            DataSet ProductLine = Db.GetSchemaSqlServer(connectionstring, "ProductLine");
+            string productLineLabelSet =
+                "ProductLineId:รหัส;SourceID:แหล่งที่มา;CategoryID:ประเภท;LineID:ไลน์ผลิต;ContainID:ขนาดบรรจุ;LineSizeID:ขนาดเส้น;CustomerBrandID:ตรา/ลูกค้า;TestFormulaID:รสชาติสูตร;ManufacturingDate:วันผลิต;ExpectItems:จำนวน;CreateDate:วันที่ทำคำสั่ง;OutHouse:สินค้าภายนอก";
+            string productColumnHide = "CreateDate;ProcessItems;";
+            string productMapDropDown =
+                "SourceID:Source;CategoryID:Category;LineID:Line;ContainID:Contain;LineSizeID:LineSize;CustomerBrandID:CustomerBrand;TestFormulaID:TestFormula;";
+            generator.Gen(ProductLine, "ProductLine", productMapDropDown, productColumnHide, productLineLabelSet);
 
-        //location work
 
-        //end location
+            //DataSet Contact = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Contact");
 
-        //string ColumnDropDown = "SupplierID:Suppliers;CategoryID:Categories;";
-        //DataSet Categories = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Categories");
-        //Gen(Categories, "Categories", ColumnDropDown);
 
-        //DataSet Suppliers = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Suppliers");
-        //Gen(Suppliers, "Suppliers", ColumnDropDown);
+            //string ContactLabelSet =
+            //    "ProductLineId:รหัส;SourceID:แหล่งที่มา;LineID:ไลน์ผลิต;ContainID:ขนาดบรรจุ;LineSizeID:ขนาดเส้น;CustomerBrandID:ตรา/ลูกค้า;TestFormulaID:รสชาติสูตร;ManufacturingDate:วันผลิต;ExpectItems:จำนวน;CreateDate:วันที่ทำคำสั่ง";
+            //string  
+            //generator.Gen(Contact, "Contact", "SourceID:Source;LineID:Line;ContainID:Contain;LineSizeID:LineSize;CustomerBrandID:CustomerBrand;TestFormulaID:TestFormula;", , ContactLabelSet);
 
-        //DataSet Products = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Products");
-        //Gen(Products, "Products", ColumnDropDown);
 
-        //Copy ไฟล์=================================================================================================================
-        Process.Start(@"D:\GitWorkSpace\StkGenCode\copy.bat");
+            //,[SourceID]
+            //,[LineID]
+            //,[TestFormulaID]
+            //,[ContainID]
+            //,[LineSizeID]
+            //,[CustomerBrandID]
+            //,[ManufacturingDate]
+            //,[ExpectItems]
+            //,[ProcessItems]
+
+            //end  ice work
+
+            //location work
+
+            //end location
+
+            //string ColumnDropDown = "SupplierID:Suppliers;CategoryID:Categories;";
+            //DataSet Categories = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Categories");
+            //Gen(Categories, "Categories", ColumnDropDown);
+
+            //DataSet Suppliers = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Suppliers");
+            //Gen(Suppliers, "Suppliers", ColumnDropDown);
+
+            //DataSet Products = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Products");
+            //Gen(Products, "Products", ColumnDropDown);
+
+            //Copy ไฟล์=================================================================================================================
+            Process.Start(@"D:\GitWorkSpace\StkGenCode\copy.bat");
             Console.ReadLine();
             Close();
         }
 
-        private void ClearFile()
-        {
-            var f = new FileCode { Path = _path };
-            f.ClearAllFile();
-        }
+        //private void ClearFile()
+        //{
+        //    var f = new FileCode { Path = _path };
+        //    f.ClearAllFile();
+        //}
     }
 }

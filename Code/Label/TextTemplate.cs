@@ -6,16 +6,16 @@ namespace StkGenCode.Code.Label
     {
         // TextID:บ้านเลขที่;Number:ตัวเลข;
         //string MappingLabel = "Col1:Text1;Col2:Text1;Col3:Text1;";
-        public string ColumnSet;
+        public string ColumnAndLabelSet;
 
         public string GetLabel(string columnName)
         {
-            if (ColumnSet == "")
+            if (ColumnAndLabelSet == "")
             {
                 return columnName;
             }
 
-            var columnAndTextSet = ColumnSet.Trim(';').Split(';');
+            var columnAndTextSet = ColumnAndLabelSet.Trim(';').Split(';');
 
             Dictionary<string, string> dictionary =
                 new Dictionary<string, string>();
@@ -36,7 +36,7 @@ namespace StkGenCode.Code.Label
                 return textResult;
             }
 
-            //หาไม่เจอ
+            //หาไม่เจอ return ชื่อ Column
             return columnName;
         }
     }
