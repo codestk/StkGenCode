@@ -80,9 +80,9 @@ new[] { "System.Byte[]", "System.Guid" });
         /// </summary>
         /// <param name="columnSize"></param>
         /// <param name="chekPrimarykey"></param>
-        /// <param name="exceptionColumne"></param>
+        /// <param name="exColumnDisplay"></param>
         /// <returns></returns>
-        public string GenControls(int columnSize, bool chekPrimarykey, bool exceptionColumne)
+        public string GenControls(int columnSize, bool chekPrimarykey, bool exColumnDisplay)
         {
             var code = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
@@ -105,7 +105,7 @@ new[] { "System.Byte[]", "System.Guid" });
 
                 }
 
-                if (IsExceptionColumn(dataColumn, exceptionColumne))
+                if (IsExceptionColumn(dataColumn, exColumnDisplay))
                 {
                     continue;
                 }
@@ -144,8 +144,8 @@ new[] { "System.Byte[]", "System.Guid" });
                     if (isPrimayKey)
                     {
                         disabled = "ReadOnly=\"true\" ";
-
-                        code += $"<div class=\"  col s{columnSize}\"> " + NewLine;
+                       
+                        code += $"<div id=\"divKey\" class=\"  col s{columnSize}\"> " + NewLine;
                         code += "<label>" + label + " </label> " + NewLine;
                         //code += "<label>" +   LabelTemplate.GetLabel( dataColumn.ColumnName) + " </label> " + NewLine;
                          
@@ -299,7 +299,7 @@ new[] { "System.Byte[]", "System.Guid" });
 
         #region Map
 
-        protected string MapProPertiesToControl(DataSet ds, bool commentKey = false)
+        protected string MapProPertiesToControl(DataSet ds, bool commentKey = false,bool isExceptionColumn=false)
         {
             var code = "";
 
@@ -309,7 +309,7 @@ new[] { "System.Byte[]", "System.Guid" });
                 //{
                 //    continue;
                 //}
-                if (IsExceptionColumn(dataColumn, true))
+                if (IsExceptionColumn(dataColumn, isExceptionColumn))
                 {
                     continue;
                 }

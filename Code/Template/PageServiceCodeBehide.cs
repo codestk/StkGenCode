@@ -243,10 +243,10 @@ namespace StkGenCode.Code.Template
                 //    continue;
                 //}
 
-                if (IsExceptionColumn(dataColumn,true))
-                {
-                    continue;
-                }
+                //if (IsExceptionColumn(dataColumn,false))
+                //{
+                //    continue;
+                //}
 
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
@@ -263,7 +263,8 @@ namespace StkGenCode.Code.Template
             code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
             code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(Ds,false,true);
+           // code += MapJsonToProPerties(Ds,false,true);
+            code += MapJsonToProPerties(Ds, false, false);
 
             code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
             code += "    _" + TableName + "Db.Update(); " + NewLine;
@@ -279,10 +280,10 @@ namespace StkGenCode.Code.Template
             var pararmeter = "";
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
-                if (ExceptionType.Contains(dataColumn.DataType.ToString()))
-                {
-                    continue;
-                }
+                //if (ExceptionType.Contains(dataColumn.DataType.ToString()))
+                //{
+                //    continue;
+                //}
                 //Parameter เป็น String หมด
                 pararmeter += $"string {dataColumn.ColumnName},";
             }
@@ -298,7 +299,7 @@ namespace StkGenCode.Code.Template
             code += " " + TableName + " _" + TableName + " = new " + TableName + "(); " + NewLine;
             code += "  " + TableName + "Db _" + TableName + "Db = new " + TableName + "Db(); " + NewLine;
 
-            code += MapJsonToProPerties(Ds,false,true);
+            code += MapJsonToProPerties(Ds,false,false);
 
             code += "  _" + TableName + "Db._" + TableName + " = _" + TableName + ";" + NewLine;
             code += "    _" + TableName + "Db.Delete(); " + NewLine;

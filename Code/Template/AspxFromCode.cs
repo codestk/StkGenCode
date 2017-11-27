@@ -212,6 +212,11 @@ namespace StkGenCode.Code.Template
             code += "Materialize.toast('Your data has been saved.', 3000, 'toastCss');" + NewLine;
             code += $" $('#{controlTextBoxPrimay}').val(result);" + NewLine;
 
+
+            //แสดง textbox primary key ที่ซ่อนไว้ตอนแรก
+            code += "$('#divKey').show();" + NewLine;
+
+
             code += "$('#btnSave').hide();" + NewLine;
 
             code += "$('#btnUpdate').show();" + NewLine;
@@ -235,7 +240,7 @@ namespace StkGenCode.Code.Template
 
         private string GenJavaScriptUpdate()
         {
-            var columnParameter = ColumnString.GenLineString(Ds, "{0},", ExceptionColumn);
+            var columnParameter = ColumnString.GenLineString(Ds, "{0},");
             columnParameter = columnParameter.TrimEnd(',');
             var code = "";
             code += "function Update() {" + NewLine;
@@ -328,6 +333,9 @@ namespace StkGenCode.Code.Template
 
             code += MapProPertiesToControl(Ds);
 
+            code += "$('#divKey').show();" + NewLine;
+
+
             code += "$('#btnSave').hide();" + NewLine;
 
             if (HavePicture())
@@ -366,7 +374,7 @@ namespace StkGenCode.Code.Template
 
             code += " $(document).ready(function () " + NewLine;
             code += "{" + NewLine;
-
+            code += "$('#divKey').hide();" + NewLine;
             code += "$('.modal-trigger').leanModal();" + NewLine;
 
             code += "ForceNumberTextBox(); " + NewLine;
@@ -545,28 +553,28 @@ namespace StkGenCode.Code.Template
             return code;
         }
 
-        private string DropAreaHtml()
-        {
-            string code = "";
-            code += "  <div id=\"drop-area\">";
-            code += "        <div id=\"drop-area-detail\">";
-            code += "";
-            code += "            <h3 class=\"drop-text\">Drag and Drop Images Here</h3>";
-            code += "";
-            code += "            <div class=\"progress\">";
-            code += "                <div class=\"bar\"></div>";
-            code += "                <div class=\"percent\">0%</div>";
-            code += "            </div>";
-            code += "        </div>";
-            code += "        <div id=\"drop-area-preview\">";
-            code += "            <img id=\"imgPreview\" src=\"\" height=\"131\" width=\"174\" alt=\"Image preview...\">";
-            code += "            <img id=\"imgRemove\" src=\"Images/Close.png\" />";
-            code += "        </div>";
+        //private string DropAreaHtml()
+        //{
+        //    string code = "";
+        //    code += "  <div id=\"drop-area\">";
+        //    code += "        <div id=\"drop-area-detail\">";
+        //    code += "";
+        //    code += "            <h3 class=\"drop-text\">Drag and Drop Images Here</h3>";
+        //    code += "";
+        //    code += "            <div class=\"progress\">";
+        //    code += "                <div class=\"bar\"></div>";
+        //    code += "                <div class=\"percent\">0%</div>";
+        //    code += "            </div>";
+        //    code += "        </div>";
+        //    code += "        <div id=\"drop-area-preview\">";
+        //    code += "            <img id=\"imgPreview\" src=\"\" height=\"131\" width=\"174\" alt=\"Image preview...\">";
+        //    code += "            <img id=\"imgRemove\" src=\"Images/Close.png\" />";
+        //    code += "        </div>";
 
-            code += "   <div id=\"status\"></div>";
-            code += "    </div>";
-            return code;
-        }
+        //    code += "   <div id=\"status\"></div>";
+        //    code += "    </div>";
+        //    return code;
+        //}
 
         public override void Gen()
         {
@@ -587,7 +595,9 @@ namespace StkGenCode.Code.Template
 
             code += GenDivFormBegin();
 
-            code += GenControls(9,true,true);
+            //code += GenControls(9,true,true);
+
+            code += GenControls(9, true, false);
 
             code += GenButton();
 

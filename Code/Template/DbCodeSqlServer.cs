@@ -244,7 +244,7 @@ namespace StkGenCode.Code.Template
             foreach (DataColumn dataColumn in Ds.Tables[0].Columns)
             {
 
-                if (IsExceptionColumn( dataColumn,true))
+                if (IsExceptionColumn( dataColumn,false))
                 {
                     continue;
                 }

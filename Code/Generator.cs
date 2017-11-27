@@ -14,7 +14,7 @@ namespace StkGenCode.Code
 
         public string Path;
 
-        public void Gen(DataSet _ds, string tableName, string columnDropDown = "", string exceptionColumn = "", string columnAndLabelSet = "")
+        public void Gen(DataSet _ds, string FileName, string columnDropDown = "", string exceptionColumn = "", string columnAndLabelSet = "")
         {
             
 
@@ -36,7 +36,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName,
+                TableName = FileName,
                 DropColumns = dropColumnsColumn
                ,
                 ExceptionColumn = exceptionColumnX,
@@ -49,7 +49,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName,
+                TableName = FileName,
                 DropColumns = dropColumnsColumn
                 ,
                 ExceptionColumn = exceptionColumnX
@@ -68,7 +68,7 @@ namespace StkGenCode.Code
                 {
                     FileCode = f,
                     Ds = _ds,
-                    TableName = tableName
+                    TableName = FileName
                     ,
                     ExceptionColumn = exceptionColumnX
                 };
@@ -80,7 +80,7 @@ namespace StkGenCode.Code
                 {
                     FileCode = f,
                     Ds = _ds,
-                    TableName = tableName
+                    TableName = FileName
                     ,
                     ExceptionColumn = exceptionColumnX
                 };
@@ -92,7 +92,7 @@ namespace StkGenCode.Code
                 {
                     FileCode = f,
                     Ds = _ds,
-                    TableName = tableName
+                    TableName = FileName
                     ,
                     ExceptionColumn = exceptionColumnX
                 };
@@ -109,7 +109,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName,
+                TableName = FileName,
                 DropColumns = dropColumnsColumn,
                 ExceptionColumn = exceptionColumnX,
                 LabelTemplate = textTemplate
@@ -122,7 +122,7 @@ namespace StkGenCode.Code
                 {
                     FileCode = f,
                     Ds = _ds,
-                    TableName = tableName,
+                    TableName = FileName,
                     DropColumns = dropColumnsColumn,
                     ExceptionColumn = exceptionColumnX
                 };
@@ -136,7 +136,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName
+                TableName = FileName
                 ,
                 ExceptionColumn = exceptionColumnX
             };
@@ -152,7 +152,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName,
+                TableName = FileName,
                 ExceptionColumn = exceptionColumnX
             };
             pageServiceCodeBehide.Gen();
@@ -165,7 +165,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName
+                TableName = FileName
                 ,
                 ExceptionColumn = exceptionColumnX
             };
@@ -179,7 +179,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName
+                TableName = FileName
                 ,
                 ExceptionColumn = exceptionColumnX
             };
@@ -193,7 +193,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName
+                TableName = FileName
                 ,
                 ExceptionColumn = exceptionColumnX
             };
@@ -207,7 +207,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName
+                TableName = FileName
                 ,
                 ExceptionColumn = exceptionColumnX
             };
@@ -231,7 +231,7 @@ namespace StkGenCode.Code
             {
                 FileCode = f,
                 Ds = _ds,
-                TableName = tableName
+                TableName = FileName
                 ,
                 ExceptionColumn = exceptionColumnX
             };

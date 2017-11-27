@@ -1,13 +1,8 @@
 ﻿using StkGenCode.Code;
-using StkGenCode.Code.Column;
-using StkGenCode.Code.Template;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Forms;
-using StkGenCode.Code.Label;
 
 namespace StkGenCode
 {
@@ -37,7 +32,6 @@ namespace StkGenCode
         //{
         //    var f = new FileCode { Path = _path };
 
-
         //    //ใช้สำหรับทำ  Label
         //    var textTemplate = new TextTemplate();
         //    textTemplate.ColumnAndLabelSet = columnAndLabelSet;
@@ -47,10 +41,8 @@ namespace StkGenCode
         //    if (columnDropDown != "")
         //        dropColumnsColumn = MappingColumn.ExtractMappingColumn(columnDropDown);
 
-
         //    List<string> exceptionColumnX = null;
         //    exceptionColumnX = exceptionColumn.Split(';').ToList();
-
 
         //    var aspxFromCodeaspx = new AspxFromCode
         //    {
@@ -63,8 +55,6 @@ namespace StkGenCode
 
         //    };
         //    aspxFromCodeaspx.Gen();
-
-
 
         //    var aspxFromCodeBehide = new AspxFromCodeBehide
         //    {
@@ -211,10 +201,9 @@ namespace StkGenCode
         //    };
         //    pcode.Gen();
 
-           
         //    var pathPropertiesCValidate = _path + @"AppCode\Business\";
         //    f.Path = pathPropertiesCValidate;
-        //    var propertiesCodeValidatetor = new PropertiesCodeValidatetor() 
+        //    var propertiesCodeValidatetor = new PropertiesCodeValidatetor()
         //    {
         //        FileCode = f,
         //        Ds = _ds,
@@ -223,7 +212,6 @@ namespace StkGenCode
         //        ExceptionColumn = exceptionColumnX
         //    };
         //    propertiesCodeValidatetor.Gen();
-
 
         //    //DbCode _DbCode = new DbCode();
         //    //_DbCode._FileCode = F;
@@ -246,7 +234,7 @@ namespace StkGenCode
         //        TableName = tableName
         //        ,
         //        ExceptionColumn = exceptionColumnX
-              
+
         //    };
         //    dbCodeSqlServer.Gen();
         //}
@@ -266,8 +254,6 @@ namespace StkGenCode
         {
             //string con = @"Server=localhost;User=SYSDBA;Password=P@ssw0rd;Database=C:\temp\FireBird\FISHWEIGHT.FDB";
             //var _ds = Db.GetDataFireBird(con, "MPO_FISH");
-
- 
 
             //DataAccessLayer Db = null;
             //DataSet ds = null;
@@ -296,7 +282,6 @@ namespace StkGenCode
 
         private void btnGen_Click(object sender, EventArgs e)
         {
-
             Generator generator = new Generator();
             generator.Constr = txtConstring.Text;
             generator.Path = textBox1.Text;
@@ -353,10 +338,8 @@ namespace StkGenCode
             //DataSet APP_USER = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "APP_USER");
             //Gen(APP_USER, "APP_USER", ColumnDropDown);
 
-
             //DataSet TestValidate = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TestValidate");
             //Gen(TestValidate, "TestValidate", ColumnDropDown);
-
 
             //===================================================================================================
             //DataSet Source = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Source");
@@ -365,12 +348,8 @@ namespace StkGenCode
             //DataSet Category = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Category");
             //Gen(Category, "Category", ColumnDropDown);
 
-
             //DataSet TestFormula = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "TestFormula");
             //Gen(TestFormula, "TestFormula", ColumnDropDown);
-
-
-
 
             //DataSet Line = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Line");
             //Gen(Line, "Line", ColumnDropDown);
@@ -378,34 +357,54 @@ namespace StkGenCode
             //DataSet LineSize = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "LineSize");
             //Gen(LineSize, "LineSize", ColumnDropDown);
 
-
-
             //DataSet CustomerBrand = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "CustomerBrand");
             //Gen(CustomerBrand, "CustomerBrand", ColumnDropDown);
-
 
             generator.ClearFile();
             DataSet Contain = Db.GetSchemaSqlServer(connectionstring, "Contain");
             generator.Gen(Contain, "Contain", ColumnDropDown);
 
 
-            DataSet ProductLine = Db.GetSchemaSqlServer(connectionstring, "ProductLine");
+            //=========================================================================================================
+            DataSet productLine = Db.GetSchemaSqlServer(connectionstring, "ProductLine");
             string productLineLabelSet =
                 "ProductLineId:รหัส;SourceID:แหล่งที่มา;CategoryID:ประเภท;LineID:ไลน์ผลิต;ContainID:ขนาดบรรจุ;LineSizeID:ขนาดเส้น;CustomerBrandID:ตรา/ลูกค้า;TestFormulaID:รสชาติสูตร;ManufacturingDate:วันผลิต;ExpectItems:จำนวน;CreateDate:วันที่ทำคำสั่ง;OutHouse:สินค้าภายนอก";
             string productColumnHide = "CreateDate;ProcessItems;";
             string productMapDropDown =
                 "SourceID:Source;CategoryID:Category;LineID:Line;ContainID:Contain;LineSizeID:LineSize;CustomerBrandID:CustomerBrand;TestFormulaID:TestFormula;";
-            generator.Gen(ProductLine, "ProductLine", productMapDropDown, productColumnHide, productLineLabelSet);
+            generator.Gen(productLine, "ProductLine", productMapDropDown, productColumnHide, productLineLabelSet);
 
+            //=====================================================================================================
+            DataSet ProductPlanning = Db.GetSchemaSqlServer(connectionstring, "ProductPlanning");
+            string ProductPlanningMapDropDown = "ProductLineId:ProductLine;UnitTypeId:UnitType;";
+
+
+          
+
+            string ProductPlanningLabelSet =
+                "UnitTypeId:หน่วย;";
+            string ProductPlanningColumnHide = "ProductPlanningID;";
+
+
+            generator.Gen(ProductPlanning, "ProductPlanning", ProductPlanningMapDropDown, ProductPlanningColumnHide, ProductPlanningLabelSet);
+
+
+            //=================================================================================================
+            DataSet UnitType = Db.GetSchemaSqlServer(connectionstring, "UnitType");
+            string UnitTypePlanningMapDropDown = "ProductLineId:ProductLine;UnitTypeId:UnitType;";
+
+            string UnitTypeLabelSet =
+                "UnitTypeId:หน่วย;";
+            string UnitTypetColumnHide = "ProductPlanningID;";
+
+            generator.Gen(UnitType, "UnitType", "", "", UnitTypeLabelSet);
 
             //DataSet Contact = StkGenCode.Code.Db.GetSchemaSqlServer(txtConstring.Text, "Contact");
 
-
             //string ContactLabelSet =
             //    "ProductLineId:รหัส;SourceID:แหล่งที่มา;LineID:ไลน์ผลิต;ContainID:ขนาดบรรจุ;LineSizeID:ขนาดเส้น;CustomerBrandID:ตรา/ลูกค้า;TestFormulaID:รสชาติสูตร;ManufacturingDate:วันผลิต;ExpectItems:จำนวน;CreateDate:วันที่ทำคำสั่ง";
-            //string  
+            //string
             //generator.Gen(Contact, "Contact", "SourceID:Source;LineID:Line;ContainID:Contain;LineSizeID:LineSize;CustomerBrandID:CustomerBrand;TestFormulaID:TestFormula;", , ContactLabelSet);
-
 
             //,[SourceID]
             //,[LineID]

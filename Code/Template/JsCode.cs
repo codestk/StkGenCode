@@ -175,10 +175,10 @@ namespace StkGenCode.Code.Template
         private string GenSave()
         {
             var code = "";
-            var columnsParameterFunction = ColumnString.GenLineString(Ds, "{0},");
+            var columnsParameterFunction = ColumnString.GenLineString(Ds, "{0},",ExceptionColumn);
             columnsParameterFunction = columnsParameterFunction.TrimEnd(',');
 
-            var columnsParameterJson = ColumnString.GenLineString(Ds, "{0}:\"' + {0} + '\",");
+            var columnsParameterJson = ColumnString.GenLineString(Ds, "{0}:\"' + {0} + '\",",ExceptionColumn);
             columnsParameterJson = columnsParameterJson.TrimEnd(',');
 
             code += $"this.Save = function({columnsParameterFunction})" + NewLine;
